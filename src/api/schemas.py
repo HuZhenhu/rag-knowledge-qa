@@ -69,12 +69,20 @@ class LoginRequest(BaseModel):
     password: str = Field(..., description="密码")
 
 
+class UserInfo(BaseModel):
+    """用户基本信息"""
+    id: str = Field(..., description="用户ID")
+    username: str = Field(..., description="用户名")
+    role: str = Field(..., description="角色")
+
+
 class TokenResponse(BaseModel):
     """JWT Token响应"""
     access_token: str = Field(..., description="访问Token")
     refresh_token: str = Field(..., description="刷新Token")
     token_type: str = Field("bearer", description="Token类型")
     expires_in: int = Field(..., description="过期时间（秒）")
+    user: Optional[UserInfo] = Field(None, description="用户信息")
 
 
 class RefreshRequest(BaseModel):
@@ -119,3 +127,22 @@ class FeedbackRequest(BaseModel):
     request_id: str = Field(..., description="关联的请求ID（trace_id）")
     rating: int = Field(..., description="评分: 1=赞, -1=踩")
     query: Optional[str] = Field(None, description="原始查询文本")
+
+
+# ---- 文档 Chunk 相关 ----
+
+class ChunkInfo(BaseModel):
+    """文档 Chunk 信息"""
+    chunk_id: str = Field(..., description="Chunk ID")
+    content: str = Field(..., description="Chunk 内容")
+    section: str = Field("", description="所属章节")
+    page_number: Optional[int] = Field(None, description="所在页码")
+    content_type: str = Field("text", description="内容类型")
+
+
+class ChunkListResponse(BaseModel):
+    """文档 Chunk 列表响应"""
+    document_id: str = Field(..., description="文档ID")
+    filename: str = Field(..., description="文件名")
+    chunks: list[ChunkInfo] = Field(default_factory=list, description="Chunk列表")
+    total: int = Field(0, description="Chunk总数")

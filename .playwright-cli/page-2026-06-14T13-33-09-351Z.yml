@@ -1,0 +1,14 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - generic [ref=e6]: R
+    - heading "RAG Admin" [level=1] [ref=e7]
+    - paragraph [ref=e8]: 知识库管理系统
+  - generic [ref=e9]:
+    - generic [ref=e13]:
+      - img [ref=e16]
+      - textbox "用户名" [ref=e18]
+    - generic [ref=e22]:
+      - img [ref=e25]
+      - textbox "密码" [ref=e28]
+    - button "登录" [ref=e29] [cursor=pointer]:
+      - generic [ref=e30]: 登录

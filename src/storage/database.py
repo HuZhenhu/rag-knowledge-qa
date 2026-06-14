@@ -273,7 +273,7 @@ def _row_to_record(row: sqlite3.Row) -> DocumentRecord:
 # ---------------------------------------------------------------------------
 
 def create_user(user_id: str, username: str, password_hash: str,
-                role: str = "viewer") -> dict | None:
+                role: str = "admin") -> dict | None:
     """创建用户，返回用户字典；用户名已存在时返回 None"""
     conn = _get_conn()
     try:

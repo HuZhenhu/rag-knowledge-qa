@@ -1,5 +1,8 @@
 """Embedding"""
-from sentence_transformers import SentenceTransformer
+try:
+    from sentence_transformers import SentenceTransformer
+except (ImportError, AttributeError, OSError) as _e:
+    SentenceTransformer = None
 
 from src.config import EMBEDDING_MODEL
 
@@ -14,6 +17,8 @@ class Embedder:
     def _load_model(self):
         """懒加载模型"""
         if self.model is None:
+            if SentenceTransformer is None:
+                raise ImportError("sentence-transformers 加载失败，请检查 torch 版本兼容性")
             print(f"加载Embedding模型: {self.model_name}")
             self.model = SentenceTransformer(self.model_name)
 

@@ -1,0 +1,120 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e36]:
+    - complementary [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e39]: R
+        - generic [ref=e40]: RAG Admin
+      - menubar [ref=e41]:
+        - menuitem "仪表盘" [ref=e42] [cursor=pointer]:
+          - img [ref=e44]
+          - text: 仪表盘
+        - menuitem "文档管理" [ref=e46] [cursor=pointer]:
+          - img [ref=e48]
+          - text: 文档管理
+        - menuitem "索引监控" [ref=e50] [cursor=pointer]:
+          - img [ref=e52]
+          - text: 索引监控
+        - menuitem "查询日志" [ref=e55] [cursor=pointer]:
+          - img [ref=e57]
+          - text: 查询日志
+        - menuitem "评测" [ref=e59] [cursor=pointer]:
+          - img [ref=e61]
+          - text: 评测
+        - menuitem "用户管理" [ref=e63] [cursor=pointer]:
+          - img [ref=e65]
+          - text: 用户管理
+        - menuitem "聊天" [ref=e67] [cursor=pointer]:
+          - img [ref=e69]
+          - text: 聊天
+      - generic [ref=e73]:
+        - generic [ref=e74]: A
+        - generic [ref=e75]:
+          - generic [ref=e76]: admin01
+          - generic [ref=e77]: viewer
+    - generic [ref=e78]:
+      - banner [ref=e79]:
+        - button [ref=e81] [cursor=pointer]:
+          - img [ref=e83]
+        - generic [ref=e85]:
+          - button "EN" [ref=e86] [cursor=pointer]:
+            - generic [ref=e87]: EN
+          - button [ref=e88] [cursor=pointer]:
+            - img [ref=e90]
+          - button "admin01" [ref=e93] [cursor=pointer]:
+            - text: admin01
+            - img [ref=e95]
+      - main [ref=e97]:
+        - generic [ref=e98]:
+          - generic [ref=e100]:
+            - heading "仪表盘" [level=1] [ref=e101]
+            - paragraph [ref=e102]: 系统概览与实时指标
+          - generic [ref=e103]:
+            - generic [ref=e104]:
+              - generic [ref=e105]: 文档数
+              - generic [ref=e106]: "0"
+            - generic [ref=e107]:
+              - generic [ref=e108]: Chunk 总数
+              - generic [ref=e109]: "0"
+            - generic [ref=e110]:
+              - generic [ref=e111]: 今日查询
+              - generic [ref=e112]: "0"
+            - generic [ref=e113]:
+              - generic [ref=e114]: 平均延迟
+              - generic [ref=e115]: 0s
+          - generic [ref=e116]:
+            - generic [ref=e117]:
+              - generic [ref=e118]:
+                - generic [ref=e119]: 最近文档
+                - generic [ref=e121]: 5 条
+              - generic [ref=e123]:
+                - table [ref=e125]:
+                  - rowgroup [ref=e131]:
+                    - row "文件名 类型 Chunks 状态" [ref=e132]:
+                      - columnheader "文件名" [ref=e133]:
+                        - generic [ref=e134]: 文件名
+                      - columnheader "类型" [ref=e135]:
+                        - generic [ref=e136]: 类型
+                      - columnheader "Chunks" [ref=e137]:
+                        - generic [ref=e138]: Chunks
+                      - columnheader "状态" [ref=e139]:
+                        - generic [ref=e140]: 状态
+                - table [ref=e145]:
+                  - rowgroup [ref=e151]:
+                    - row "1旧治安管理处罚法.docx" [ref=e152]:
+                      - cell "1旧治安管理处罚法.docx" [ref=e153]:
+                        - generic [ref=e154]: 1旧治安管理处罚法.docx
+                      - cell [ref=e155]
+                      - cell [ref=e158]
+                      - cell [ref=e159]
+                    - row "刑法.pdf" [ref=e162]:
+                      - cell "刑法.pdf" [ref=e163]:
+                        - generic [ref=e164]: 刑法.pdf
+                      - cell [ref=e165]
+                      - cell [ref=e168]
+                      - cell [ref=e169]
+                    - row "记录本 8-1毕业设计（论文）学生记录本(1).docx" [ref=e172]:
+                      - cell "记录本 8-1毕业设计（论文）学生记录本(1).docx" [ref=e173]:
+                        - generic [ref=e174]: 记录本 8-1毕业设计（论文）学生记录本(1).docx
+                      - cell [ref=e175]
+                      - cell [ref=e178]
+                      - cell [ref=e179]
+                    - row "胡贞虎答辩意见表-学号-姓名.docx" [ref=e182]:
+                      - cell "胡贞虎答辩意见表-学号-姓名.docx" [ref=e183]:
+                        - generic [ref=e184]: 胡贞虎答辩意见表-学号-姓名.docx
+                      - cell [ref=e185]
+                      - cell [ref=e188]
+                      - cell [ref=e189]
+                    - row "胡贞虎-毕业论文.docx" [ref=e192]:
+                      - cell "胡贞虎-毕业论文.docx" [ref=e193]:
+                        - generic [ref=e194]: 胡贞虎-毕业论文.docx
+                      - cell [ref=e195]
+                      - cell [ref=e198]
+                      - cell [ref=e199]
+            - generic [ref=e202]:
+              - generic [ref=e203]:
+                - generic [ref=e204]: 系统告警
+                - generic [ref=e206]: Healthy
+              - generic [ref=e208]: 暂无告警
+  - alert [ref=e209]:
+    - img [ref=e211]
+    - paragraph [ref=e213]: 登录成功

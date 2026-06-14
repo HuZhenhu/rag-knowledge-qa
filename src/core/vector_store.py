@@ -276,6 +276,38 @@ class VectorStore:
     def get_all(self) -> dict:
         return self._backend.get_all(collection_name=self._active_collection())
 
+    def query_by_source(self, source_filename: str) -> list[dict]:
+        """按来源文件名查询所有 chunk
+
+        Args:
+            source_filename: 文件名（metadata 中的 source_file 字段）
+
+        Returns:
+            [{"chunk_id": ..., "content": ..., "section": ...,
+              "page_number": ..., "content_type": ...}, ...]
+        """
+        col_name = self._active_collection()
+        col = self._backend._get_collection(col_name)
+        result = col.get(
+            where={"source_file": source_filename},
+            include=["documents", "metadatas"],
+        )
+
+        chunks: list[dict] = []
+        if not result or not result.get("ids"):
+            return chunks
+
+        for i, chunk_id in enumerate(result["ids"]):
+            metadata = result["metadatas"][i] if result.get("metadatas") else {}
+            chunks.append({
+                "chunk_id": chunk_id,
+                "content": result["documents"][i] if result.get("documents") else "",
+                "section": metadata.get("section", ""),
+                "page_number": metadata.get("page_number"),
+                "content_type": metadata.get("element_type", "text"),
+            })
+        return chunks
+
     # ------------------------------------------------------------------
     # 跨 collection 操作（M6 索引分片）
     # ------------------------------------------------------------------

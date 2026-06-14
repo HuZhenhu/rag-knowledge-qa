@@ -14,6 +14,7 @@ from src.api.schemas import (
     RegisterRequest, LoginRequest, TokenResponse, RefreshRequest,
     KnowledgeBaseCreateRequest, KnowledgeBaseResponse,
     FeedbackRequest,
+    ChunkInfo, ChunkListResponse,
 )
 from src.api.jwt_auth import (
     get_current_user, require_role, log_audit,
@@ -97,6 +98,7 @@ async def login(req: LoginRequest, request: Request):
         access_token=access_token,
         refresh_token=refresh_token,
         expires_in=JWT_ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        user={"id": user["id"], "username": user["username"], "role": user["role"]},
     )
 
 
@@ -321,6 +323,31 @@ async def list_documents(user: dict = Depends(get_current_user)):
         for r in records
     ]
     return DocumentListResponse(documents=documents, total=len(documents))
+
+
+@router.get("/documents/{document_id}/chunks", response_model=ChunkListResponse)
+async def get_document_chunks(document_id: str, user: dict = Depends(get_current_user)):
+    """获取文档的所有 chunk 列表"""
+    from src.storage.database import get_document, get_user_readable_doc_ids
+
+    doc = get_document(document_id)
+    if not doc:
+        raise HTTPException(status_code=404, detail="文档不存在")
+
+    # 权限检查
+    readable_ids = get_user_readable_doc_ids(user["id"])
+    if user["role"] != "admin" and readable_ids and document_id not in readable_ids:
+        raise HTTPException(status_code=403, detail="无权访问该文档")
+
+    # 从向量库查询 chunks
+    chunks = rag_engine.vector_store.query_by_source(doc.filename)
+
+    return ChunkListResponse(
+        document_id=document_id,
+        filename=doc.filename,
+        chunks=[ChunkInfo(**c) for c in chunks],
+        total=len(chunks),
+    )
 
 
 @router.post("/documents/upload", response_model=UploadResponse)

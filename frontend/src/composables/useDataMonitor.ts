@@ -1,5 +1,4 @@
 import { ref, onUnmounted } from 'vue'
-import type { FileChangeEvent, IndexStartEvent, IndexProgressEvent, IndexCompleteEvent, IndexErrorEvent } from '../types'
 
 /**
  * 数据监控 WebSocket — 接收文件变化和索引进度通知
