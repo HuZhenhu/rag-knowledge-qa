@@ -26,23 +26,29 @@ from src.storage.database import (
     create_user, get_user_by_username, update_user_login,
     create_knowledge_base, get_knowledge_base, list_knowledge_bases,
 )
-from src.core.rag_engine import RAGEngine
-from src.core.vector_store import VectorStore
+from src.config import USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, ALLOW_REGISTRATION, USE_CONVERSATION_SUMMARY, RAG_ENGINE
 from src.core.session import SessionManager
 from src.core.metrics import metrics
 from src.core.tracer import get_trace, list_recent_traces
 from src.core.alert_manager import alert_manager
-from src.config import USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, ALLOW_REGISTRATION, USE_CONVERSATION_SUMMARY
 
 router = APIRouter(prefix="/api/v1")
 
-# 初始化组件
-rag_engine = RAGEngine(
-    use_query_expansion=USE_QUERY_EXPANSION,
-    use_hyde=USE_HYDE,
-    use_reranker=USE_RERANKER,
-)
-vector_store = VectorStore()
+# 初始化组件（根据配置选择引擎）
+if RAG_ENGINE == "langchain":
+    from src.core.langchain_rag import LangChainRAGEngine
+    rag_engine = LangChainRAGEngine()
+    vector_store = rag_engine.vectorstore  # LangChain Chroma实例
+else:
+    from src.core.rag_engine import RAGEngine
+    from src.core.vector_store import VectorStore
+    rag_engine = RAGEngine(
+        use_query_expansion=USE_QUERY_EXPANSION,
+        use_hyde=USE_HYDE,
+        use_reranker=USE_RERANKER,
+    )
+    vector_store = VectorStore()
+
 session_manager = SessionManager()
 
 
@@ -340,7 +346,10 @@ async def get_document_chunks(document_id: str, user: dict = Depends(get_current
         raise HTTPException(status_code=403, detail="无权访问该文档")
 
     # 从向量库查询 chunks
-    chunks = rag_engine.vector_store.query_by_source(doc.filename)
+    if RAG_ENGINE == "langchain":
+        chunks = rag_engine.query_by_source(doc.filename)
+    else:
+        chunks = rag_engine.vector_store.query_by_source(doc.filename)
 
     return ChunkListResponse(
         document_id=document_id,

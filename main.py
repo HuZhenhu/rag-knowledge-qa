@@ -16,7 +16,7 @@ from src.core.metrics import metrics
 from src.core.alert_manager import alert_manager
 from src.core.tracer import init_traces_table
 from src.storage.database import init_db
-from src.config import API_HOST, API_PORT, USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER
+from src.config import API_HOST, API_PORT, USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, RAG_ENGINE
 from src.core.session import SessionManager
 
 # 初始化所有数据表（包括新增的 users / knowledge_bases 等）
@@ -96,12 +96,18 @@ app.add_middleware(RateLimitMiddleware)
 app.include_router(router)
 
 # RAG 引擎（WebSocket 使用）
-from src.core.rag_engine import RAGEngine
-rag_engine = RAGEngine(
-    use_query_expansion=USE_QUERY_EXPANSION,
-    use_hyde=USE_HYDE,
-    use_reranker=USE_RERANKER,
-)
+if RAG_ENGINE == "langchain":
+    from src.core.langchain_rag import LangChainRAGEngine
+    rag_engine = LangChainRAGEngine()
+    logger.info("使用 LangChain RAG 引擎")
+else:
+    from src.core.rag_engine import RAGEngine
+    rag_engine = RAGEngine(
+        use_query_expansion=USE_QUERY_EXPANSION,
+        use_hyde=USE_HYDE,
+        use_reranker=USE_RERANKER,
+    )
+    logger.info("使用原版 RAG 引擎")
 session_manager = SessionManager()
 
 

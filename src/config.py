@@ -35,6 +35,9 @@ DEEPSEEK_MODEL = OPENAI_MODEL
 EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "local")  # local 或 api
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "models/BAAI/bge-m3")
 
+# RAG引擎选择：langchain / original
+RAG_ENGINE = os.getenv("RAG_ENGINE", "langchain")
+
 # 切片配置
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "800"))
 CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "100"))
