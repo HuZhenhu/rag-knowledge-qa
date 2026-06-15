@@ -271,7 +271,7 @@ class LangChainRAGEngine:
             list[dict]: chunk列表，每个包含content, metadata等
         """
         results = self.vectorstore.get(
-            where={"source": source_filename} if source_filename else None,
+            where={"source_file": source_filename} if source_filename else None,
         )
         chunks = []
         if results and results.get("documents"):

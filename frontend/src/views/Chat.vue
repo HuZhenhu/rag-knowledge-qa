@@ -1,12 +1,78 @@
 <script setup lang="ts">
-import { ref, nextTick, watch } from 'vue'
+import { ref, nextTick, watch, onMounted } from 'vue'
 import { useChat } from '../composables/useChat'
 import { useWebSocket } from '../composables/useWebSocket'
 import { useDataMonitor } from '../composables/useDataMonitor'
 import ChatMessage from '../components/ChatMessage.vue'
 import ChatInput from '../components/ChatInput.vue'
+import type { Message } from '../types'
 
-const { messages, isLoading, error, sessionId, sendMessage, addAssistantMessage, handleToken, setMessageDone, setError } = useChat()
+const { messages, isLoading, error, sessionId, sendMessage, addAssistantMessage, handleToken, setMessageDone, setError, clearMessages } = useChat()
+
+// 对话历史管理
+interface ChatSession {
+  id: string
+  title: string
+  messages: Message[]
+  createdAt: number
+}
+const chatHistory = ref<ChatSession[]>([])
+const currentSessionIndex = ref<number>(-1)
+
+function loadHistory() {
+  try {
+    const saved = localStorage.getItem('chat_history')
+    if (saved) chatHistory.value = JSON.parse(saved)
+  } catch {}
+}
+function saveHistory() {
+  if (messages.value.length === 0) return
+  const title = messages.value.find(m => m.role === 'user')?.content.slice(0, 30) || '新对话'
+  if (currentSessionIndex.value >= 0) {
+    chatHistory.value[currentSessionIndex.value].messages = [...messages.value]
+    chatHistory.value[currentSessionIndex.value].title = title
+  } else {
+    const session: ChatSession = {
+      id: sessionId.value,
+      title,
+      messages: [...messages.value],
+      createdAt: Date.now(),
+    }
+    chatHistory.value.unshift(session)
+    currentSessionIndex.value = 0
+  }
+  if (chatHistory.value.length > 50) chatHistory.value = chatHistory.value.slice(0, 50)
+  localStorage.setItem('chat_history', JSON.stringify(chatHistory.value))
+}
+
+function loadSession(index: number) {
+  saveHistory()
+  const session = chatHistory.value[index]
+  messages.value = [...session.messages]
+  currentSessionIndex.value = index
+  sessionId.value = session.id
+  ws.disconnect()
+  ws.connect(session.id)
+}
+
+function newChat() {
+  saveHistory()
+  clearMessages()
+  currentSessionIndex.value = -1
+  ws.disconnect()
+  ws.connect(sessionId.value)
+}
+
+function deleteSession(index: number) {
+  chatHistory.value.splice(index, 1)
+  localStorage.setItem('chat_history', JSON.stringify(chatHistory.value))
+  if (currentSessionIndex.value === index) newChat()
+  else if (currentSessionIndex.value > index) currentSessionIndex.value--
+}
+
+onMounted(() => {
+  loadHistory()
+})
 
 const WS_URL = ref('ws://localhost:8080/ws')
 const ws = useWebSocket(WS_URL.value)
@@ -69,56 +135,190 @@ function handleSend(content: string) {
   const assistantMsg = addAssistantMessage()
   ws.sendQuery(content, assistantMsg.id)
 }
+
+// 发送后自动保存历史（监听messages变化）
+watch(messages, () => {
+  if (!isLoading.value && messages.value.length > 0) {
+    saveHistory()
+  }
+}, { deep: true })
+
+const historyCollapsed = ref(false)
 </script>
 
 <template>
-  <div class="chat-view">
-    <div v-if="dataMonitorMessage" class="monitor-toast">
-      {{ dataMonitorMessage }}
-    </div>
-
-    <div v-if="monitor.indexProgress.value" class="monitor-progress">
-      索引进度: {{ monitor.indexProgress.value.current }}/{{ monitor.indexProgress.value.total }}
-      {{ monitor.indexProgress.value.filename ? `— ${monitor.indexProgress.value.filename}` : '' }}
-    </div>
-
-    <main class="chat-container" ref="chatContainer">
-      <div v-if="messages.length === 0" class="empty-state">
-        <div class="icon">🤖</div>
-        <p>有什么问题？问我吧！</p>
-        <div class="status-bar">
-          <div class="status" :class="{ connected: monitor.isConnected.value }">
-            数据监控: {{ monitor.isConnected.value ? '已连接' : '未连接' }}
+  <div class="chat-layout">
+    <!-- 侧边栏：对话历史 -->
+    <aside class="chat-sidebar" :class="{ collapsed: historyCollapsed }">
+      <div class="sidebar-header">
+        <span v-if="!historyCollapsed">对话历史</span>
+        <el-button text size="small" @click="historyCollapsed = !historyCollapsed">
+          <el-icon><Fold v-if="!historyCollapsed" /><Expand v-else /></el-icon>
+        </el-button>
+      </div>
+      <div v-if="!historyCollapsed" class="sidebar-content">
+        <el-button type="primary" class="new-chat-btn" @click="newChat">
+          <el-icon><Plus /></el-icon>
+          开启新对话
+        </el-button>
+        <div class="session-list">
+          <div
+            v-for="(session, index) in chatHistory"
+            :key="session.id"
+            class="session-item"
+            :class="{ active: currentSessionIndex === index }"
+            @click="loadSession(index)"
+          >
+            <span class="session-title">{{ session.title }}</span>
+            <el-button
+              text
+              size="small"
+              class="delete-btn"
+              @click.stop="deleteSession(index)"
+            >
+              <el-icon><Delete /></el-icon>
+            </el-button>
           </div>
-          <div class="status" :class="{ connected: ws.isConnected.value }">
-            对话服务: {{ ws.isConnected.value ? '已连接' : '未连接' }}
+          <div v-if="chatHistory.length === 0" class="empty-history">
+            暂无对话记录
           </div>
         </div>
       </div>
+    </aside>
 
-      <ChatMessage
-        v-for="msg in messages"
-        :key="msg.id"
-        :message="msg"
-      />
-
-      <div v-if="error" class="error-message">
-        {{ error }}
+    <!-- 主聊天区域 -->
+    <div class="chat-view">
+      <div v-if="dataMonitorMessage" class="monitor-toast">
+        {{ dataMonitorMessage }}
       </div>
-    </main>
 
-    <ChatInput :loading="isLoading" @send="handleSend" />
+      <div v-if="monitor.indexProgress.value" class="monitor-progress">
+        索引进度: {{ monitor.indexProgress.value.current }}/{{ monitor.indexProgress.value.total }}
+        {{ monitor.indexProgress.value.filename ? `— ${monitor.indexProgress.value.filename}` : '' }}
+      </div>
+
+      <main class="chat-container" ref="chatContainer">
+        <div v-if="messages.length === 0" class="empty-state">
+          <div class="icon">🤖</div>
+          <p>有什么问题？问我吧！</p>
+          <div class="status-bar">
+            <div class="status" :class="{ connected: monitor.isConnected.value }">
+              数据监控: {{ monitor.isConnected.value ? '已连接' : '未连接' }}
+            </div>
+            <div class="status" :class="{ connected: ws.isConnected.value }">
+              对话服务: {{ ws.isConnected.value ? '已连接' : '未连接' }}
+            </div>
+          </div>
+        </div>
+
+        <ChatMessage
+          v-for="msg in messages"
+          :key="msg.id"
+          :message="msg"
+        />
+
+        <div v-if="error" class="error-message">
+          {{ error }}
+        </div>
+      </main>
+
+      <ChatInput :loading="isLoading" @send="handleSend" />
+    </div>
   </div>
 </template>
 
 <style scoped>
-.chat-view {
+.chat-layout {
   display: flex;
-  flex-direction: column;
   height: 100%;
   margin: 0;
   background: var(--bg-surface);
   border-radius: 8px;
+  overflow: hidden;
+}
+
+/* 侧边栏 */
+.chat-sidebar {
+  width: 240px;
+  min-width: 240px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  transition: width 0.2s, min-width 0.2s;
+}
+.chat-sidebar.collapsed {
+  width: 48px;
+  min-width: 48px;
+}
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+}
+.sidebar-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 8px;
+}
+.new-chat-btn {
+  width: 100%;
+  margin-bottom: 8px;
+}
+.session-list {
+  flex: 1;
+  overflow-y: auto;
+}
+.session-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-bottom: 2px;
+  transition: background 0.15s;
+}
+.session-item:hover {
+  background: var(--bg-hover);
+}
+.session-item.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.session-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.delete-btn {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.session-item:hover .delete-btn {
+  opacity: 1;
+}
+.empty-history {
+  text-align: center;
+  color: var(--text-3);
+  font-size: 13px;
+  padding: 24px 0;
+}
+
+/* 主聊天区域 */
+.chat-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .monitor-toast {

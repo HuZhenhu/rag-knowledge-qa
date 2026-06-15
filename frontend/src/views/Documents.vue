@@ -115,7 +115,7 @@ function getStatusType(status: string) {
             <el-tag size="small">{{ row.file_type?.toUpperCase() }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="chunk_count" :label="'Chunks'" width="80" />
+        <el-table-column prop="chunks" :label="'Chunks'" width="80" />
         <el-table-column prop="indexed_at" :label="'索引时间'" width="180" />
         <el-table-column prop="status" :label="'状态'" width="100">
           <template #default="{ row }">
