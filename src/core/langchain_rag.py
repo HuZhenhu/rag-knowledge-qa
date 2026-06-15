@@ -3,7 +3,8 @@ import logging
 import time
 from dataclasses import dataclass, field
 
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_openai import ChatOpenAI
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_community.retrievers import BM25Retriever
 from langchain_classic.retrievers import EnsembleRetriever
@@ -58,11 +59,11 @@ class LangChainRAGEngine:
             max_tokens=2048,
         )
 
-        # 初始化Embeddings
-        self.embeddings = OpenAIEmbeddings(
-            model=EMBEDDING_MODEL,
-            api_key=DEEPSEEK_API_KEY,
-            base_url=f"{DEEPSEEK_BASE_URL}/v1" if "v1" not in DEEPSEEK_BASE_URL else DEEPSEEK_BASE_URL,
+        # 初始化Embeddings（使用本地HuggingFace模型）
+        self.embeddings = HuggingFaceEmbeddings(
+            model_name=EMBEDDING_MODEL,
+            model_kwargs={"device": "cpu"},
+            encode_kwargs={"normalize_embeddings": True},
         )
 
         # 初始化Chroma向量存储
