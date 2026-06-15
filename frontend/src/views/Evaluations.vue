@@ -18,7 +18,7 @@ async function fetchEvaluations() {
   loading.value = true
   try {
     const { data } = await authClient.get('/evaluations')
-    evaluations.value = data.evaluations || []
+    evaluations.value = Array.isArray(data) ? data : (data.evaluations || [])
   } catch {} finally {
     loading.value = false
   }
