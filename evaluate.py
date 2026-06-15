@@ -109,8 +109,13 @@ def run_single_test(case: dict, engine, embedder) -> dict:
     start_time = time.time()
     try:
         result = engine.query(question)
-        answer = result.get("answer", "")
-        sources = result.get("sources", [])
+        # 兼容dataclass和dict两种返回格式
+        if hasattr(result, 'answer'):
+            answer = result.answer or ""
+            sources = result.sources or []
+        else:
+            answer = result.get("answer", "")
+            sources = result.get("sources", [])
         elapsed_ms = int((time.time() - start_time) * 1000)
 
         # 关键词评分
