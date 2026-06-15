@@ -18,7 +18,6 @@ const loading = ref(true)
 
 onMounted(async () => {
   try {
-    // 并行请求所有数据
     const [healthRes, metricsRes] = await Promise.allSettled([
       authClient.get('/health'),
       authClient.get('/metrics'),
@@ -26,8 +25,7 @@ onMounted(async () => {
 
     if (healthRes.status === 'fulfilled') {
       const data = healthRes.value.data
-      stats.value.documents = data.document_count || 0
-      stats.value.chunks = data.chunk_count || 0
+      stats.value.chunks = data.vector_store?.count || 0
     }
 
     if (metricsRes.status === 'fulfilled') {
@@ -37,13 +35,13 @@ onMounted(async () => {
       stats.value.avgLatency = latency ? (latency / 1000).toFixed(1) + 's' : '0s'
     }
 
-    // 获取文档列表
     try {
       const docsRes = await authClient.get('/documents')
-      recentDocs.value = (docsRes.data.documents || []).slice(0, 5)
+      const docs = docsRes.data.documents || []
+      recentDocs.value = docs.slice(0, 5)
+      stats.value.documents = docs.length
     } catch {}
 
-    // 获取告警
     try {
       const alertsRes = await authClient.get('/alerts')
       alerts.value = (alertsRes.data.alerts || []).slice(0, 5)
@@ -102,17 +100,8 @@ function getStatusType(status: string) {
         </div>
         <el-table :data="recentDocs" style="width: 100%">
           <el-table-column prop="filename" :label="'文件名'" />
-          <el-table-column prop="file_type" :label="'类型'" width="80">
-            <template #default="{ row }">
-              <el-tag size="small">{{ row.file_type?.toUpperCase() }}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column prop="chunk_count" :label="'Chunks'" width="80" />
-          <el-table-column prop="status" :label="'状态'" width="100">
-            <template #default="{ row }">
-              <el-tag :type="getStatusType(row.status)" size="small">{{ row.status }}</el-tag>
-            </template>
-          </el-table-column>
+          <el-table-column prop="chunks" :label="'Chunks'" width="80" />
+          <el-table-column prop="indexed_at" :label="'索引时间'" width="160" />
         </el-table>
       </div>
 
