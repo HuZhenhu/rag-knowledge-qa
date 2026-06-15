@@ -151,33 +151,40 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str = "default"):
 
                 loop = asyncio.get_event_loop()
                 try:
-                    response = await loop.run_in_executor(
-                        None,
-                        lambda: rag_engine.query(
-                            query,
-                            top_k=3,
-                            history=history,
-                            summary=summary,
-                            user_id=session_id,
-                        ),
-                    )
+                    full_answer = ""
+                    final_sources = []
+                    final_timing = {}
+
+                    # 流式生成
+                    for token, is_last, sources, timing in rag_engine.query_stream(
+                        query,
+                        top_k=3,
+                        history=history,
+                        summary=summary,
+                        user_id=session_id,
+                    ):
+                        if is_last:
+                            final_sources = sources
+                            final_timing = timing
+                        elif token:
+                            full_answer += token
+                            await websocket.send_json({
+                                "type": "token",
+                                "message_id": message_id,
+                                "token": token,
+                            })
 
                     # 记录AI回复到会话
-                    session_manager.add_message(session_id, "assistant", response.answer)
+                    session_manager.add_message(session_id, "assistant", full_answer)
 
-                    await websocket.send_json({
-                        "type": "token",
-                        "message_id": message_id,
-                        "token": response.answer,
-                    })
-
-                    sources = []
-                    for s in response.sources:
+                    # 发送来源
+                    source_list = []
+                    for s in final_sources:
                         meta = s.get("metadata", {})
                         file_name = meta.get("source_file", "") or meta.get("source", "未知")
                         if "\\" in file_name or "/" in file_name:
                             file_name = file_name.replace("\\", "/").split("/")[-1]
-                        sources.append({
+                        source_list.append({
                             "file": file_name,
                             "section": meta.get("section", ""),
                             "chunk": s["content"],
@@ -187,13 +194,13 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str = "default"):
                     await websocket.send_json({
                         "type": "sources",
                         "message_id": message_id,
-                        "sources": sources,
+                        "sources": source_list,
                     })
 
                     await websocket.send_json({
                         "type": "done",
                         "message_id": message_id,
-                        "timing": response.timing,
+                        "timing": final_timing,
                     })
 
                 except Exception as e:

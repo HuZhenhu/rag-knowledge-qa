@@ -373,3 +373,99 @@ class RAGEngine:
             raise
         finally:
             trace.finish()
+
+    def query_stream(self, question: str, top_k: int = RETRIEVAL_TOP_K,
+                     history: list[dict] | None = None,
+                     summary: str = "",
+                     user_id: str = ""):
+        """流式RAG问答（返回generator，yield token）
+
+        Yields:
+            tuple: (token_str, is_last, sources, timing)
+            最后一个yield时 is_last=True
+        """
+        trace = Trace(question, user_id=user_id)
+        metrics.inc_counter("total_queries")
+        start_time = time.time()
+        timing = {}
+
+        try:
+            # 1. 检索
+            trace.start_span("retrieval")
+            retrieval_start = time.time()
+
+            corrected_question = question
+            if USE_QUERY_CORRECTION:
+                corrected_question = self.query_understander.correct_query(question)
+
+            expanded_queries = [corrected_question]
+            if self.use_query_expansion:
+                expansion = self.query_understander.expand_query(corrected_question)
+                expanded_queries = expansion.expanded_queries
+
+            all_results = []
+            for q in expanded_queries:
+                results = self.retriever.retrieve(q, top_k)
+                all_results.extend(results)
+
+            import hashlib
+            seen = set()
+            unique_results = []
+            for result in all_results:
+                key = hashlib.md5(result.content.encode()).hexdigest()
+                if key not in seen:
+                    seen.add(key)
+                    unique_results.append(result)
+
+            timing["retrieval_ms"] = round((time.time() - retrieval_start) * 1000, 2)
+            trace.end_span({"unique_results": len(unique_results)})
+
+            # 2. ReRanker
+            if self.use_reranker and unique_results:
+                docs_for_rerank = [
+                    {"content": r.content, "metadata": r.metadata}
+                    for r in unique_results
+                ]
+                final_results = self.reranker.rerank(question, docs_for_rerank, top_k)
+            else:
+                final_results = unique_results[:top_k]
+
+            # 3. 准备sources
+            sources = []
+            for result in final_results[:5]:
+                sources.append({
+                    "content": result.content,
+                    "metadata": result.metadata,
+                    "score": result.score
+                })
+
+            # 4. 流式生成
+            trace.start_span("generation")
+            generation_start = time.time()
+
+            if not sources:
+                yield "知识库中未找到相关信息", True, sources, timing
+                return
+
+            full_answer = ""
+            for token in self.generator.generate_stream(
+                question, sources, history=history, summary=summary
+            ):
+                full_answer += token
+                yield token, False, sources, timing
+
+            timing["generation_ms"] = round((time.time() - generation_start) * 1000, 2)
+            timing["total_ms"] = round((time.time() - start_time) * 1000, 2)
+            metrics.record_histogram("generation_latency_ms", timing["generation_ms"])
+            metrics.record_histogram("query_latency_ms", timing["total_ms"])
+
+            trace.end_span({"model": "deepseek-chat", "answer_length": len(full_answer)})
+
+            yield "", True, sources, timing
+
+        except Exception:
+            trace.status = "error"
+            metrics.inc_counter("total_errors")
+            raise
+        finally:
+            trace.finish()

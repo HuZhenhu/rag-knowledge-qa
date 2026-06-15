@@ -89,7 +89,7 @@ class Generator:
             ) from e
 
     def _call_openai(self, system_content: str, messages: list[dict]) -> dict:
-        """调用OpenAI兼容API"""
+        """调用OpenAI兼容API（非流式）"""
         response = self.client.chat.completions.create(
             model=OPENAI_MODEL,
             messages=[{"role": "system", "content": system_content}] + messages,
@@ -103,6 +103,55 @@ class Generator:
             "total_tokens": response.usage.total_tokens
         }
         return {"answer": answer, "usage": usage}
+
+    def generate_stream(self, question: str, sources: list[dict],
+                        history: list[dict] | None = None,
+                        summary: str = ""):
+        """流式生成回答（yield每个token）
+
+        Args:
+            question: 用户当前问题
+            sources: 检索到的参考资料列表
+            history: 对话历史
+            summary: 对话摘要
+
+        Yields:
+            str: 每个token文本
+        """
+        self._init_client()
+        prompt = self._build_prompt(question, sources)
+
+        system_content = SECURITY_INSTRUCTION + (
+            "你是知识库问答助手。请基于参考资料和对话历史回答。\n"
+            "引用格式：在关键论断末尾标注（文件名，章节名）。\n"
+            "如果用户追问（如详细一点、展开说说），结合对话上下文理解意图，"
+            "优先从参考资料查找，找不到则基于之前的回答展开。"
+        )
+        if summary:
+            system_content += f"\n\n之前对话的摘要：\n{summary}"
+
+        messages = []
+        if history:
+            messages.extend(history)
+        messages.append({"role": "user", "content": prompt})
+
+        try:
+            response = self.client.chat.completions.create(
+                model=OPENAI_MODEL,
+                messages=[{"role": "system", "content": system_content}] + messages,
+                temperature=LLM_TEMPERATURE,
+                max_tokens=LLM_MAX_TOKENS,
+                stream=True,
+            )
+            for chunk in response:
+                if chunk.choices and chunk.choices[0].delta.content:
+                    yield chunk.choices[0].delta.content
+        except Exception as e:
+            logger.error("LLM流式调用失败: %s", e)
+            raise GenerationError(
+                message=f"LLM调用失败: {e}",
+                details={"provider": LLM_PROVIDER, "model": OPENAI_MODEL},
+            ) from e
 
     def _call_anthropic(self, system_content: str, messages: list[dict]) -> dict:
         """调用Anthropic Claude API"""
