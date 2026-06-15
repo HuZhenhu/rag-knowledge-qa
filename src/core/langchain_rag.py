@@ -221,6 +221,56 @@ class LangChainRAGEngine:
                 timing={"total_ms": round(total_time, 2)},
             )
 
+    def query_stream(self, question: str, top_k: int | None = None,
+                     history: list[dict] | None = None,
+                     summary: str = "",
+                     user_id: str = ""):
+        """流式RAG问答
+
+        Yields:
+            tuple: (token_str, is_last, sources, timing)
+        """
+        start_time = time.time()
+        timing = {}
+
+        try:
+            # 1. 检索
+            retrieval_start = time.time()
+            retriever = self._ensemble_retriever if self.use_hybrid and self._ensemble_retriever else self.vector_retriever
+            docs = retriever.invoke(question)
+            timing["retrieval_ms"] = round((time.time() - retrieval_start) * 1000, 2)
+
+            # 2. 构建sources
+            sources = []
+            for i, doc in enumerate(docs):
+                sources.append({
+                    "content": doc.page_content,
+                    "metadata": doc.metadata,
+                    "score": 1.0 - (i * 0.1),
+                })
+
+            # 3. 流式生成
+            generation_start = time.time()
+            if not sources:
+                yield "知识库中未找到相关信息", True, sources, timing
+                return
+
+            # 使用LangChain的stream方法
+            full_answer = ""
+            for chunk in self.chain.stream(question):
+                if chunk:
+                    full_answer += chunk
+                    yield chunk, False, sources, timing
+
+            timing["generation_ms"] = round((time.time() - generation_start) * 1000, 2)
+            timing["total_ms"] = round((time.time() - start_time) * 1000, 2)
+
+            yield "", True, sources, timing
+
+        except Exception as e:
+            logger.error("LangChain RAG流式查询失败: %s", e)
+            yield f"查询失败: {str(e)}", True, [], {"total_ms": round((time.time() - start_time) * 1000, 2)}
+
     def add_documents(self, texts: list[str], metadatas: list[dict] | None = None):
         """添加文档到向量存储
 
