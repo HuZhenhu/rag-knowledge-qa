@@ -66,9 +66,9 @@ class LangChainRAGEngine:
             encode_kwargs={"normalize_embeddings": True},
         )
 
-        # 初始化Chroma向量存储
+        # 初始化Chroma向量存储（使用与原版相同的集合名）
         self.vectorstore = Chroma(
-            collection_name="rag_knowledge",
+            collection_name="knowledge_base",
             embedding_function=self.embeddings,
             persist_directory=str(CHROMA_DB_DIR),
         )
