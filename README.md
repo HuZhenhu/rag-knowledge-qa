@@ -41,10 +41,12 @@
 
 | 组件 | 技术 |
 |------|------|
+| **LLM应用框架** | **LangChain**（业界主流） |
 | LLM | DeepSeek / OpenAI / Anthropic Claude（可切换） |
-| Embedding | sentence-transformers all-MiniLM-L6-v2 |
-| 向量数据库 | ChromaDB（本地持久化） |
-| 关键词检索 | rank_bm25 + jieba 中文分词 |
+| Embedding | sentence-transformers / OpenAI Embeddings（可切换） |
+| 向量数据库 | ChromaDB（langchain-chroma 集成） |
+| 关键词检索 | BM25Retriever + EnsembleRetriever 混合检索 |
+| Prompt管理 | ChatPromptTemplate（LangChain组件） |
 | 前端 | Vue 3 + Vite + TypeScript + Element Plus |
 | 状态管理 | Pinia |
 | 路由 | vue-router（含权限守卫） |
@@ -120,7 +122,8 @@ rag-knowledge-qa/
 │   │   ├── retriever.py   # 混合检索（向量+BM25）
 │   │   ├── reranker.py    # CrossEncoder 重排序
 │   │   ├── generator.py   # LLM 生成（带引用+安全指令）
-│   │   ├── rag_engine.py  # RAG 引擎（串联所有模块）
+│   │   ├── rag_engine.py  # 原版 RAG 引擎
+│   │   ├── langchain_rag.py  # LangChain RAG 引擎（默认）
 │   │   ├── session.py     # 多轮对话管理
 │   │   ├── query_understander.py # 查询理解
 │   │   ├── data_monitor.py # WebSocket 数据监控
@@ -158,6 +161,7 @@ rag-knowledge-qa/
 
 | 配置项 | 默认值 | 说明 |
 |--------|--------|------|
+| RAG_ENGINE | langchain | RAG引擎：langchain / original |
 | LLM_PROVIDER | deepseek | LLM提供商：deepseek/openai/anthropic |
 | OPENAI_API_KEY | - | OpenAI兼容API密钥（DeepSeek等） |
 | OPENAI_BASE_URL | https://api.deepseek.com | API地址 |
@@ -213,7 +217,8 @@ curl -X POST http://localhost:8080/api/v1/documents/upload \
 
 ## 更新日志
 
-详见 [docs/v1.1.0-changelog.md](docs/v1.1.0-changelog.md)
+- [v1.2.0 — LangChain框架集成](docs/v1.2.0-changelog.md)
+- [v1.1.0 — 管理后台 + 安全功能](docs/v1.1.0-changelog.md)
 
 ## License
 
