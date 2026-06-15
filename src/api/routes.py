@@ -296,11 +296,19 @@ async def export_session(
 @router.get("/health", response_model=HealthResponse)
 async def health():
     """健康检查（含向量库状态）"""
-    vs_health = vector_store.health_check()
+    if RAG_ENGINE == "langchain":
+        # LangChain模式：直接查询Chroma状态
+        try:
+            count = vector_store._collection.count()
+            vs_health = {"status": "ok", "count": count}
+        except Exception as e:
+            vs_health = {"status": "error", "error": str(e)}
+    else:
+        vs_health = vector_store.health_check()
     overall_status = "ok" if vs_health["status"] == "ok" else "degraded"
     return HealthResponse(
         status=overall_status,
-        version="1.0.0",
+        version="1.2.0",
         vector_store=vs_health,
     )
 
@@ -310,7 +318,10 @@ async def stats(user: dict = Depends(get_current_user)):
     """知识库统计"""
     from src.config import DATA_DIR
     total_documents = len(list(DATA_DIR.rglob("*.md")))
-    total_chunks = vector_store.count()
+    if RAG_ENGINE == "langchain":
+        total_chunks = vector_store._collection.count()
+    else:
+        total_chunks = vector_store.count()
     return StatsResponse(total_documents=total_documents, total_chunks=total_chunks)
 
 
