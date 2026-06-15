@@ -328,17 +328,25 @@ class LangChainRAGEngine:
             source_filename: 源文件名
 
         Returns:
-            list[dict]: chunk列表，每个包含content, metadata等
+            list[dict]: chunk列表，每个包含chunk_id, content, metadata等
         """
-        results = self.vectorstore.get(
-            where={"source_file": source_filename} if source_filename else None,
-        )
+        # metadata中source_file是完整路径，需要模糊匹配
+        # 注意：ids 默认返回，不能放在 include 里
+        all_results = self.vectorstore.get(include=["metadatas", "documents"])
         chunks = []
-        if results and results.get("documents"):
-            for i, doc in enumerate(results["documents"]):
-                meta = results["metadatas"][i] if results.get("metadatas") else {}
-                chunks.append({
-                    "content": doc,
-                    "metadata": meta,
-                })
+        if all_results and all_results.get("documents"):
+            for i, doc in enumerate(all_results["documents"]):
+                meta = all_results["metadatas"][i] if all_results.get("metadatas") else {}
+                chunk_id = all_results["ids"][i] if all_results.get("ids") else f"chunk_{i}"
+                sf = meta.get("source_file", "")
+                # 匹配：完整路径包含文件名，或文件名包含路径
+                if source_filename and (source_filename in sf or sf.endswith(source_filename)):
+                    chunks.append({
+                        "chunk_id": chunk_id,
+                        "content": doc,
+                        "section": meta.get("section", ""),
+                        "page_number": meta.get("page_number"),
+                        "content_type": meta.get("content_type", "text"),
+                        "metadata": meta,
+                    })
         return chunks
