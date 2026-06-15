@@ -180,6 +180,7 @@ def run_single_test(case: dict, engine, embedder) -> dict:
 def run_evaluation(
     test_cases: list[dict] | None = None,
     version: str = "",
+    engine=None,
 ) -> dict:
     """运行完整评测，返回汇总结果"""
     if test_cases is None:
@@ -194,10 +195,11 @@ def run_evaluation(
     print("=" * 60)
 
     try:
-        from src.core.rag_engine import RAGEngine
         from src.core.embedder import Embedder
 
-        engine = RAGEngine()
+        if engine is None:
+            from src.core.rag_engine import RAGEngine
+            engine = RAGEngine()
         embedder = Embedder()
     except Exception as e:
         print(f"无法初始化引擎: {e}")

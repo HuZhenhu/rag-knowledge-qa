@@ -665,7 +665,7 @@ async def run_evaluation_now(
 ):
     """手动触发一次评测"""
     from evaluate import run_evaluation, save_to_database
-    summary = run_evaluation(version=version)
+    summary = run_evaluation(version=version, engine=rag_engine)
     if "error" in summary:
         raise HTTPException(status_code=500, detail=summary["error"])
     save_to_database(summary)
