@@ -25,6 +25,7 @@ from src.config import (
     CHUNK_SIZE,
     CHUNK_OVERLAP,
 )
+from src.core.tracer import Trace
 
 logger = logging.getLogger(__name__)
 
@@ -230,15 +231,18 @@ class LangChainRAGEngine:
         Yields:
             tuple: (token_str, is_last, sources, timing)
         """
+        trace = Trace(question, user_id=user_id)
         start_time = time.time()
         timing = {}
 
         try:
             # 1. 检索
+            trace.start_span("retrieval")
             retrieval_start = time.time()
             retriever = self._ensemble_retriever if self.use_hybrid and self._ensemble_retriever else self.vector_retriever
             docs = retriever.invoke(question)
             timing["retrieval_ms"] = round((time.time() - retrieval_start) * 1000, 2)
+            trace.end_span({"docs_count": len(docs)})
 
             # 2. 构建sources
             sources = []
@@ -250,12 +254,13 @@ class LangChainRAGEngine:
                 })
 
             # 3. 流式生成
+            trace.start_span("generation")
             generation_start = time.time()
             if not sources:
                 yield "知识库中未找到相关信息", True, sources, timing
+                trace.end_span({"status": "no_sources"})
                 return
 
-            # 使用LangChain的stream方法
             full_answer = ""
             for chunk in self.chain.stream(question):
                 if chunk:
@@ -264,12 +269,16 @@ class LangChainRAGEngine:
 
             timing["generation_ms"] = round((time.time() - generation_start) * 1000, 2)
             timing["total_ms"] = round((time.time() - start_time) * 1000, 2)
+            trace.end_span({"answer_length": len(full_answer)})
 
             yield "", True, sources, timing
 
         except Exception as e:
             logger.error("LangChain RAG流式查询失败: %s", e)
+            trace.status = "error"
             yield f"查询失败: {str(e)}", True, [], {"total_ms": round((time.time() - start_time) * 1000, 2)}
+        finally:
+            trace.finish()
 
     def add_documents(self, texts: list[str], metadatas: list[dict] | None = None):
         """添加文档到向量存储
