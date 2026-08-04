@@ -1,0 +1,1328 @@
+[
+  {
+    "id": "001",
+    "question": "什么是RAG？",
+    "expected_keywords": [
+      "检索",
+      "增强",
+      "生成"
+    ],
+    "expected_answer": "RAG是检索增强生成，通过检索相关文档，再让模型基于这些文档生成答案，解决大模型知识截止和幻觉问题。",
+    "source_files": [
+      "AI应用工程师完整知识手册.md",
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "002",
+    "question": "如何构建向量索引？",
+    "expected_keywords": [
+      "embedding",
+      "向量",
+      "索引"
+    ],
+    "expected_answer": "构建向量索引需要将文本通过Embedding模型转换为向量，然后存入向量数据库如ChromaDB。",
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "003",
+    "question": "ChromaDB向量数据库有什么特点？适合什么场景？",
+    "expected_keywords": [
+      "ChromaDB",
+      "最简单",
+      "纯Python",
+      "学习",
+      "小项目"
+    ],
+    "expected_answer": "ChromaDB是最简单的、纯Python的向量数据库，适合学习和小项目场景。",
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "004",
+    "question": "DeepSeek API如何调用？",
+    "expected_keywords": [
+      "API",
+      "调用"
+    ],
+    "expected_answer": "DeepSeek API兼容OpenAI格式，通过base_url和API Key进行调用。",
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "005",
+    "question": "在RAG系统中，文本是如何变成向量存入向量数据库的？",
+    "expected_keywords": [
+      "向量",
+      "embedding",
+      "向量数据库"
+    ],
+    "expected_answer": "文本通过Embedding模型转换为向量，然后存入向量数据库（如ChromaDB）用于检索。",
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "006",
+    "question": "Python为什么被称作AI领域的普通话？",
+    "expected_keywords": [
+      "Python",
+      "AI",
+      "语言"
+    ],
+    "expected_answer": "Python是AI领域的普通话，几乎所有大模型框架都支持Python。",
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming"
+  },
+  {
+    "id": "007",
+    "question": "什么是MCP协议？",
+    "expected_keywords": [
+      "MCP",
+      "插件",
+      "模型上下文"
+    ],
+    "expected_answer": "MCP（Model Context Protocol）是一个插件系统，让AI模型能调用外部服务的能力。",
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "008",
+    "question": "在RAG系统中，如何使用BM25检索器进行关键词检索？",
+    "expected_keywords": [
+      "BM25",
+      "关键词",
+      "检索"
+    ],
+    "expected_answer": "RAG系统中用BM25Retriever进行关键词检索，通过关键词匹配来召回相关文档。",
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "009",
+    "question": "什么是Prompt Engineering？",
+    "expected_keywords": [
+      "prompt",
+      "提示词",
+      "工程"
+    ],
+    "expected_answer": "Prompt Engineering是设计和优化提示词的技术，通过结构化提示词和少样本学习来提升大模型输出质量。",
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "010",
+    "question": "Docker的作用是什么？",
+    "expected_keywords": [
+      "Docker",
+      "容器",
+      "部署"
+    ],
+    "expected_answer": "Docker是一个容器化平台，用于打包应用及其依赖，实现跨环境一致部署。",
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "011",
+    "question": "产品运营的核心定义是什么？",
+    "expected_keywords": [
+      "产品运营",
+      "知道",
+      "使用",
+      "离不开"
+    ],
+    "expected_answer": "产品运营是让用户知道产品，让用户使用产品，让用户离不开产品。",
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "interview"
+  },
+  {
+    "id": "012",
+    "question": "产品运营中的用户运营主要负责什么？",
+    "expected_keywords": [
+      "用户运营",
+      "维护用户关系",
+      "提升活跃度"
+    ],
+    "expected_answer": "用户运营主要负责维护用户关系、提升活跃度，是核心工作。",
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "interview"
+  },
+  {
+    "id": "013",
+    "question": "运营和销售有什么区别？",
+    "expected_keywords": [
+      "运营",
+      "销售",
+      "活跃度",
+      "成交额"
+    ],
+    "expected_answer": "销售目标是卖出去，工作方式是主动找客户，考核指标是成交额；运营目标是让产品用得好，工作方式是维护已有客户，考核指标是活跃度、留存率、满意度。",
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "multi_doc",
+    "domain": "interview"
+  },
+  {
+    "id": "014",
+    "question": "RAG系统中如何优化检索质量？有哪些方法？",
+    "expected_keywords": [
+      "检索",
+      "优化",
+      "混合",
+      "重排序"
+    ],
+    "expected_answer": "RAG检索质量优化包括混合检索（向量+BM25）、ReRanker重排序、查询扩展、HyDE、检索缓存和阈值过滤等方法。",
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "015",
+    "question": "做一个AI应用工程师需要掌握哪些技能？按阶段应该怎么学？",
+    "expected_keywords": [
+      "Python",
+      "RAG",
+      "Agent",
+      "部署"
+    ],
+    "expected_answer": "AI应用工程师需要分阶段学习：先掌握Python基础和Web开发，再学RAG和Agent，最后掌握部署和优化。",
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "AI应用工程师完整知识手册.md",
+      "Python学习路线.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "016",
+    "question": "对比RAG和Fine-tuning两种方法的优缺点。",
+    "expected_keywords": [
+      "RAG",
+      "fine-tuning",
+      "检索",
+      "微调"
+    ],
+    "expected_answer": "RAG通过外部知识库检索来增强回答，成本低、易更新；Fine-tuning通过微调模型参数来适配领域，效果更深但成本高。",
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "017",
+    "question": "MCP和传统REST API有什么区别？各适合什么场景？",
+    "expected_keywords": [
+      "MCP",
+      "API",
+      "插件",
+      "REST"
+    ],
+    "expected_answer": "MCP是AI模型专用的插件协议，通过JSON-RPC通信；REST API是通用Web接口。MCP更适合AI工具调用，REST更适合前后端数据交互。",
+    "source_files": [
+      "MCP与API开发知识总结.md",
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "018",
+    "question": "Python中异步编程(async/await)对AI应用有什么帮助？",
+    "expected_keywords": [
+      "异步",
+      "async",
+      "并发",
+      "高并发"
+    ],
+    "expected_answer": "Python异步编程通过async/await实现非阻塞IO，适合处理高并发AI请求，如同时调用多个LLM API。",
+    "source_files": [
+      "Python学习路线.md",
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "multi_doc",
+    "domain": "programming"
+  },
+  {
+    "id": "019",
+    "question": "什么是Harness Engineering？它在Agent开发中起什么作用？",
+    "expected_keywords": [
+      "Harness",
+      "Agent",
+      "基础设施",
+      "状态管理"
+    ],
+    "expected_answer": "Harness Engineering是Agent除LLM之外的全部基础设施，包括状态管理、工具调用、记忆系统等12大模块。",
+    "source_files": [
+      "HarnessEngineering总结.md",
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "020",
+    "question": "向量数据库ChromaDB、Milvus、FAISS各有什么特点？怎么选择？",
+    "expected_keywords": [
+      "向量数据库",
+      "ChromaDB",
+      "Milvus",
+      "FAISS"
+    ],
+    "expected_answer": "ChromaDB适合开发和小规模；Milvus是生产级分布式方案；FAISS适合单机高性能场景。选择取决于数据规模和部署需求。",
+    "source_files": [
+      "AI应用工程师完整知识手册.md",
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "021",
+    "question": "Agent的规划推理能力是怎么实现的？有哪些框架？",
+    "expected_keywords": [
+      "Agent",
+      "规划",
+      "LangGraph",
+      "CrewAI"
+    ],
+    "expected_answer": "Agent通过将大任务拆解为小步骤实现规划推理，常用框架有LangGraph（复杂Agent）和CrewAI（上手快）。",
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "HarnessEngineering总结.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "022",
+    "question": "Python学习路线中第一阶段学什么？",
+    "expected_keywords": [
+      "Python",
+      "核心语法",
+      "基础"
+    ],
+    "expected_answer": "Python学习路线第一阶段是Python核心语法，重点是Python思维，包括变量、数据类型等基础语法。",
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming"
+  },
+  {
+    "id": "023",
+    "question": "MySQL中主键的作用是什么？",
+    "expected_keywords": [
+      "主键",
+      "Primary Key",
+      "唯一标识"
+    ],
+    "expected_answer": "主键（Primary Key）是唯一标识一行的字段。",
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming"
+  },
+  {
+    "id": "024",
+    "question": "量子计算的基本原理是什么？",
+    "expected_keywords": [
+      "量子",
+      "叠加",
+      "纠缠"
+    ],
+    "expected_answer": "知识库中没有关于量子计算的详细内容。",
+    "source_files": [],
+    "category": "out_of_scope",
+    "domain": "general"
+  },
+  {
+    "id": "025",
+    "question": "如何用Go语言开发微服务？",
+    "expected_keywords": [
+      "Go",
+      "微服务",
+      "gRPC"
+    ],
+    "expected_answer": "知识库中没有关于Go语言开发微服务的内容。",
+    "source_files": [],
+    "category": "out_of_scope",
+    "domain": "general"
+  },
+  {
+    "id": "026",
+    "question": "如何种植多肉植物？",
+    "expected_keywords": [
+      "多肉",
+      "种植"
+    ],
+    "expected_answer": "知识库中没有关于多肉植物种植的内容。",
+    "source_files": [],
+    "category": "out_of_scope",
+    "domain": "general"
+  },
+  {
+    "id": "027",
+    "question": "帮我总结一下相关的学习内容",
+    "expected_keywords": [
+      "总结",
+      "学习"
+    ],
+    "expected_answer": "知识库涵盖AI应用工程师学习路线、RAG技术、MCP协议、Python开发、产品运营等内容。",
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "Python学习路线.md"
+    ],
+    "category": "vague",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "028",
+    "question": "有没有什么推荐的入门方案？",
+    "expected_keywords": [
+      "入门",
+      "推荐",
+      "学习"
+    ],
+    "expected_answer": "推荐按学习路线图分阶段入门：先学Python基础和Web开发，再掌握RAG和Agent技术。",
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "Python学习路线.md"
+    ],
+    "category": "vague",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "029",
+    "question": "说说跟Agent相关的东西",
+    "expected_keywords": [
+      "Agent",
+      "LLM",
+      "工具"
+    ],
+    "expected_answer": "Agent相关知识包括：Harness Engineering的12大模块、LangGraph和CrewAI框架、记忆系统、规划推理等。",
+    "source_files": [
+      "HarnessEngineering总结.md",
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "vague",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "030",
+    "question": "怎么部署和上线？",
+    "expected_keywords": [
+      "部署",
+      "Docker",
+      "上线",
+      "容器"
+    ],
+    "expected_answer": "部署上线涉及Docker容器化、FastAPI服务部署、前端构建等流程。",
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "vague",
+    "domain": "ai_tech"
+  },
+  {
+    "id": "g0001",
+    "question": "AI应用工程师在AI落地中的定位是什么？",
+    "expected_answer": "AI应用工程师本质上是AI落地的'最后一公里'，负责把实验室里的模型变成用户可用的产品。核心能力是在强大基座模型基础上，不依赖顶级算法团队，能独立或小团队闭环交付AI应用。",
+    "expected_keywords": [
+      "AI应用工程师",
+      "最后一公里",
+      "闭环交付AI应用"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# AI应用工程师学习路线图\n\n> 来源：https://blog.51cto.com/u_39037/14584878\n\n## 定位\n\n\"AI应用工程师\"本质"
+  },
+  {
+    "id": "g0002",
+    "question": "第二阶段AI应用核心开发能力的目标是什么？",
+    "expected_answer": "第二阶段AI应用核心开发能力的目标是掌握RAG和Agent，能动手做出智能应用。",
+    "expected_keywords": [
+      "掌握RAG和Agent",
+      "动手做出智能应用"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### AI辅助编程\n- GitHub Copilot / Cursor\n\n---\n\n## 第二阶段：AI应用核心开发能力（2-3个月）\n\n**目标**：掌握R"
+  },
+  {
+    "id": "g0003",
+    "question": "在性能优化中，当模型超时或报错时，应该如何处理？",
+    "expected_answer": "在性能优化中，当模型超时或报错时，采用降级策略，即提供兜底回答。",
+    "expected_keywords": [
+      "降级策略",
+      "兜底回答",
+      "模型超时",
+      "报错"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 性能优化\n- 异步IO处理大并发\n- 降级策略：模型超时或报错时的兜底回答\n\n### 沉淀可复用资产\n- 封装工具、提示词模板、RAG流程为SDK或内部"
+  },
+  {
+    "id": "g0004",
+    "question": "为什么Python是AI领域的首选语言？",
+    "expected_answer": "Python是AI领域的'普通话'，几乎所有大模型框架（如LangChain、LlamaIndex、HuggingFace）都以Python为第一优先级。原因包括：生态丰富，AI/ML库几乎都先出Python版本；上手简单，语法接近伪代码，非科班也能快速产出；动态类型，开发速度快，适合快速原型验证。",
+    "expected_keywords": [
+      "普通话",
+      "生态丰富",
+      "上手简单",
+      "动态类型"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# AI应用工程师完整知识手册\n\n> 从零到一，覆盖AI应用工程师所需的全部技术栈。看不懂随时问。\n\n---\n\n# 第一部分：基础工程能力\n\n---\n\n## 1"
+  },
+  {
+    "id": "g0005",
+    "question": "在LangChain中，为什么需要对文档进行文本分割？",
+    "expected_answer": "因为大模型有上下文窗口限制，且检索太长的文档效果差，所以需要将文档切成合适大小的'块'（chunk）。",
+    "expected_keywords": [
+      "上下文窗口限制",
+      "检索效果差",
+      "块"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "docs = loader.load()\n```\n\n**Step 2: 文本分割**\n```python\nfrom langchain.text_splitte"
+  },
+  {
+    "id": "g0006",
+    "question": "同步和异步模式下，调用三次大模型 API（每次等待 2 秒）的总耗时分别是多少？",
+    "expected_answer": "同步模式下，三次请求串行执行，总耗时约 6 秒；异步模式下，三个请求同时等待，总耗时约 2 秒。",
+    "expected_keywords": [
+      "同步",
+      "6秒",
+      "异步",
+      "2秒"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 1.4 异步编程 async/await\n\n**为什么需要异步**：\n\n假设你要调用大模型 API，一次请求要等 2 秒。同步模式下：\n```\n请求1 "
+  },
+  {
+    "id": "g0007",
+    "question": "面试官问“为什么 Hermes 没有 OpenClaw 受欢迎”时，他真正想考察什么？",
+    "expected_answer": "面试官问这个问题，不是要你比较两个工具的Star数。他真正想问的是：你清不清楚自己的工具在行业里的定位？你有没有客观的自我认知？",
+    "expected_keywords": [
+      "定位",
+      "自我认知",
+      "不是比较Star数"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# 面试问题：为什么 Hermes 没有 OpenClaw 受欢迎？\n\n> 面试官问这个问题，不是要你比较两个工具的Star数。\n> 他真正想问的是：**你清不"
+  },
+  {
+    "id": "g0009",
+    "question": "面试官问'为什么选择OpenClaw而不是其他工具'时，应该怎么回答？",
+    "expected_answer": "面试官问这个问题，其实是想看你有没有'工具理性'。正确回答是客观分析原因，然后话锋一转——'但受欢迎不等于适合我的场景'。你能说出'它们共存'、'分工不同'、'看场景选工具'，就已经赢了大多数人了。",
+    "expected_keywords": [
+      "工具理性",
+      "客观分析",
+      "看场景选工具"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 五、对你的启示\n\n面试官问这个问题，其实是想看你有没有\"工具理性\"：\n- ❌ 错误回答：\"我也不知道为啥，可能OpenClaw更好用吧\"\n- ✅ 正确回答"
+  },
+  {
+    "id": "g0011",
+    "question": "Harness Engineering（驾驭工程）是什么？",
+    "expected_answer": "Harness Engineering（驾驭工程）是一种AI原生软件开发的未来范式。",
+    "expected_keywords": [
+      "Harness Engineering",
+      "驾驭工程",
+      "AI原生软件开发",
+      "未来范式"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# Harness Engineering（驾驭工程）总结\n\n> 来源：知乎《爆火的Harness Engineering》+ 什么值得买《万字讲透Agent "
+  },
+  {
+    "id": "g0012",
+    "question": "我已经在做一些工程相关的工作，但不知道是否属于Harness Engineering，如何判断自己是否已经入门？",
+    "expected_answer": "你已经在做Harness Engineering了，只是你不知道它叫这个名字。12大模块里你做了4个，了解了4个，还有4个需要补。补上就是完整体系。",
+    "expected_keywords": [
+      "Harness Engineering",
+      "12大模块",
+      "4个",
+      "补上",
+      "完整体系"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 和你的关系\n你已经在做Harness Engineering了，只是你不知道它叫这个名字。12大模块里你做了4个，了解了4个，还有4个需要补。补上就是完整"
+  },
+  {
+    "id": "g0013",
+    "question": "MCP 服务器可以暴露哪三种能力？",
+    "expected_answer": "MCP 服务器可以暴露三种能力：Tools（可调用的函数，最常用）、Resources（可读取的数据源）、Prompts（预定义的提示模板）。",
+    "expected_keywords": [
+      "Tools",
+      "Resources",
+      "Prompts"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# MCP 与 API 开发知识总结\n\n## 一、MCP (Model Context Protocol) 是什么\n\nMCP 是一个插件系统，让 Claude "
+  },
+  {
+    "id": "g0015",
+    "question": "在哪里可以找到可用的 API？",
+    "expected_answer": "可以通过聚合平台如 RapidAPI、API Hub，官方文档如 GitHub API、微信支付 API，以及国内平台如聚合数据、阿里云 API 市场、百度 API Store 来寻找 API。",
+    "expected_keywords": [
+      "RapidAPI",
+      "API Hub",
+      "官方文档",
+      "聚合数据",
+      "阿里云 API 市场"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 七、在哪里找 API\n\n- **聚合平台**：RapidAPI、API Hub — 海量 API 集市\n- **官方文档**：GitHub API、微信支"
+  },
+  {
+    "id": "g0016",
+    "question": "这份Python学习路线适合什么基础的学习者，预计需要多长时间？",
+    "expected_answer": "这份Python学习路线适合有Java基础的学习者，结合Agent开发和数据分析方向，预计总时长为2-3个月（每天2-3小时）。",
+    "expected_keywords": [
+      "Java基础",
+      "2-3个月",
+      "每天2-3小时"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "# Python 学习路线\n\n> 适合有 Java 基础的学习者，结合 Agent 开发和数据分析方向\n> 预计总时长：2-3 个月（每天 2-3 小时）\n\n-"
+  },
+  {
+    "id": "g0018",
+    "question": "学 Python 需要数学基础吗？",
+    "expected_answer": "基础开发不需要数学基础；数据分析需要基础统计知识；机器学习需要线性代数和概率论；AI开发则取决于具体做什么，如果只是调用API则不需要数学基础。",
+    "expected_keywords": [
+      "基础开发",
+      "数据分析",
+      "机器学习",
+      "AI开发",
+      "线性代数",
+      "概率论"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "### Q: 学 Python 需要数学基础吗？\n\n**A**:\n- **基础开发**：不需要\n- **数据分析**：基础统计知识\n- **机器学习**：线性代"
+  },
+  {
+    "id": "g0019",
+    "question": "知识库数据目录中应该放置哪些类型的文件？",
+    "expected_answer": "将你的文档（md/txt/docx/pdf/xlsx/图片）放在此目录下，然后运行 python build_index.py 构建索引。",
+    "expected_keywords": [
+      "md",
+      "txt",
+      "docx",
+      "pdf",
+      "xlsx",
+      "图片"
+    ],
+    "source_files": [
+      "README.md"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "# 知识库数据目录\n\n将你的文档（md/txt/docx/pdf/xlsx/图片）放在此目录下，然后运行 python build_index.py 构建索引。"
+  },
+  {
+    "id": "g0020",
+    "question": "知识库数据目录下应该放置哪些类型的文档？",
+    "expected_answer": "将你的文档（md/txt/docx/pdf/xlsx/图片）放在此目录下，然后运行 python build_index.py 构建索引。",
+    "expected_keywords": [
+      "md",
+      "txt",
+      "docx",
+      "pdf",
+      "xlsx",
+      "图片",
+      "build_index.py"
+    ],
+    "source_files": [
+      "README.md"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "# 知识库数据目录\n\n将你的文档（md/txt/docx/pdf/xlsx/图片）放在此目录下，然后运行 python build_index.py 构建索引。"
+  },
+  {
+    "id": "g0023",
+    "question": "有哪些关于Python数据分析的参考文献？",
+    "expected_answer": "根据知识库片段，关于Python数据分析的参考文献包括：王燕梅的《基于Python爬虫实现手机端数据的分析和可视化》、马合努尔·阿力木江等的《基于Python的语音情感分析系统设计与实现》、刘颖的《基于成果导向的高职院校Python数据分析课程项目化教学反思与优化研究》、王芳的《基于Python的电商网站用户行为数据可视化分析方法》、李慧敏等的《基于Python的内蒙古慢性病流行趋势及蒙药治疗效果数据分析》、陈春霞等的《基于Python的教学管理数据分析与可视化实践》、周梦丹等的《基于Python可视化我国工业企业产品产量分析研究》、李强等的《基于新工科的Python数据分析课程教学设计》、张俊丽等的《Python数据分析在新旧融合课程中的应用与教学模式创新》、张浩等的《基于Python的大数据专业人才招聘数据的抓取与分析》，以及李晓明和欧阳志的《Python程序设计课程中医学生》等。",
+    "expected_keywords": [
+      "Python数据分析",
+      "参考文献",
+      "可视化",
+      "爬虫",
+      "教学"
+    ],
+    "source_files": [
+      "11开题报告_更新版.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 查阅资料、文献目录 |\n| --- |\n| 1. 王燕梅. 基于Python爬虫实现手机端数据的分析和可视化[J]. 山东电子技术, 2026(01): 8"
+  },
+  {
+    "id": "g0027",
+    "question": "健康元药业集团选择质检异常识别作为AI落地场景的原因是什么？",
+    "expected_answer": "选择质检异常识别的原因是药品质量直接关系到患者安全，是药企最不能出问题的环节。目前产线上的质检主要靠人工目检，每人每天大概要看8000片，时间长了一疲劳就容易漏检。行业案例显示用AI做质检辅助，漏检率可以从1%~3%降到0.1%以下。而且健康元已经有DeepSeek-R1大模型在本地部署了，不需要额外买硬件，数据也不出内网，GMP合规上相对好处理。",
+    "expected_keywords": [
+      "药品质量",
+      "漏检率",
+      "DeepSeek-R1",
+      "本地部署",
+      "GMP合规"
+    ],
+    "source_files": [
+      "健康元AI落地方案_答案.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "健康元药业集团 AI 落地解决方案\n应聘岗位：AI应用负责人|2026年5月\n一、场景选择\n我选择以下两个业务场景，原因是我觉得AI在这两个点上能创造比较确定的"
+  },
+  {
+    "id": "g0028",
+    "question": "在简历筛选场景中，Dify 接入了哪些 API？",
+    "expected_answer": "Dify 接入的 API 包括：招聘系统 API（拉简历）、DeepSeek-R1 API（语义匹配评分）、飞书 API（推送筛选结果、创建日历邀约）。",
+    "expected_keywords": [
+      "招聘系统API",
+      "DeepSeek-R1API",
+      "飞书API"
+    ],
+    "source_files": [
+      "健康元AI落地方案_答案.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "场景二：简历筛选\n我们已有的工具：OpenClaw+DeepSeek-R1+Dify+莫斯。\n工作流：\n招聘系统收到新简历后，通过API把简历文本传给Dify。"
+  },
+  {
+    "id": "g0029",
+    "question": "在使用Dify搭建工作流时，哪些环节必须自己亲自完成？",
+    "expected_answer": "必须自己亲自完成的环节包括：跟质量部、HR沟通确认需求和排期；上线前整个链路自己手动跑一遍验证；生产环境的数据对接自己盯着做。",
+    "expected_keywords": [
+      "沟通确认需求和排期",
+      "手动跑一遍验证",
+      "数据对接自己盯着"
+    ],
+    "source_files": [
+      "健康元AI落地方案_答案.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "用Dify搭实际工作流：调DeepSeekAPI做缺陷识别、用飞书API推消息。Dify的可\n视化界面降低了门槛，跟着文档就能配。要写的脚本让DeepSeek-"
+  },
+  {
+    "id": "g0032",
+    "question": "这篇关于电子健康记录的可视化分析的综述文章的作者是谁？",
+    "expected_answer": "作者是Neda Rostamzadeh, Sheikh S.Abdullah和Kamran Sedig，他们来自加拿大伦敦的Western University的Insight Lab。",
+    "expected_keywords": [
+      "Neda Rostamzadeh",
+      "Sheikh S.Abdullah",
+      "Kamran Sedig",
+      "Insight Lab",
+      "Western University"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "Visual Analytics for Electronic Health Records: A Review\nNeda Rostamzadeh, Sheik"
+  },
+  {
+    "id": "g0033",
+    "question": "为什么研究导致相同结果的不同疾病进展轨迹很重要？",
+    "expected_answer": "研究这些不同的轨迹可以促进更个性化治疗方案的发展、生物标志物的发现以及不同风险评估指标的制定。",
+    "expected_keywords": [
+      "更个性化的治疗方案",
+      "生物标志物的发现",
+      "风险评估指标的制定"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "cardiovascular complications, kidney complications, or peripheral complications."
+  },
+  {
+    "id": "g0034",
+    "question": "这篇论文中关于机构审查委员会和知情同意的声明是什么？",
+    "expected_answer": "机构审查委员会声明：不适用。知情同意声明：不适用。",
+    "expected_keywords": [
+      "机构审查委员会",
+      "不适用",
+      "知情同意"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "机构审查委员会声明：不适用。\n知情同意声明：不适用。\n致谢：我们要感谢所有与我们分享其工具图像的作者和出版商。\n利益冲突：作者声明不存在利益冲突。"
+  },
+  {
+    "id": "g0038",
+    "question": "胡贞虎在AIDevPlatform项目中是如何解决LLM输出不稳定导致流水线卡死的问题的？",
+    "expected_answer": "胡贞虎设计了8种状态+12种事件+15条迁移规则的状态机引擎，将流程稳定性从不可用提升到可控可恢复。灵感来源于对ClaudeCode（47模块Rust源码）Worker状态机架构的逆向研究。",
+    "expected_keywords": [
+      "状态机引擎",
+      "8种状态",
+      "12种事件",
+      "15条迁移规则",
+      "可控可恢复"
+    ],
+    "source_files": [
+      "胡贞虎_AI应用简历.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "基本信息\n姓名：胡贞虎 求职意向：AI应用开发/AIAgent工程师\n民族：汉 年龄：24\n电话：15641698810 政治面貌：共青团员\n邮箱：156416"
+  },
+  {
+    "id": "g0039",
+    "question": "这个AI导购系统是如何实现实时价格数据的？",
+    "expected_answer": "通过京东实时爬虫实现京东搜索页面价格爬取，带5分钟缓存机制与备用估算价格降级策略，确保数据实时性与系统稳定性。",
+    "expected_keywords": [
+      "京东实时爬虫",
+      "5分钟缓存机制",
+      "备用估算价格降级策略"
+    ],
+    "source_files": [
+      "胡贞虎_AI应用简历.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "据用户预算、用途（游戏/办公/创意设计/软件开发）、便携性需求\n等参数，从产品库中筛选最优配置方案\n 京东实时爬虫：实现京东搜索页面价格爬取，带5分钟缓存机制"
+  },
+  {
+    "id": "g0043",
+    "question": "你在毕业设计中掌握了哪些技术？",
+    "expected_answer": "通过本项目，我系统掌握了Django+Vue.js前后端分离开发技术、机器学习在医疗健康领域的应用实践、数据可视化技术以及规范的软件工程开发流程。",
+    "expected_keywords": [
+      "Django+Vue.js",
+      "机器学习",
+      "数据可视化",
+      "软件工程"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成了毕业设计的全部收尾工作。回顾整个毕业设计过程，从最初的需求调研、文献查阅，到系统设计、代码开发，再到论文撰写、毕业答辩，每一个环节都让我收获颇丰。通过"
+  },
+  {
+    "id": "g0044",
+    "question": "产品运营的核心定义是什么？",
+    "expected_answer": "产品运营的核心定义是：让用户知道产品 → 让用户使用产品 → 让用户离不开产品。简单说就是，产品做出来了（开发的活），让产品有人用、用得好（运营的活）。",
+    "expected_keywords": [
+      "让用户知道产品",
+      "让用户使用产品",
+      "让用户离不开产品"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# 产品运营面试完全指南\n\n> 适用场景：零经验转行产品运营，面试准备用\n\n---\n\n## 一、产品运营是什么\n\n### 1.1 核心定义\n\n产品运营 = **"
+  },
+  {
+    "id": "g0046",
+    "question": "面试产品运营岗位时，一句话总结中提到的面试和入职的关键分别是什么？",
+    "expected_answer": "面试 = 态度诚恳 + 展示学习能力 + 表现出稳定；入职 = 细心 + 及时跟进 + 主动汇报。",
+    "expected_keywords": [
+      "态度诚恳",
+      "学习能力",
+      "表现出稳定",
+      "细心",
+      "及时跟进",
+      "主动汇报"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 八、一句话总结\n\n**面试 = 态度诚恳 + 展示学习能力 + 表现出稳定**\n\n**入职 = 细心 + 及时跟进 + 主动汇报**\n\n---\n\n*文档生"
+  },
+  {
+    "id": "g0047",
+    "question": "在Agent开发中，莫斯和OpenClaw分别扮演什么角色？",
+    "expected_answer": "莫斯是Agent编排与决策引擎，相当于总指挥；OpenClaw是Agent运行时与编码执行器，相当于一线干活的。",
+    "expected_keywords": [
+      "莫斯",
+      "OpenClaw",
+      "编排与决策引擎",
+      "运行时与编码执行器",
+      "总指挥",
+      "一线干活的"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# Agent开发面试必备 — 莫斯 vs OpenClaw 技术对比\n\n## 一句话定位\n> 莫斯 = Agent编排与决策引擎（总指挥）\n> OpenCla"
+  },
+  {
+    "id": "g0049",
+    "question": "如何通过话术体现我懂Agent架构？",
+    "expected_answer": "能对比莫斯和OpenClaw的技术设计差异。",
+    "expected_keywords": [
+      "莫斯",
+      "OpenClaw",
+      "技术设计差异"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 六、总结\n\n| 你要输出的人设 | 对应话术 |\n|--------------|---------|\n| 懂Agent架构 | 能对比莫斯和OpenCl"
+  },
+  {
+    "id": "g0053",
+    "question": "《中华人民共和国治安管理处罚法》是何时修订通过的？",
+    "expected_answer": "2025年6月27日第十四届全国人民代表大会常务委员会第十六次会议修订。",
+    "expected_keywords": [
+      "2025年6月27日",
+      "第十四届全国人民代表大会常务委员会第十六次会议",
+      "修订"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "中华人民共和国治安管理处罚法\n（2005 年 8 月 28 日第十届全国人民代表大会常务委员\n会第十七次会议通过 根据 2012 年 10 月 26 日第十一\n"
+  },
+  {
+    "id": "g0054",
+    "question": "非法安装、使用、提供窃听、窃照专用器材的，会受到什么处罚？",
+    "expected_answer": "非法安装、使用、提供窃听、窃照专用器材的，处五日以下拘留或者一千元以上三千元以下罚款；情节较重的，处五日以上十日以下拘留，并处三千元以上五千元以下罚款。",
+    "expected_keywords": [
+      "五日以下拘留",
+      "一千元以上三千元以下罚款",
+      "五日以上十日以下拘留",
+      "三千元以上五千元以下罚款"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "款。\n第七十条 非法安装、使用、提供窃听、窃照专用器材的，\n处五日以下拘留或者一千元以上三千元以下罚款；情节较重的，\n处五日以上十日以下拘留，并处三千元以上五千"
+  },
+  {
+    "id": "g0055",
+    "question": "海警机构在履行海上治安管理职责时，行使的职权依据是什么？",
+    "expected_answer": "海警机构履行海上治安管理职责，行使本法规定的公安机关的职权，但是法律另有规定的除外。",
+    "expected_keywords": [
+      "海警机构",
+      "海上治安管理职责",
+      "公安机关的职权",
+      "法律另有规定"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "第一百四十一条 其他法律中规定由公安机关给予行政拘\n留处罚的，其处罚程序适用本法规定。\n公安机关依照《中华人民共和国枪支管理法》、《民用爆炸物\n品安全管理条例》"
+  },
+  {
+    "id": "g0057",
+    "question": "本科毕业设计（论文）开题检查意见中，开题答辩意见的记录人和整改情况的签字人分别是谁？",
+    "expected_answer": "开题答辩意见的记录人签字处未填写具体姓名，整改情况的签字人是系主任。",
+    "expected_keywords": [
+      "记录人",
+      "系主任",
+      "签字"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "本科毕业设计（论文）开题检查意见\n1.开题答辩意见\n记录人签字：\n2026年3月12日\n2.整改情况\n系主任签字：\n2026年3月20日\n2"
+  },
+  {
+    "id": "g0060",
+    "question": "知识库片段中“学生工作情况记录”表格包含哪些字段？",
+    "expected_answer": "该表格包含“时间”、“地点”两个字段，且“学生工作情况记录”作为表格标题。",
+    "expected_keywords": [
+      "时间",
+      "地点",
+      "学生工作情况记录"
+    ],
+    "source_files": [
+      "叶  记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0067",
+    "question": "论文致谢中，作者感谢了哪些人？",
+    "expected_answer": "作者感谢了老师、同学、家人和朋友，以及所有为本文提供参考文献和资料的学者和研究人员。",
+    "expected_keywords": [
+      "老师",
+      "同学",
+      "家人",
+      "朋友",
+      "学者和研究人员"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "们的关心和理解让我能够全身心地投入其中。朋友们在\n我遇到困难时，总是耐心倾听并给予我精神上的支持，帮助我度过了许多艰难的时刻。\n最后，我要感谢所有为本文提供参考"
+  },
+  {
+    "id": "g0072",
+    "question": "在这次实习中，你发现历史数据存在什么问题，以及你是如何处理的？",
+    "expected_answer": "发现部分历史数据存在关键字段缺失的问题，这些字段是后续用户标签生成、画像构建的关键依据。我没有简单标记问题就结束工作，而是主动梳理了缺失数据的分布情况，统计了缺失率和影响范围，并带着分析报告与产品、运营团队沟通，同步数据问题细节和潜在风险，共同推进数据补全工作。",
+    "expected_keywords": [
+      "关键字段缺失",
+      "缺失率",
+      "影响范围",
+      "数据补全"
+    ],
+    "source_files": [
+      "中可博凡实习总结.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "这次实习的核心任务，是参与用户画像分析项目中的数据质量核查工作。看似简单的核查工作，却让我对“数据是大数据项目的基石”这句话有了深刻的体会。刚开始，我只是按照既"
+  },
+  {
+    "id": "g0073",
+    "question": "这次实习对你个人成长和职业规划有哪些具体影响？",
+    "expected_answer": "这次实习是从学生向职场人过渡的重要一步，不仅掌握了数据工程师岗位的基础工作技能，还养成了严谨负责的工作态度、主动沟通的协作意识和直面问题的抗压能力。同时，实习让作者对自己的专业和未来职业道路有了更清晰的认知，未来会带着收获和反思，在学习中打磨自己，弥补短板，努力成为优秀的大数据工程师。",
+    "expected_keywords": [
+      "数据工程师",
+      "职业规划",
+      "工作技能"
+    ],
+    "source_files": [
+      "中可博凡实习总结.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "这次实习，是我从学生向职场人过渡的重要一步。它不仅让我掌握了数据工程师岗位的基础工作技能，更让我养成了严谨负责的工作态度、主动沟通的协作意识和直面问题的抗压能力"
+  },
+  {
+    "id": "g0075",
+    "question": "在健康评估系统中，各项指标的权重是如何分配的？",
+    "expected_answer": "血压权重为0.25，血糖和BMI权重均为0.20，心率权重为0.15，胆固醇和睡眠质量权重均为0.10。",
+    "expected_keywords": [
+      "血压",
+      "0.25",
+      "血糖",
+      "0.20",
+      "BMI",
+      "心率",
+      "0.15",
+      "胆固醇",
+      "睡眠质量",
+      "0.10"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": " METRIC_WEIGHTS: Dict[str, float] = { 'blood_pressure': 0.25, 'blood_sugar': 0.2"
+  },
+  {
+    "id": "g0076",
+    "question": "使用孤立森林模型进行异常检测时，如何将预测标签转换为0和1的格式？",
+    "expected_answer": "将标签转换为0=正常，1=异常的格式，通过代码 anomalies = (labels == -1).astype(int) 实现。",
+    "expected_keywords": [
+      "标签转换",
+      "0=正常",
+      "1=异常",
+      "astype(int)"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "ion=contamination, random_state=random_state, n_jobs=-1 # 新增：启用多线程加速训练 ) # 拟合并预测"
+  },
+  {
+    "id": "g0078",
+    "question": "体检报告上传支持哪些文件格式？",
+    "expected_answer": "体检报告上传支持医院出具的体检报告文件，格式包括PDF、Word和图片格式。",
+    "expected_keywords": [
+      "PDF",
+      "Word",
+      "图片格式"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "体检报告上传：支持用户上传医院出具的体检报告文件（PDF、Word、图片格式），系统自动归档并与健康数据关联。"
+  },
+  {
+    "id": "g0091",
+    "question": "毕业设计收尾阶段具体完成了哪些文档和部署工作？",
+    "expected_answer": "完成了系统的维护文档编写，整理了系统部署手册和用户使用指南。将系统代码整理后上传至GitHub仓库，编写了项目README文档。整理了系统部署上线的相关文档，包括服务器配置、Nginx反向代理配置、MySQL数据库备份策略等。将毕业设计系统部署至稳定服务器，配置了生产环境参数。",
+    "expected_keywords": [
+      "维护文档",
+      "部署手册",
+      "用户使用指南",
+      "GitHub仓库",
+      "README文档",
+      "Nginx反向代理",
+      "MySQL数据库备份",
+      "生产环境参数"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成毕业设计的全部收尾工作。根据答辩委员会的意见，对系统进行了最后的优化调整。完成了系统的维护文档编写，整理了系统部署手册和用户使用指南。将系统代码整理后上"
+  },
+  {
+    "id": "g0097",
+    "question": "毕业论文顺利完成，作者感谢了哪些人？",
+    "expected_answer": "毕业论文顺利完成离不开各位老师、同学、家人和朋友的支持与帮助。",
+    "expected_keywords": [
+      "老师",
+      "同学",
+      "家人",
+      "朋友"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "总之，此次毕业论文顺利完成离不开各位老师、同学、家人和朋友的支持与帮助。在此，我再次向所有关心和帮助过我的人表示最诚挚的感谢！未来的道路上，我将继续努力，不断学"
+  },
+  {
+    "id": "g0100",
+    "question": "这份表格需要准备几份？分别存放在哪里？",
+    "expected_answer": "此表一式两份，一份装学生档案、一份与学生毕业设计资料一起存档。",
+    "expected_keywords": [
+      "一式两份",
+      "学生档案",
+      "毕业设计资料",
+      "存档"
+    ],
+    "source_files": [
+      "胡贞虎答辩意见表-学号-姓名.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "注：此表一式两份，一份装学生档案、一份与学生毕业设计资料一起存档"
+  },
+  {
+    "id": "g0103",
+    "question": "学生工作情况记录表中包含哪些字段？",
+    "expected_answer": "学生工作情况记录表中包含时间、地点和学生工作情况记录三个字段。",
+    "expected_keywords": [
+      "时间",
+      "地点",
+      "学生工作情况记录"
+    ],
+    "source_files": [
+      "记录本   8-1毕业设计（论文）学生记录本(1).docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 | 学生工作情况记录 | 学生工作情况记录 | 学"
+  },
+  {
+    "id": "g0104",
+    "question": "中华人民共和国刑法（2024版）是根据哪些修正案和决定修订的？",
+    "expected_answer": "根据1999年12月25日中华人民共和国刑法修正案，2001年8月31日中华人民共和国刑法修正案（二），2001年12月29日中华人民共和国刑法修正案（三），2002年12月28日中华人民共和国刑法修正案（四），2005年2月28日中华人民共和国刑法修正案（五），2006年6月29日中华人民共和国刑法修正案（六），2009年2月28日中华人民共和国刑法修正案（七），2009年8月27日《全国人民代表大会常务委员会关于修改部分法律的决定》，2011年2月25日中华人民共和国刑法修正案（八），2015年8月29日中华人民共和国刑法修正案（九），2017年11月4日中华人民共和国刑法修正案（十），2020年12月26日中华人民共和国刑法修正案(十一)，2023年12月29日中华人民共和国刑法修正案（十二）修正。",
+    "expected_keywords": [
+      "刑法修正案",
+      "修改部分法律的决定",
+      "修正"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n中华人民共和国刑法（2024 版）\n（1979年7月1日第五届全国人民代表大会第二次会议通过，1997年3月\n14 日第八届全国人民代表大"
+  },
+  {
+    "id": "g0105",
+    "question": "根据刑法第二百二十六条，强迫交易罪的构成要件中，哪些行为属于“以暴力、威胁手段”实施且情节严重的？",
+    "expected_answer": "根据刑法第二百二十六条，以暴力、威胁手段实施下列行为之一，情节严重的，构成强迫交易罪：（一）强买强卖商品的；（二）强迫他人提供或者接受服务的；（三）强迫他人参与或者退出投标、拍卖的；（四）强迫他人转让或者收购公司、企业的股份、债券或者其他资产的；（五）强迫他人参与或者退出特定的经营活动的。",
+    "expected_keywords": [
+      "强买强卖商品",
+      "强迫他人提供或接受服务",
+      "强迫参与或退出投标拍卖",
+      "强迫转让或收购股份债券",
+      "强迫参与或退出特定经营活动"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n（三）未经国家有关主管部门批准非法经营证券、期货、保险业务的，或者\n非法从事资金支付结算业务的；\n（四）其他严重扰乱市场秩序的非法经营行为"
+  },
+  {
+    "id": "g0106",
+    "question": "全国人民代表大会常务委员会制定的哪些补充规定和决定予以保留，其中有关行政处罚和行政措施的规定继续有效？",
+    "expected_answer": "予以保留的补充规定和决定包括：1. 关于禁毒的决定；2. 关于惩治走私、制作、贩卖、传播淫秽物品的犯罪分子的决定；3. 关于严惩拐卖、绑架妇女、儿童的犯罪分子的决定；4. 关于严禁卖淫嫖娼的决定；5. 关于惩治偷税、抗税犯罪的补充规定；6. 关于严惩组织、运送他人偷越国（边）境犯罪的补充规定；7. 关于惩治破坏金融秩序犯罪的决定；8. 关于惩治虚开、伪造和非法出售增值税专用发票犯罪的决定。其中，有关行政处罚和行政措施的规定继续有效。",
+    "expected_keywords": [
+      "予以保留",
+      "补充规定和决定",
+      "行政处罚和行政措施",
+      "继续有效"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n9．关于惩治盗掘古文化遗址古墓葬犯罪的补充规定\n10．关于惩治劫持航空器犯罪分子的决定\n11．关于惩治假冒注册商标犯罪的补充规定\n12．关"
+  },
+  {
+    "id": "g0108",
+    "question": "根据该知识库片段，伪造、变造、倒卖船票的，属于哪一条规定的行为？",
+    "expected_answer": "根据片段内容，伪造、变造、倒卖船票属于第五十二条第三项规定的行为，即“伪造、变造、倒卖车票、船票、航空客票、文艺演出票、体育比赛入场券或者其他有价票证、凭证的”。",
+    "expected_keywords": [
+      "第五十二条",
+      "第三项",
+      "船票",
+      "有价票证"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "关、人民团体、企业、事业单位或者其他组织的公文、证件、证明文件的；\n　　（三）伪造、变造、倒卖车票、船票、航空客票、文艺演出票、体育比赛入场券或者其他有价票证、"
+  },
+  {
+    "id": "g0109",
+    "question": "《中华人民共和国治安管理处罚法》中“以上、以下、以内”是否包括本数？",
+    "expected_answer": "包括本数。",
+    "expected_keywords": [
+      "以上",
+      "以下",
+      "以内",
+      "包括本数"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "第一百一十八条　本法所称以上、以下、以内，包括本数。\n　　第一百一十九条　本法自2006年3月1日起施行。1986年9月5日公布、1994年5月12日修订公布的"
+  }
+]

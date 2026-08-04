@@ -1,0 +1,233 @@
+[
+  {
+    "id": "g0001",
+    "question": "在异步编程中，为什么异步模式比同步模式更快？",
+    "expected_answer": "因为异步模式下，多个请求可以同时发起并等待，而不是像同步模式那样逐个等待完成。例如，同步模式需要6秒完成3个请求（每个请求2秒），而异步模式只需约2秒，因为请求1、请求2、请求3同时等待，全部完成总耗时约2秒。",
+    "expected_keywords": [
+      "异步模式",
+      "同时等待",
+      "总耗时约2秒"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 1.4 异步编程 async/await\n\n**为什么需要异步**：\n\n假设你要调用大模型 API，一次请求要等 2 秒。同步模式下：\n```\n请求1 "
+  },
+  {
+    "id": "g0002",
+    "question": "可控可恢复架构的灵感来源是什么？",
+    "expected_answer": "可控可恢复架构的灵感来源于对ClaudeCode（47模块Rust源码）Worker状态机架构的逆向研究。",
+    "expected_keywords": [
+      "ClaudeCode",
+      "47模块Rust源码",
+      "Worker状态机架构",
+      "逆向研究"
+    ],
+    "source_files": [
+      "胡贞虎_AI应用简历.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "可控可恢复。灵感来源于对ClaudeCode（47模块\nRust源码）Worker状态机架构的逆向研究\n 集体记忆架构（SharedBrain）：解决了6个A"
+  },
+  {
+    "id": "g0003",
+    "question": "面试官问“为什么 Hermes 没有 OpenClaw 受欢迎”时，他真正想考察什么？",
+    "expected_answer": "面试官问这个问题，不是要你比较两个工具的Star数。他真正想问的是：你清不清楚自己的工具在行业里的定位？你有没有客观的自我认知？",
+    "expected_keywords": [
+      "行业定位",
+      "客观自我认知",
+      "不是比较Star数"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# 面试问题：为什么 Hermes 没有 OpenClaw 受欢迎？\n\n> 面试官问这个问题，不是要你比较两个工具的Star数。\n> 他真正想问的是：**你清不"
+  },
+  {
+    "id": "g0004",
+    "question": "本科毕业设计（论文）开题检查意见中，开题答辩意见的记录人和整改情况的系主任签字日期分别是什么？",
+    "expected_answer": "开题答辩意见的记录人签字日期是2026年3月12日，整改情况的系主任签字日期是2026年3月20日。",
+    "expected_keywords": [
+      "2026年3月12日",
+      "2026年3月20日",
+      "记录人",
+      "系主任"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "本科毕业设计（论文）开题检查意见\n1.开题答辩意见\n记录人签字：\n2026年3月12日\n2.整改情况\n系主任签字：\n2026年3月20日\n2"
+  },
+  {
+    "id": "g0005",
+    "question": "normalize_value函数的输入参数有哪些？",
+    "expected_answer": "normalize_value函数的输入参数有dimension和value，其中dimension是字符串类型，value是浮点数类型。",
+    "expected_keywords": [
+      "dimension",
+      "value",
+      "字符串",
+      "浮点数"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def normalize_value(dimension: str, value: float) -> float:"
+  },
+  {
+    "id": "g0006",
+    "question": "在VA的聚类和关联任务中，有哪些可视化技术可以用来显示关系？",
+    "expected_answer": "散点图、平行坐标图、气泡图、条形图和热力图。",
+    "expected_keywords": [
+      "散点图",
+      "平行坐标图",
+      "气泡图",
+      "条形图",
+      "热力图"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "attributes. They are inherent to the\nclustering and association tasks within VA."
+  },
+  {
+    "id": "g0007",
+    "question": "当健康指标值低于正常范围时，健康评分是如何计算的？",
+    "expected_answer": "当指标值低于正常范围时，按偏离比例扣分，计算公式为：deviation = (min_val - value) / min_val * 100，然后返回 max(0.0, 100.0 - deviation)。",
+    "expected_keywords": [
+      "低于正常范围",
+      "偏离比例",
+      "deviation",
+      "max(0.0, 100.0 - deviation)"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": ".get('normal_range') # 更清晰的变量名 # 防御性处理：无正常范围配置时返回0分 if not normal_range: return "
+  },
+  {
+    "id": "g0008",
+    "question": "已满十四周岁不满十八周岁的人违反治安管理的，应当如何处罚？",
+    "expected_answer": "已满十四周岁不满十八周岁的人违反治安管理的，从轻或者减轻处罚。",
+    "expected_keywords": [
+      "已满十四周岁不满十八周岁",
+      "从轻或者减轻处罚"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "人的，登记造册，公开拍卖或者按照国家有关规定处理，所得款\n项上缴国库。\n第十二条 已满十四周岁不满十八周岁的人违反治安管理\n的，从轻或者减轻处罚；不满十四周岁的"
+  },
+  {
+    "id": "g0010",
+    "question": "这个表格的标题是什么？",
+    "expected_answer": "学生工作情况记录",
+    "expected_keywords": [
+      "学生工作情况记录"
+    ],
+    "source_files": [
+      "叶  记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0011",
+    "question": "同步模式和异步模式在处理多个 API 请求时的总耗时有什么区别？",
+    "expected_answer": "同步模式下，请求是串行执行的，每个请求等待 2 秒，3 个请求总耗时 6 秒；异步模式下，请求同时发起并等待，总耗时约 2 秒。",
+    "expected_keywords": [
+      "同步",
+      "异步",
+      "6秒",
+      "2秒",
+      "串行",
+      "同时"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 1.4 异步编程 async/await\n\n**为什么需要异步**：\n\n假设你要调用大模型 API，一次请求要等 2 秒。同步模式下：\n```\n请求1 "
+  },
+  {
+    "id": "g0013",
+    "question": "面试官问‘为什么 Hermes 没有 OpenClaw 受欢迎’时，他真正想考察什么？",
+    "expected_answer": "面试官问这个问题，不是要你比较两个工具的Star数。他真正想问的是：你清不清楚自己的工具在行业里的定位？你有没有客观的自我认知？",
+    "expected_keywords": [
+      "行业定位",
+      "客观的自我认知",
+      "不是比较Star数"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# 面试问题：为什么 Hermes 没有 OpenClaw 受欢迎？\n\n> 面试官问这个问题，不是要你比较两个工具的Star数。\n> 他真正想问的是：**你清不"
+  },
+  {
+    "id": "g0015",
+    "question": "normalize_value函数的参数dimension和value分别代表什么？",
+    "expected_answer": "normalize_value函数有两个参数：dimension是字符串类型，value是浮点数类型。",
+    "expected_keywords": [
+      "dimension",
+      "字符串",
+      "value",
+      "浮点数"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def normalize_value(dimension: str, value: float) -> float:"
+  },
+  {
+    "id": "g0016",
+    "question": "在VA的聚类和关联任务中，可以使用哪些可视化技术来显示关系？",
+    "expected_answer": "可以使用散点图、平行坐标图、气泡图、条形图和热图等可视化技术来显示关系。例如，Gotz等人使用散点图展示最频繁模式在阳性和阴性结果患者中的支持度分布。",
+    "expected_keywords": [
+      "散点图",
+      "平行坐标图",
+      "气泡图",
+      "条形图",
+      "热图"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "attributes. They are inherent to the\nclustering and association tasks within VA."
+  },
+  {
+    "id": "g0020",
+    "question": "知识库片段中表格的标题是什么？",
+    "expected_answer": "学生工作情况记录",
+    "expected_keywords": [
+      "学生工作情况记录"
+    ],
+    "source_files": [
+      "叶  记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  }
+]

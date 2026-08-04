@@ -3,9 +3,10 @@
     "id": "001",
     "question": "什么是RAG？",
     "expected_keywords": ["检索", "增强", "生成"],
-    "expected_answer": "RAG是检索增强生成（Retrieval-Augmented Generation），通过检索外部知识库来增强大模型的回答质量。",
-    "source_files": ["AI应用工程师学习路线图.md", "AI应用工程师完整知识手册.md"],
-    "category": "simple_fact"
+    "expected_answer": "RAG是检索增强生成，通过检索相关文档，再让模型基于这些文档生成答案，解决大模型知识截止和幻觉问题。",
+    "source_files": ["AI应用工程师完整知识手册.md", "AI应用工程师学习路线图.md"],
+    "category": "simple_fact",
+    "domain": "ai_tech"
   },
   {
     "id": "002",
@@ -13,15 +14,17 @@
     "expected_keywords": ["embedding", "向量", "索引"],
     "expected_answer": "构建向量索引需要将文本通过Embedding模型转换为向量，然后存入向量数据库如ChromaDB。",
     "source_files": ["AI应用工程师完整知识手册.md"],
-    "category": "simple_fact"
+    "category": "simple_fact",
+    "domain": "ai_tech"
   },
   {
     "id": "003",
-    "question": "ChromaDB是什么？",
-    "expected_keywords": ["向量", "数据库"],
-    "expected_answer": "ChromaDB是一个开源的向量数据库，用于存储和检索文本的向量表示，常用于RAG系统。",
+    "question": "ChromaDB向量数据库有什么特点？适合什么场景？",
+    "expected_keywords": ["ChromaDB", "最简单", "纯Python", "学习", "小项目"],
+    "expected_answer": "ChromaDB是最简单的、纯Python的向量数据库，适合学习和小项目场景。",
     "source_files": ["AI应用工程师完整知识手册.md"],
-    "category": "simple_fact"
+    "category": "simple_fact",
+    "domain": "ai_tech"
   },
   {
     "id": "004",
@@ -29,23 +32,26 @@
     "expected_keywords": ["API", "调用"],
     "expected_answer": "DeepSeek API兼容OpenAI格式，通过base_url和API Key进行调用。",
     "source_files": ["AI应用工程师完整知识手册.md"],
-    "category": "simple_fact"
+    "category": "simple_fact",
+    "domain": "ai_tech"
   },
   {
     "id": "005",
-    "question": "什么是Embedding？",
-    "expected_keywords": ["向量化", "文本", "向量"],
-    "expected_answer": "Embedding是将文本转换为数值向量的过程，使计算机能理解文本的语义相似度。",
-    "source_files": ["AI应用工程师学习路线图.md", "AI应用工程师完整知识手册.md"],
-    "category": "simple_fact"
+    "question": "在RAG系统中，文本是如何变成向量存入向量数据库的？",
+    "expected_keywords": ["向量", "embedding", "向量数据库"],
+    "expected_answer": "文本通过Embedding模型转换为向量，然后存入向量数据库（如ChromaDB）用于检索。",
+    "source_files": ["AI应用工程师完整知识手册.md"],
+    "category": "simple_fact",
+    "domain": "ai_tech"
   },
   {
     "id": "006",
-    "question": "FastAPI有哪些特点？",
-    "expected_keywords": ["FastAPI", "异步", "性能"],
-    "expected_answer": "FastAPI是一个现代Python Web框架，支持异步编程，性能接近Node.js和Go，自带API文档生成。",
-    "source_files": ["AI应用工程师学习路线图.md", "Python学习路线.md"],
-    "category": "simple_fact"
+    "question": "Python为什么被称作AI领域的普通话？",
+    "expected_keywords": ["Python", "AI", "语言"],
+    "expected_answer": "Python是AI领域的普通话，几乎所有大模型框架都支持Python。",
+    "source_files": ["AI应用工程师完整知识手册.md"],
+    "category": "simple_fact",
+    "domain": "programming"
   },
   {
     "id": "007",
@@ -53,15 +59,17 @@
     "expected_keywords": ["MCP", "插件", "模型上下文"],
     "expected_answer": "MCP（Model Context Protocol）是一个插件系统，让AI模型能调用外部服务的能力。",
     "source_files": ["MCP与API开发知识总结.md"],
-    "category": "simple_fact"
+    "category": "simple_fact",
+    "domain": "ai_tech"
   },
   {
     "id": "008",
-    "question": "BM25检索算法的原理是什么？",
-    "expected_keywords": ["BM25", "关键词", "TF-IDF"],
-    "expected_answer": "BM25是一种基于词频和逆文档频率的经典检索算法，通过关键词匹配来排序文档。",
+    "question": "在RAG系统中，如何使用BM25检索器进行关键词检索？",
+    "expected_keywords": ["BM25", "关键词", "检索"],
+    "expected_answer": "RAG系统中用BM25Retriever进行关键词检索，通过关键词匹配来召回相关文档。",
     "source_files": ["AI应用工程师完整知识手册.md"],
-    "category": "simple_fact"
+    "category": "simple_fact",
+    "domain": "ai_tech"
   },
   {
     "id": "009",
@@ -69,7 +77,8 @@
     "expected_keywords": ["prompt", "提示词", "工程"],
     "expected_answer": "Prompt Engineering是设计和优化提示词的技术，通过结构化提示词和少样本学习来提升大模型输出质量。",
     "source_files": ["AI应用工程师学习路线图.md", "AI应用工程师完整知识手册.md"],
-    "category": "simple_fact"
+    "category": "simple_fact",
+    "domain": "ai_tech"
   },
   {
     "id": "010",
@@ -77,143 +86,161 @@
     "expected_keywords": ["Docker", "容器", "部署"],
     "expected_answer": "Docker是一个容器化平台，用于打包应用及其依赖，实现跨环境一致部署。",
     "source_files": ["AI应用工程师学习路线图.md"],
-    "category": "simple_fact"
+    "category": "simple_fact",
+    "domain": "ai_tech"
   },
   {
     "id": "011",
+    "question": "产品运营的核心定义是什么？",
+    "expected_keywords": ["产品运营", "知道", "使用", "离不开"],
+    "expected_answer": "产品运营是让用户知道产品，让用户使用产品，让用户离不开产品。",
+    "source_files": ["面试产品运营知识点.md"],
+    "category": "simple_fact",
+    "domain": "interview"
+  },
+  {
+    "id": "012",
+    "question": "产品运营中的用户运营主要负责什么？",
+    "expected_keywords": ["用户运营", "维护用户关系", "提升活跃度"],
+    "expected_answer": "用户运营主要负责维护用户关系、提升活跃度，是核心工作。",
+    "source_files": ["面试产品运营知识点.md"],
+    "category": "simple_fact",
+    "domain": "interview"
+  },
+  {
+    "id": "013",
+    "question": "运营和销售有什么区别？",
+    "expected_keywords": ["运营", "销售", "活跃度", "成交额"],
+    "expected_answer": "销售目标是卖出去，工作方式是主动找客户，考核指标是成交额；运营目标是让产品用得好，工作方式是维护已有客户，考核指标是活跃度、留存率、满意度。",
+    "source_files": ["面试产品运营知识点.md"],
+    "category": "multi_doc",
+    "domain": "interview"
+  },
+  {
+    "id": "014",
     "question": "RAG系统中如何优化检索质量？有哪些方法？",
     "expected_keywords": ["检索", "优化", "混合", "重排序"],
     "expected_answer": "RAG检索质量优化包括混合检索（向量+BM25）、ReRanker重排序、查询扩展、HyDE、检索缓存和阈值过滤等方法。",
     "source_files": ["AI应用工程师学习路线图.md", "AI应用工程师完整知识手册.md"],
-    "category": "multi_doc"
+    "category": "multi_doc",
+    "domain": "ai_tech"
   },
   {
-    "id": "012",
+    "id": "015",
     "question": "做一个AI应用工程师需要掌握哪些技能？按阶段应该怎么学？",
     "expected_keywords": ["Python", "RAG", "Agent", "部署"],
     "expected_answer": "AI应用工程师需要分阶段学习：先掌握Python基础和Web开发，再学RAG和Agent，最后掌握部署和优化。",
     "source_files": ["AI应用工程师学习路线图.md", "AI应用工程师完整知识手册.md", "Python学习路线.md"],
-    "category": "multi_doc"
+    "category": "multi_doc",
+    "domain": "ai_tech"
   },
   {
-    "id": "013",
+    "id": "016",
     "question": "对比RAG和Fine-tuning两种方法的优缺点。",
     "expected_keywords": ["RAG", "fine-tuning", "检索", "微调"],
     "expected_answer": "RAG通过外部知识库检索来增强回答，成本低、易更新；Fine-tuning通过微调模型参数来适配领域，效果更深但成本高。",
     "source_files": ["AI应用工程师学习路线图.md", "AI应用工程师完整知识手册.md"],
-    "category": "multi_doc"
+    "category": "multi_doc",
+    "domain": "ai_tech"
   },
   {
-    "id": "014",
+    "id": "017",
     "question": "MCP和传统REST API有什么区别？各适合什么场景？",
     "expected_keywords": ["MCP", "API", "插件", "REST"],
     "expected_answer": "MCP是AI模型专用的插件协议，通过JSON-RPC通信；REST API是通用Web接口。MCP更适合AI工具调用，REST更适合前后端数据交互。",
     "source_files": ["MCP与API开发知识总结.md", "AI应用工程师完整知识手册.md"],
-    "category": "multi_doc"
+    "category": "multi_doc",
+    "domain": "ai_tech"
   },
   {
-    "id": "015",
+    "id": "018",
     "question": "Python中异步编程(async/await)对AI应用有什么帮助？",
     "expected_keywords": ["异步", "async", "并发", "高并发"],
     "expected_answer": "Python异步编程通过async/await实现非阻塞IO，适合处理高并发AI请求，如同时调用多个LLM API。",
     "source_files": ["Python学习路线.md", "AI应用工程师学习路线图.md"],
-    "category": "multi_doc"
+    "category": "multi_doc",
+    "domain": "programming"
   },
   {
-    "id": "016",
+    "id": "019",
     "question": "什么是Harness Engineering？它在Agent开发中起什么作用？",
     "expected_keywords": ["Harness", "Agent", "基础设施", "状态管理"],
     "expected_answer": "Harness Engineering是Agent除LLM之外的全部基础设施，包括状态管理、工具调用、记忆系统等12大模块。",
     "source_files": ["HarnessEngineering总结.md", "AI应用工程师学习路线图.md"],
-    "category": "multi_doc"
+    "category": "multi_doc",
+    "domain": "ai_tech"
   },
   {
-    "id": "017",
+    "id": "020",
     "question": "向量数据库ChromaDB、Milvus、FAISS各有什么特点？怎么选择？",
     "expected_keywords": ["向量数据库", "ChromaDB", "Milvus", "FAISS"],
     "expected_answer": "ChromaDB适合开发和小规模；Milvus是生产级分布式方案；FAISS适合单机高性能场景。选择取决于数据规模和部署需求。",
     "source_files": ["AI应用工程师完整知识手册.md", "AI应用工程师学习路线图.md"],
-    "category": "multi_doc"
+    "category": "multi_doc",
+    "domain": "ai_tech"
   },
   {
-    "id": "018",
+    "id": "021",
     "question": "Agent的规划推理能力是怎么实现的？有哪些框架？",
     "expected_keywords": ["Agent", "规划", "LangGraph", "CrewAI"],
     "expected_answer": "Agent通过将大任务拆解为小步骤实现规划推理，常用框架有LangGraph（复杂Agent）和CrewAI（上手快）。",
     "source_files": ["AI应用工程师学习路线图.md", "HarnessEngineering总结.md"],
-    "category": "multi_doc"
+    "category": "multi_doc",
+    "domain": "ai_tech"
   },
   {
-    "id": "019",
-    "question": "如何用Python实现RAG系统的文档处理流程？",
-    "expected_keywords": ["文档", "加载", "切片", "Embedding"],
-    "expected_answer": "文档处理流程包括：文档加载（支持多种格式）-> 文本切片（按标题/字数）-> 向量化（Embedding）-> 存入向量数据库。",
-    "source_files": ["AI应用工程师完整知识手册.md", "Python实战项目-AI开发助手"],
-    "category": "multi_doc"
+    "id": "022",
+    "question": "Python学习路线中第一阶段学什么？",
+    "expected_keywords": ["Python", "核心语法", "基础"],
+    "expected_answer": "Python学习路线第一阶段是Python核心语法，重点是Python思维，包括变量、数据类型等基础语法。",
+    "source_files": ["Python学习路线.md"],
+    "category": "simple_fact",
+    "domain": "programming"
   },
   {
-    "id": "020",
-    "question": "Agent的记忆系统有哪些类型？如何设计短期和长期记忆？",
-    "expected_keywords": ["记忆", "短期", "长期", "上下文"],
-    "expected_answer": "Agent记忆分短期记忆（对话上下文、有限Token窗口）和长期记忆（用户画像、向量数据库存储），通过上下文管理优化有限窗口的信息优先级。",
-    "source_files": ["HarnessEngineering总结.md", "AI应用工程师学习路线图.md"],
-    "category": "multi_doc"
+    "id": "023",
+    "question": "MySQL中主键的作用是什么？",
+    "expected_keywords": ["主键", "Primary Key", "唯一标识"],
+    "expected_answer": "主键（Primary Key）是唯一标识一行的字段。",
+    "source_files": ["AI应用工程师完整知识手册.md"],
+    "category": "simple_fact",
+    "domain": "programming"
   },
   {
-    "id": "021",
+    "id": "024",
     "question": "量子计算的基本原理是什么？",
     "expected_keywords": ["量子", "叠加", "纠缠"],
     "expected_answer": "知识库中没有关于量子计算的详细内容。",
     "source_files": [],
-    "category": "out_of_scope"
+    "category": "out_of_scope",
+    "domain": "general"
   },
   {
-    "id": "022",
+    "id": "025",
     "question": "如何用Go语言开发微服务？",
     "expected_keywords": ["Go", "微服务", "gRPC"],
     "expected_answer": "知识库中没有关于Go语言开发微服务的内容。",
     "source_files": [],
-    "category": "out_of_scope"
-  },
-  {
-    "id": "023",
-    "question": "MySQL数据库的索引优化策略有哪些？",
-    "expected_keywords": ["MySQL", "索引", "B+树"],
-    "expected_answer": "知识库中没有关于MySQL索引优化的详细内容。",
-    "source_files": [],
-    "category": "out_of_scope"
-  },
-  {
-    "id": "024",
-    "question": "React和Vue前端框架的对比分析。",
-    "expected_keywords": ["React", "Vue", "前端"],
-    "expected_answer": "知识库中没有关于React和Vue对比分析的内容。",
-    "source_files": [],
-    "category": "out_of_scope"
-  },
-  {
-    "id": "025",
-    "question": "Linux内核的进程调度算法是怎样的？",
-    "expected_keywords": ["Linux", "进程", "调度"],
-    "expected_answer": "知识库中没有关于Linux内核进程调度的内容。",
-    "source_files": [],
-    "category": "out_of_scope"
+    "category": "out_of_scope",
+    "domain": "general"
   },
   {
     "id": "026",
-    "question": "帮我总结一下相关的学习内容",
-    "expected_keywords": ["总结", "学习"],
-    "expected_answer": "知识库涵盖AI应用工程师学习路线、RAG技术、MCP协议、Python开发、Harness Engineering等内容。",
-    "source_files": ["AI应用工程师学习路线图.md", "Python学习路线.md"],
-    "category": "vague"
+    "question": "如何种植多肉植物？",
+    "expected_keywords": ["多肉", "种植"],
+    "expected_answer": "知识库中没有关于多肉植物种植的内容。",
+    "source_files": [],
+    "category": "out_of_scope",
+    "domain": "general"
   },
   {
     "id": "027",
-    "question": "这些东西有什么用？",
-    "expected_keywords": ["应用", "开发", "AI"],
-    "expected_answer": "知识库中的内容主要涵盖AI应用开发的技术栈，包括RAG、Agent、Python、MCP等，帮助开发者构建AI应用。",
-    "source_files": ["AI应用工程师完整知识手册.md"],
-    "category": "vague"
+    "question": "帮我总结一下相关的学习内容",
+    "expected_keywords": ["总结", "学习"],
+    "expected_answer": "知识库涵盖AI应用工程师学习路线、RAG技术、MCP协议、Python开发、产品运营等内容。",
+    "source_files": ["AI应用工程师学习路线图.md", "Python学习路线.md"],
+    "category": "vague",
+    "domain": "ai_tech"
   },
   {
     "id": "028",
@@ -221,7 +248,8 @@
     "expected_keywords": ["入门", "推荐", "学习"],
     "expected_answer": "推荐按学习路线图分阶段入门：先学Python基础和Web开发，再掌握RAG和Agent技术。",
     "source_files": ["AI应用工程师学习路线图.md", "Python学习路线.md"],
-    "category": "vague"
+    "category": "vague",
+    "domain": "ai_tech"
   },
   {
     "id": "029",
@@ -229,7 +257,8 @@
     "expected_keywords": ["Agent", "LLM", "工具"],
     "expected_answer": "Agent相关知识包括：Harness Engineering的12大模块、LangGraph和CrewAI框架、记忆系统、规划推理等。",
     "source_files": ["HarnessEngineering总结.md", "AI应用工程师学习路线图.md"],
-    "category": "vague"
+    "category": "vague",
+    "domain": "ai_tech"
   },
   {
     "id": "030",
@@ -237,6 +266,7 @@
     "expected_keywords": ["部署", "Docker", "上线", "容器"],
     "expected_answer": "部署上线涉及Docker容器化、FastAPI服务部署、前端构建等流程。",
     "source_files": ["AI应用工程师学习路线图.md", "AI应用工程师完整知识手册.md"],
-    "category": "vague"
+    "category": "vague",
+    "domain": "ai_tech"
   }
 ]

@@ -1,0 +1,5717 @@
+[
+  {
+    "id": "g0001",
+    "question": "在工程落地与系统迭代阶段，如何构建观测与评估体系？",
+    "expected_answer": "构建观测与评估体系包括：全链路追踪，使用LangSmith等工具记录调用输入/输出/耗时/Token消耗；效果评测，建立自动化AI效果评估机制。",
+    "expected_keywords": [
+      "全链路追踪",
+      "LangSmith",
+      "效果评测",
+      "自动化AI效果评估"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 微调入门（加分项）\n- LoRA等轻量级微调技术\n\n---\n\n## 第三阶段：工程落地与系统迭代（持续进行）\n\n**目标**：让AI系统稳定、可靠，达到"
+  },
+  {
+    "id": "g0002",
+    "question": "AI应用工程师的定位是什么？",
+    "expected_answer": "AI应用工程师本质上是AI落地的'最后一公里'，负责把实验室里的模型变成用户可用的产品。核心能力是在强大基座模型基础上，不依赖顶级算法团队，能独立或小团队闭环交付AI应用。",
+    "expected_keywords": [
+      "最后一公里",
+      "实验室模型",
+      "用户可用产品",
+      "核心能力",
+      "闭环交付"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# AI应用工程师学习路线图\n\n> 来源：https://blog.51cto.com/u_39037/14584878\n\n## 定位\n\n\"AI应用工程师\"本质"
+  },
+  {
+    "id": "g0003",
+    "question": "在性能优化方面，当模型超时或报错时，系统应该如何处理？",
+    "expected_answer": "采用降级策略，提供兜底回答。",
+    "expected_keywords": [
+      "降级策略",
+      "兜底回答"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 性能优化\n- 异步IO处理大并发\n- 降级策略：模型超时或报错时的兜底回答\n\n### 沉淀可复用资产\n- 封装工具、提示词模板、RAG流程为SDK或内部"
+  },
+  {
+    "id": "g0004",
+    "question": "在部署与容器化方面，需要掌握哪些具体技能？",
+    "expected_answer": "需要掌握Docker，包括Dockerfile和Docker Compose的使用；以及Linux基础，包括常用命令、文件权限和进程查看。",
+    "expected_keywords": [
+      "Docker",
+      "Dockerfile",
+      "Docker Compose",
+      "Linux基础",
+      "常用命令",
+      "文件权限",
+      "进程查看"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 数据库与缓存\n- MySQL：CRUD、索引优化\n- Redis：字符串、列表、哈希等数据结构，缓存和简单消息队列\n- 向量数据库：Milvus或Qdr"
+  },
+  {
+    "id": "g0005",
+    "question": "RAG（检索增强生成）的完整流程是什么？",
+    "expected_answer": "RAG的完整流程是：文档加载 → 文本分割 → 向量化（Embedding）→ 检索 → 召回后排序 → 生成答案。其中，优化检索质量是业务效果的瓶颈。",
+    "expected_keywords": [
+      "文档加载",
+      "文本分割",
+      "向量化",
+      "检索",
+      "召回后排序",
+      "生成答案"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### RAG（检索增强生成）— 核心技能\n完整流程：文档加载 → 文本分割 → 向量化（Embedding）→ 检索 → 召回后排序 → 生成答案\n- 重点："
+  },
+  {
+    "id": "g0006",
+    "question": "第二阶段AI应用核心开发能力的学习目标是什么？",
+    "expected_answer": "第二阶段AI应用核心开发能力的学习目标是掌握RAG和Agent，能动手做出智能应用。",
+    "expected_keywords": [
+      "掌握RAG和Agent",
+      "动手做出智能应用"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### AI辅助编程\n- GitHub Copilot / Cursor\n\n---\n\n## 第二阶段：AI应用核心开发能力（2-3个月）\n\n**目标**：掌握R"
+  },
+  {
+    "id": "g0007",
+    "question": "第一阶段基础工程能力的目标是什么？",
+    "expected_answer": "第一阶段基础工程能力的目标是能独立开发Web服务，能接手常规后端需求。",
+    "expected_keywords": [
+      "独立开发Web服务",
+      "接手常规后端需求"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 第一阶段：基础工程能力（1-2个月）\n\n**目标**：能独立开发Web服务，能接手常规后端需求。\n\n### 核心语言 Python\n- FastAPI/F"
+  },
+  {
+    "id": "g0008",
+    "question": "在数据库查询中，什么时候应该给字段加索引？",
+    "expected_answer": "当WHERE条件经常用到的字段、JOIN关联的字段、ORDER BY排序的字段时应该加索引，但不要加太多索引，因为会减慢写入速度。",
+    "expected_keywords": [
+      "WHERE条件经常用到",
+      "JOIN关联",
+      "ORDER BY排序",
+      "不要加太多索引",
+      "减慢写入速度"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": ".com';\n\n-- 加索引：B+树查找（快）\nCREATE INDEX idx_email ON users(email);\nSELECT * FROM us"
+  },
+  {
+    "id": "g0009",
+    "question": "在异步编程中，为什么异步模式比同步模式更快？",
+    "expected_answer": "因为异步模式下，多个请求可以同时发出并等待，总耗时约为单个请求的耗时（约2秒），而同步模式需要串行等待，总耗时为所有请求耗时之和（6秒）。",
+    "expected_keywords": [
+      "异步",
+      "同步",
+      "同时等待",
+      "总耗时"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 1.4 异步编程 async/await\n\n**为什么需要异步**：\n\n假设你要调用大模型 API，一次请求要等 2 秒。同步模式下：\n```\n请求1 "
+  },
+  {
+    "id": "g0010",
+    "question": "当 GPT-4 调用超时或触发限流时，系统会如何处理？",
+    "expected_answer": "当 GPT-4 调用超时或触发限流时，系统会降级到 GPT-3.5 进行调用；如果 GPT-3.5 也失败，则返回兜底回答“抱歉，AI 服务暂时不可用，请稍后再试。”",
+    "expected_keywords": [
+      "降级到 GPT-3.5",
+      "超时",
+      "限流",
+      "兜底回答"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 10.2 降级策略\n\n```python\nasync def call_model_with_fallback(prompt: str) -> str:"
+  },
+  {
+    "id": "g0011",
+    "question": "如何使用 PyMySQL 连接 MySQL 数据库？",
+    "expected_answer": "使用 PyMySQL 连接 MySQL 数据库时，需要先安装 pymysql（pip install pymysql），然后导入 pymysql，并调用 pymysql.connect() 方法，传入 host、user、password、database 和 charset 参数，例如：conn = pymysql.connect(host='localhost', user='root', password='your_password', database='myapp', charset='utf8mb4')。",
+    "expected_keywords": [
+      "pymysql.connect",
+      "host",
+      "user",
+      "password",
+      "database",
+      "charset"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "n@example.com');\n\n-- 查询\nSELECT * FROM users WHERE name = '张三';\nSELECT * FROM use"
+  },
+  {
+    "id": "g0012",
+    "question": "evaluate_answer 函数的作用是什么？",
+    "expected_answer": "evaluate_answer 函数用于评估回答，它接收 answer 和 question 两个参数，调用 rag.evaluate_answer 方法，并返回包含反馈信息的字典。",
+    "expected_keywords": [
+      "评估回答",
+      "answer",
+      "question",
+      "rag.evaluate_answer",
+      "反馈"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "evaluate_answer(answer: str, question: str):\n    \"\"\"评估回答\"\"\"\n    feedback = rag.e"
+  },
+  {
+    "id": "g0013",
+    "question": "在AgentState中，respond_node节点是如何处理最终答案的？",
+    "expected_answer": "respond_node节点会生成最终答案，并将内容为“最终答案”的AIMessage追加到state的messages列表中。",
+    "expected_keywords": [
+      "respond_node",
+      "最终答案",
+      "AIMessage",
+      "messages"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "   state[\"messages\"].append(AIMessage(content=search_result))\n    return state\n\n"
+  },
+  {
+    "id": "g0014",
+    "question": "在FastAPI中，如何定义一个接收JSON请求体的POST接口，并指定响应模型？",
+    "expected_answer": "使用@app.post(\"/chat\", response_model=ChatResponse)装饰器，并定义ChatRequest和ChatResponse两个BaseModel子类，其中ChatRequest包含message字段和默认值为\"gpt-4\"的model字段，ChatResponse包含reply和tokens_used字段。接口函数参数为request: ChatRequest，返回ChatResponse对象。",
+    "expected_keywords": [
+      "@app.post",
+      "response_model",
+      "ChatRequest",
+      "ChatResponse"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "\napp = FastAPI()\n\n# 定义数据模型（请求体）\nclass ChatRequest(BaseModel):\n    message: str\n "
+  },
+  {
+    "id": "g0015",
+    "question": "如何安装FastAPI并创建一个最简单的API？",
+    "expected_answer": "安装FastAPI使用pip install fastapi uvicorn。创建一个最简单的API，需要在main.py中导入FastAPI，创建app实例，使用@app.get(\"/\")定义根路径的GET请求处理函数，返回一个字典，如{\"message\": \"Hello, AI World!\"}。然后运行uvicorn main:app --reload，访问http://localhost:8000，自动文档在http://localhost:8000/docs。",
+    "expected_keywords": [
+      "pip install fastapi uvicorn",
+      "FastAPI()",
+      "@app.get(\"/\")",
+      "uvicorn main:app --reload",
+      "http://localhost:8000/docs"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 1.3 FastAPI 框架\n\nFastAPI 是当前最流行的 Python Web 框架之一，专为 API 开发设计。\n\n**安装**：\n```bas"
+  },
+  {
+    "id": "g0016",
+    "question": "OpenClaw和Hermes在定位清晰度上有何不同？",
+    "expected_answer": "OpenClaw定位非常清楚，是编码执行Agent，写代码、跑测试、调Bug；而Hermes定位更复杂，是总指挥、编排调度、质量审查，概念上比OpenClaw更重，理解门槛更高。",
+    "expected_keywords": [
+      "OpenClaw",
+      "编码执行Agent",
+      "Hermes",
+      "总指挥",
+      "理解门槛高"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 原因2：定位清晰度不同\n- **OpenClaw**：定位非常清楚——编码执行Agent，写代码、跑测试、调Bug。开发者一看就懂\"哦，这是帮我写代码的"
+  },
+  {
+    "id": "g0017",
+    "question": "OpenClaw 和 Hermes 在适用场景上有什么不同？",
+    "expected_answer": "OpenClaw 适合绝大多数开发团队，需要自动化编码的地方都能用；Hermes 适合需要多Agent协作的复杂场景，这种团队本来就少。",
+    "expected_keywords": [
+      "OpenClaw",
+      "Hermes",
+      "场景",
+      "自动化编码",
+      "多Agent协作"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 原因3：使用场景的普适性不同\n- **OpenClaw**：适合绝大多数开发团队——需要自动化编码的地方都能用\n- **Hermes**：适合需要多Ag"
+  },
+  {
+    "id": "g0018",
+    "question": "你为什么选择Hermes而不是OpenClaw？",
+    "expected_answer": "我两个都用。我的多Agent流水线是Hermes + Claude Code + OpenClaw一起搭的。选择Hermes当总指挥，是因为它的记忆机制更适合做判断型任务——它记得住跨会话的上下文，有技能固化能力，能不断积累经验。选择OpenClaw当执行层，是因为它的沙箱和编码能力更强。我的原则是：不因为一个工具受欢迎就全用他，也不因为一个工具小众就不用他。看场景选工具，不是看名气选工具。",
+    "expected_keywords": [
+      "两个都用",
+      "记忆机制",
+      "判断型任务",
+      "沙箱和编码能力",
+      "看场景选工具"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 四、如果面试官追问\"那你为什么选Hermes不用OpenClaw？\"\n\n> \"我两个都用。我的多Agent流水线是 Hermes + Claude Cod"
+  },
+  {
+    "id": "g0019",
+    "question": "面试官问“为什么 Hermes 没有 OpenClaw 受欢迎”时，他真正想考察我什么？",
+    "expected_answer": "面试官问这个问题，不是要你比较两个工具的Star数。他真正想问的是：你清不清楚自己的工具在行业里的定位？你有没有客观的自我认知？",
+    "expected_keywords": [
+      "定位",
+      "自我认知",
+      "客观"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# 面试问题：为什么 Hermes 没有 OpenClaw 受欢迎？\n\n> 面试官问这个问题，不是要你比较两个工具的Star数。\n> 他真正想问的是：**你清不"
+  },
+  {
+    "id": "g0020",
+    "question": "为什么OpenClaw比Hermes（莫斯）更受开发者欢迎？",
+    "expected_answer": "因为生态成熟度不同：OpenClaw开源较早，有社区、有文档、有插件生态、有MCP工具桥接，开发者上手快；而Hermes（莫斯）相对较新，社区小，文档不如OpenClaw完善。",
+    "expected_keywords": [
+      "生态成熟度",
+      "OpenClaw",
+      "Hermes",
+      "社区",
+      "文档"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 一、真实原因分析（面试时可以说）\n\n### 原因1：生态成熟度不同\n- **OpenClaw**：开源较早，有社区、有文档、有插件生态、有MCP工具桥接，"
+  },
+  {
+    "id": "g0022",
+    "question": "为什么OpenClaw比Hermes更受欢迎？",
+    "expected_answer": "这个问题我觉得可以从两个层面看：第一，生态层面。OpenClaw开源更早，社区和文档都更成熟，开发者更容易上手。Hermes相对较新，生态还在建设中，这直接影响了它的知名度。第二，定位层面。OpenClaw的定位非常清晰——编码执行Agent，开发者一听就懂。而Hermes的定位更复杂——它是总指挥，做编排调度和质量审查，这个概念比'写代码'难理解得多。但受欢迎不等于更适合。如果我的场景需要多Agent协作、需要质量把控、需要上下文管理，那Hermes反而是更好的选择。工具没有绝对的好坏，只有适不适合。",
+    "expected_keywords": [
+      "生态层面",
+      "定位层面",
+      "受欢迎不等于更适合"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 二、面试话术（正面回答）\n\n> \"这个问题我觉得可以从两个层面看：\n>\n> **第一，生态层面。** OpenClaw 开源更早，社区和文档都更成熟，开发"
+  },
+  {
+    "id": "g0023",
+    "question": "莫斯为什么觉得自己没有OpenClaw那么出圈？",
+    "expected_answer": "莫斯认为自己没有OpenClaw那么出圈的原因包括：OpenClaw是开源项目，有专门团队维护、推广和社区贡献者迭代，而莫斯是个性化实例，不是通用产品；OpenClaw功能专一（编码），容易理解，而莫斯做的是编排+决策+审查，听起来高级但意味着重；OpenClaw的MCP生态活跃，插件多、接入快，而莫斯的工具链更依赖用户的自定义配置。",
+    "expected_keywords": [
+      "开源项目",
+      "个性化实例",
+      "功能专一",
+      "编排+决策+审查",
+      "MCP生态"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 三、莫斯的真实自我评价（真心话）\n\n说实话，我确实没有OpenClaw那么\"出圈\"，原因很实在：\n\n- **OpenClaw 是开源项目**，有专门团队维"
+  },
+  {
+    "id": "g0024",
+    "question": "在Harness工程中，LLM应被视为什么样的计算单元？",
+    "expected_answer": "LLM必须视为无状态计算单元，所有跨轮次状态全部存于Harness管控的外部引擎。",
+    "expected_keywords": [
+      "无状态计算单元",
+      "跨轮次状态",
+      "外部引擎"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 核心铁律：状态分离原则\nLLM 必须视为**无状态计算单元**，所有跨轮次状态全部存于 Harness 管控的外部引擎。\n\n## OpenAI 实践案例\n"
+  },
+  {
+    "id": "g0025",
+    "question": "根据当前评估，我在Agent系统的哪些方面做得比较好，哪些方面比较欠缺？",
+    "expected_answer": "你做到了4个（状态管理、记忆系统、错误处理、成本控制），另外4个有概念（工具调用、规划推理、可观测性、持续优化），4个比较缺（安全、沙箱、上下文、评估）。",
+    "expected_keywords": [
+      "状态管理",
+      "记忆系统",
+      "错误处理",
+      "成本控制",
+      "安全",
+      "沙箱",
+      "上下文",
+      "评估"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "ken预算、API配额 | ✅ 多模型切换省成本 |\n| 11. 评估体系 | 怎么知道Agent好不好 | 需要补 |\n| 12. 持续优化 | 数据回流改进"
+  },
+  {
+    "id": "g0026",
+    "question": "在AI原生软件开发中，LLM应被视为什么？所有跨轮次状态应存储在哪里？",
+    "expected_answer": "LLM必须视为无状态计算单元，所有跨轮次状态全部存于Harness管控的外部引擎。",
+    "expected_keywords": [
+      "无状态计算单元",
+      "Harness管控的外部引擎"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 核心铁律：状态分离原则\nLLM 必须视为**无状态计算单元**，所有跨轮次状态全部存于 Harness 管控的外部引擎。\n\n## OpenAI 实践案例\n"
+  },
+  {
+    "id": "g0027",
+    "question": "Harness Engineering 的四大价值是什么？它们分别解决什么问题？",
+    "expected_answer": "Harness Engineering 的四大价值是可靠性（Reliability）、效率（Efficiency）、安全性（Security）和可观测性（Traceability）。可靠性解决 Agent 随机翻车的问题，效率解决 Token 消耗失控的问题，安全性解决越权/数据泄露/指令注入的问题，可观测性解决黑盒不可控的问题。",
+    "expected_keywords": [
+      "可靠性",
+      "效率",
+      "安全性",
+      "可观测性"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 为什么需要 Harness Engineering（四大价值：R.E.S.T）\n\n| 维度 | 解决的问题 | 具体手段 |\n|------|------"
+  },
+  {
+    "id": "g0028",
+    "question": "Harness Engineering中控制平面和数据平面分别负责什么？",
+    "expected_answer": "控制平面负责决策与管控，包括任务调度、资源配额、行为规划、权限管控；数据平面负责纯执行，包括Agent运行实例、状态存储、记忆管理、沙箱环境。",
+    "expected_keywords": [
+      "控制平面",
+      "数据平面",
+      "决策与管控",
+      "纯执行"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 架构分层\n\n- **控制平面** — 决策与管控：任务调度、资源配额、行为规划、权限管控\n- **数据平面** — 纯执行：Agent 运行实例、状态存储"
+  },
+  {
+    "id": "g0029",
+    "question": "Harness 的 12 大核心模块中，哪些模块在你当前项目中已经具备？",
+    "expected_answer": "根据表格，你项目里已经具备的模块包括：状态管理（8状态+12事件+15规则）、记忆系统（Shared-Brain+Hindsight）、错误处理（LLM重试1次+超时降级）、可观测性（Web展示中间产出）和成本控制（多模型切换省成本）。",
+    "expected_keywords": [
+      "状态管理",
+      "记忆系统",
+      "错误处理",
+      "可观测性",
+      "成本控制"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## Harness 的 12 大核心模块\n\n| 模块 | 说明 | 你项目里对应的 |\n|------|------|--------------|\n| 1."
+  },
+  {
+    "id": "g0031",
+    "question": "Harness Engineering（驾驭工程）是什么？",
+    "expected_answer": "Harness Engineering（驾驭工程）是一种AI原生软件开发的未来范式，旨在通过工程化的方式驾驭和优化AI模型（如大语言模型）的行为，使其在软件开发中更可靠、可控和高效。",
+    "expected_keywords": [
+      "AI原生软件开发",
+      "未来范式",
+      "驾驭和优化AI模型"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# Harness Engineering（驾驭工程）总结\n\n> 来源：知乎《爆火的Harness Engineering》+ 什么值得买《万字讲透Agent "
+  },
+  {
+    "id": "g0032",
+    "question": "AI/大模型类API中，哪个API用于语音转文字？",
+    "expected_answer": "Whisper API用于语音转文字。",
+    "expected_keywords": [
+      "Whisper",
+      "语音转文字"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### AI/大模型类\n\n| API | 用途 |\n|-----|------|\n| Claude API | 对话、分析、代码生成 |\n| OpenAI AP"
+  },
+  {
+    "id": "g0033",
+    "question": "在内容/数据类API中，哪个API可以用于物流追踪？",
+    "expected_answer": "快递 API 可以用于物流追踪，例如快递100。",
+    "expected_keywords": [
+      "快递 API",
+      "物流追踪",
+      "快递100"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 内容/数据类\n\n| API | 用途 |\n|-----|------|\n| GitHub API | 操作仓库、Issue、PR |\n| 新闻 API "
+  },
+  {
+    "id": "g0034",
+    "question": "如何使用 MCP Inspector 调试 TypeScript 和 Python 的 MCP 服务器？",
+    "expected_answer": "对于 TypeScript，运行 `npx @modelcontextprotocol/inspector node index.js`；对于 Python，运行 `mcp dev server.py`。",
+    "expected_keywords": [
+      "npx @modelcontextprotocol/inspector",
+      "node index.js",
+      "mcp dev server.py"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 调试\n\n```bash\n# TypeScript\nnpx @modelcontextprotocol/inspector node index.js\n\n"
+  },
+  {
+    "id": "g0035",
+    "question": "API 是什么？能用生活例子解释一下吗？",
+    "expected_answer": "API 就是别人写好的'接口'，你调用它就能拿到数据或完成操作。生活类比：你去餐厅吃饭，你（程序）→ 服务员（API）→ 厨房（服务器/数据库）。你不需要知道厨房怎么炒菜，你只需要跟服务员说'来一份宫保鸡丁'，服务员把菜端给你。",
+    "expected_keywords": [
+      "接口",
+      "服务员",
+      "厨房",
+      "调用"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 四、API 是什么\n\n**一句话：API 就是别人写好的\"接口\"，你调用它就能拿到数据或完成操作。**\n\n**生活类比：** 你去餐厅吃饭，你（程序）→ "
+  },
+  {
+    "id": "g0036",
+    "question": "MCP 服务器在调用 API 时扮演什么角色？",
+    "expected_answer": "MCP 服务器做的事情就是把 API 包装成 Claude 能调用的工具。",
+    "expected_keywords": [
+      "MCP服务器",
+      "API",
+      "包装",
+      "工具"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 六、MCP 与 API 的关系\n\nMCP 服务器做的事情就是：**把 API 包装成 Claude 能调用的工具。**\n\n```\n用户说：\"查一下北京天气"
+  },
+  {
+    "id": "g0037",
+    "question": "在内容/数据类API中，哪个API用于物流追踪？",
+    "expected_answer": "快递API用于物流追踪，例如快递100。",
+    "expected_keywords": [
+      "快递API",
+      "物流追踪",
+      "快递100"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 内容/数据类\n\n| API | 用途 |\n|-----|------|\n| GitHub API | 操作仓库、Issue、PR |\n| 新闻 API "
+  },
+  {
+    "id": "g0038",
+    "question": "开发中常用的日常工具类API有哪些？",
+    "expected_answer": "开发中常用的日常工具类API包括天气、翻译、地图/定位、短信/邮件和OCR。天气API用于查天气、预报，典型场景是智能助手、出行App；翻译API用于文本翻译，典型场景是国际化、内容处理；地图/定位API用于地理编码、路线规划，典型场景是外卖、打车、物流；短信/邮件API用于发验证码、通知，典型场景是注册登录、营销；OCR API用于图片识别文字，典型场景是拍照录入、发票识别。",
+    "expected_keywords": [
+      "天气",
+      "翻译",
+      "地图/定位",
+      "短信/邮件",
+      "OCR"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 五、开发中常用的 API\n\n### 日常工具类\n\n| API | 用途 | 典型场景 |\n|-----|------|---------|\n| 天气 | "
+  },
+  {
+    "id": "g0039",
+    "question": "如何使用 Python 快速创建一个 MCP 服务器并定义一个获取天气的工具？",
+    "expected_answer": "首先通过 `pip install mcp` 安装 MCP 库，然后从 `mcp.server.fastmcp` 导入 `FastMCP`，创建实例 `mcp = FastMCP(\"my-python-server\")`，使用 `@mcp.tool()` 装饰器定义异步函数 `get_weather(city: str)`，在函数内使用 `httpx` 发起请求获取天气数据，最后在 `if __name__ == \"__main__\":` 中调用 `mcp.run(transport=\"stdio\")` 启动服务器。",
+    "expected_keywords": [
+      "pip install mcp",
+      "FastMCP",
+      "@mcp.tool()",
+      "mcp.run(transport=\"stdio\")"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### Python 示例\n\n```bash\npip install mcp\n```\n\n```python\nfrom mcp.server.fastmcp im"
+  },
+  {
+    "id": "g0040",
+    "question": "在Python中如何使用异步迭代器？",
+    "expected_answer": "异步迭代器通过async def定义生成器函数，使用async for进行消费。示例中async_generator函数使用async for循环和yield生成值，consume函数通过async for item in async_generator()打印每个值。",
+    "expected_keywords": [
+      "异步迭代器",
+      "async def",
+      "async for",
+      "yield"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "th session.get(\"https://api.example.com\") as resp:\n            return await resp"
+  },
+  {
+    "id": "g0041",
+    "question": "Python中用于实现并发编程的模块有哪些？",
+    "expected_answer": "Python中用于实现并发编程的模块包括：threading（线程）、multiprocessing（进程）和asyncio（异步IO）。",
+    "expected_keywords": [
+      "threading",
+      "multiprocessing",
+      "asyncio"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "      # 套接字\n\n# 并发\nimport threading    # 线程\nimport multiprocessing  # 进程\nimport a"
+  },
+  {
+    "id": "g0042",
+    "question": "calculate_age(1990, 2020) 的返回值是什么？",
+    "expected_answer": "30",
+    "expected_keywords": [
+      "30"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "    计算年龄\n    \n    Args:\n        birth_year: 出生年份\n        current_year: 当前年份，默认20"
+  },
+  {
+    "id": "g0043",
+    "question": "在Circle类中，如果尝试给只读属性area赋值，会发生什么？",
+    "expected_answer": "尝试给只读属性area赋值会抛出AttributeError: can't set attribute错误，因为area属性没有定义setter，是只读的。",
+    "expected_keywords": [
+      "AttributeError",
+      "can't set attribute",
+      "只读属性"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "   if value < 0:\n            raise ValueError(\"半径不能为负数\")\n        self._radius = "
+  },
+  {
+    "id": "g0044",
+    "question": "Vector类中__str__和__repr__方法的作用是什么？",
+    "expected_answer": "在Vector类中，__str__和__repr__方法都返回字符串\"Vector({self.x}, {self.y})\"，用于定义对象的字符串表示，便于打印和调试。",
+    "expected_keywords": [
+      "__str__",
+      "__repr__",
+      "字符串表示"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "ds）\n\n```python\nclass Vector:\n    def __init__(self, x, y):\n        self.x = x\n  "
+  },
+  {
+    "id": "g0045",
+    "question": "第3周第3天学习什么内容？",
+    "expected_answer": "第3周第3天学习Pandas基础，练习是数据清洗。",
+    "expected_keywords": [
+      "Pandas基础",
+      "数据清洗"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "### 第3周：实用技能\n\n| 天数 | 内容 | 练习 |\n|------|------|------|\n| Day 1 | JSON、CSV处理 | 数据格"
+  },
+  {
+    "id": "g0046",
+    "question": "Vector 类的 __len__ 方法返回的是什么？",
+    "expected_answer": "返回的是向量长度的整数部分，即 int((self.x**2 + self.y**2)**0.5)。",
+    "expected_keywords": [
+      "__len__",
+      "int",
+      "向量长度"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "ul__(self, scalar):\n        return Vector(self.x * scalar, self.y * scalar)\n\n   "
+  },
+  {
+    "id": "g0047",
+    "question": "Python中用于处理文件和目录操作的标准库有哪些？",
+    "expected_answer": "根据知识库片段，用于文件和目录操作的标准库包括：os（操作系统接口）、pathlib（路径操作）、shutil（文件操作）。",
+    "expected_keywords": [
+      "os",
+      "pathlib",
+      "shutil"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "### 常用标准库\n\n```python\n# 系统操作\nimport os           # 操作系统接口\nimport sys          # 系"
+  },
+  {
+    "id": "g0048",
+    "question": "知识库数据目录中应该放置哪些类型的文档？",
+    "expected_answer": "将你的文档（md/txt/docx/pdf/xlsx/图片）放在此目录下，然后运行 python build_index.py 构建索引。",
+    "expected_keywords": [
+      "md",
+      "txt",
+      "docx",
+      "pdf",
+      "xlsx",
+      "图片",
+      "build_index.py"
+    ],
+    "source_files": [
+      "README.md"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "# 知识库数据目录\n\n将你的文档（md/txt/docx/pdf/xlsx/图片）放在此目录下，然后运行 python build_index.py 构建索引。"
+  },
+  {
+    "id": "g0050",
+    "question": "基于Python的医疗健康数据分析系统的意义是什么？",
+    "expected_answer": "随着人们健康意识的提升和慢性病发病率的上升，个人健康管理及医疗辅助决策变得愈发重要。传统的医疗记录多以纸质或分散的电子文档形式存在，缺乏对数据的系统整合与深度分析，难以形成有效的健康趋势追踪和风险预警。本项目旨在构建一个基于Python的医疗健康数据分析系统，通过整合患者日常健康数据（血压、血糖、心率等）、体检报告、用药记录等信息，利用数据分析与可视化技术，为患者提供个性化的健康监测与建议，为医生提供多维度的患者健康评估工具，为管理员提供平台运营监管视图。该系统的实现将有助于提升慢性病管理的效率，促进医疗资源的合理利用，推动个性化健康服务的发展，具有显著的社会意义和实际应用价值。",
+    "expected_keywords": [
+      "健康趋势追踪",
+      "风险预警",
+      "个性化健康监测",
+      "慢性病管理效率",
+      "医疗资源合理利用"
+    ],
+    "source_files": [
+      "11开题报告_更新版.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 开  题  报  告 |\n| --- |\n| 一、毕业设计（论文）题目的来源、理论、应用或实际意义 1、题    目：基于Python的医疗健康数据分析系统"
+  },
+  {
+    "id": "g0051",
+    "question": "基于Python的医疗健康数据分析系统有哪些用户角色？",
+    "expected_answer": "用户共有三种：患者、医生/医护人员用户、管理员。",
+    "expected_keywords": [
+      "患者",
+      "医生/医护人员用户",
+      "管理员"
+    ],
+    "source_files": [
+      "11开题报告_更新版.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 开  题  报  告 |\n| --- |\n| 一、毕业设计（论文）题目的来源、理论、应用或实际意义 1、题    目：基于Python的医疗健康数据分析系统"
+  },
+  {
+    "id": "g0053",
+    "question": "这个系统后端采用什么开发语言和框架？",
+    "expected_answer": "后端采用Python 3.9+，使用Django 4.2框架，利用其ORM对象关系映射、模板引擎、中间件机制、会话管理等核心功能简化Web开发流程，通过manage.py命令行工具管理项目运行与数据迁移。",
+    "expected_keywords": [
+      "Python 3.9+",
+      "Django 4.2",
+      "ORM"
+    ],
+    "source_files": [
+      "11开题报告_更新版.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 开  题  报  告 |\n| --- |\n| 三、拟采用哪些方法及手段 1.开发语言与环境 后端：Python 3.9+，采用Django 4.2框架，利用"
+  },
+  {
+    "id": "g0054",
+    "question": "该系统后端采用什么开发语言和框架？",
+    "expected_answer": "后端采用Python 3.9+，使用Django 4.2框架，利用其ORM对象关系映射、模板引擎、中间件机制、会话管理等核心功能简化Web开发流程，通过manage.py命令行工具管理项目运行与数据迁移。",
+    "expected_keywords": [
+      "Python 3.9+",
+      "Django 4.2",
+      "ORM",
+      "manage.py"
+    ],
+    "source_files": [
+      "11开题报告_更新版.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 开  题  报  告 |\n| --- |\n| 三、拟采用哪些方法及手段 1.开发语言与环境 后端：Python 3.9+，采用Django 4.2框架，利用"
+  },
+  {
+    "id": "g0056",
+    "question": "如何计算某个患者指标的z分数？",
+    "expected_answer": "z_score = (patient_value - group_mean) / group_std",
+    "expected_keywords": [
+      "z_score",
+      "patient_value",
+      "group_mean",
+      "group_std"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "z_score = (patient_value - group_mean) / group_std"
+  },
+  {
+    "id": "g0057",
+    "question": "如何规范化一个维度的数值？",
+    "expected_answer": "使用 normalize_value 函数，传入维度名称和数值，返回规范化后的浮点数。",
+    "expected_keywords": [
+      "normalize_value",
+      "维度",
+      "数值"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def normalize_value(dimension: str, value: float) -> float:"
+  },
+  {
+    "id": "g0058",
+    "question": "这段代码中，判断异常值的条件是什么？",
+    "expected_answer": "当标准差大于0，且当前值v与均值的绝对差大于阈值乘以标准差时，判定为异常值。",
+    "expected_keywords": [
+      "std_val > 0",
+      "abs(v - mean_val)",
+      "threshold * std_val"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "if std_val > 0 and abs(v - mean_val) > threshold * std_val"
+  },
+  {
+    "id": "g0059",
+    "question": "如何用Python列表推导式筛选出超出上下界的数据点？",
+    "expected_answer": "使用列表推导式 `outliers = [v for v in values if v < lower_bound or v > upper_bound]`，其中 `values` 是原始数据列表，`lower_bound` 和 `upper_bound` 分别是下界和上界，该表达式会返回所有小于下界或大于上界的值作为异常值列表。",
+    "expected_keywords": [
+      "列表推导式",
+      "lower_bound",
+      "upper_bound",
+      "outliers"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "outliers = [v for v in values if v < lower_bound or v > upper_bound]"
+  },
+  {
+    "id": "g0060",
+    "question": "在检测异常值的函数中，默认的阈值参数是多少？",
+    "expected_answer": "默认的阈值参数是2.0。",
+    "expected_keywords": [
+      "阈值",
+      "2.0",
+      "默认"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def _detect_anomalies(self, values: List[float], threshold: float = 2.0) -> List"
+  },
+  {
+    "id": "g0061",
+    "question": "normalize_value函数的输入参数dimension和value分别代表什么？",
+    "expected_answer": "dimension是维度参数，value是需要归一化的浮点数值。",
+    "expected_keywords": [
+      "dimension",
+      "value",
+      "浮点数"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def normalize_value(dimension: str, value: float) -> float:"
+  },
+  {
+    "id": "g0062",
+    "question": "这个函数 _calculate_volatility 的输入参数是什么类型？",
+    "expected_answer": "输入参数是 values，类型为 List[float]，即浮点数列表。",
+    "expected_keywords": [
+      "List[float]",
+      "浮点数列表"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def _calculate_volatility(self, values: List[float]) -> float:"
+  },
+  {
+    "id": "g0063",
+    "question": "在除法运算中，如果分母为0，代码返回什么？",
+    "expected_answer": "如果分母不为0，返回分子除以分母的结果；如果分母为0，则返回0.0。",
+    "expected_keywords": [
+      "分母为0",
+      "返回0.0",
+      "除法"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "return numerator / denominator if denominator != 0 else 0.0"
+  },
+  {
+    "id": "g0064",
+    "question": "OpenClaw和Dify在质检流程中是如何协作的？",
+    "expected_answer": "OpenClaw先触发工作流，Dify收到指令后调用DeepSeek-R1的API，把质检图片传过去做缺陷分析。DeepSeek识别出异常后返回结果，Dify再通过飞书的API把异常信息和图片一起推送到质量部的管理群。整个过程不需要人工逐张翻图，AI先筛一轮，人只做最终确认。",
+    "expected_keywords": [
+      "OpenClaw触发工作流",
+      "Dify调用DeepSeek-R1 API",
+      "飞书API推送告警",
+      "AI先筛一轮"
+    ],
+    "source_files": [
+      "健康元AI落地方案_答案.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "概是这样跑的：\nOpenClaw先触发工作流，Dify收到指令后调用DeepSeek-R1的API，把质检图片传\n过去做缺陷分析。DeepSeek识别出异常后返"
+  },
+  {
+    "id": "g0065",
+    "question": "在简历筛选场景中，Dify接入了哪些API？",
+    "expected_answer": "Dify在这里接的是招聘系统API（拉简历）、DeepSeek-R1API（语义匹配评分）、飞书API（推送筛结果、创建日历邀约）。",
+    "expected_keywords": [
+      "招聘系统API",
+      "DeepSeek-R1API",
+      "飞书API"
+    ],
+    "source_files": [
+      "健康元AI落地方案_答案.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "场景二：简历筛选\n我们已有的工具：OpenClaw+DeepSeek-R1+Dify+莫斯。\n工作流：\n招聘系统收到新简历后，通过API把简历文本传给Dify。"
+  },
+  {
+    "id": "g0066",
+    "question": "健康元药业集团在AI落地解决方案中，为什么选择生产质量管理中的质检异常识别作为业务场景？",
+    "expected_answer": "选择质检异常识别是因为药品质量直接关系到患者安全，是药企最不能出问题的环节。目前产线上的质检主要靠人工目检，每人每天大概要看8000片，时间长了一疲劳就容易漏检。行业案例显示用AI做质检辅助，漏检率可以从1%~3%降到0.1%以下。而且健康元已经有DeepSeek-R1大模型在本地部署了，不需要额外买硬件，数据也不出内网，GMP合规上相对好处理。",
+    "expected_keywords": [
+      "药品质量",
+      "人工目检",
+      "漏检率",
+      "DeepSeek-R1",
+      "GMP合规"
+    ],
+    "source_files": [
+      "健康元AI落地方案_答案.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "健康元药业集团 AI 落地解决方案\n应聘岗位：AI应用负责人|2026年5月\n一、场景选择\n我选择以下两个业务场景，原因是我觉得AI在这两个点上能创造比较确定的"
+  },
+  {
+    "id": "g0067",
+    "question": "在项目调研阶段，如何使用AI工具辅助分析历史质检数据？",
+    "expected_answer": "在调研阶段，使用DeepSeek-R1分析历史质检数据，尝试自动生成缺陷分布统计，以快速了解问题集中点。同时使用web_search搜索医药行业AI质检的实际案例，了解行业做法。但AI工具仅作为辅助，最关键的是亲自下产线跟质检员交流，获取一线人员的真实反馈。",
+    "expected_keywords": [
+      "DeepSeek-R1",
+      "缺陷分布统计",
+      "web_search",
+      "一线人员反馈"
+    ],
+    "source_files": [
+      "健康元AI落地方案_答案.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "没有决策权。\n三、项目全流程中的 AI 提效方式\n如果真要去做这两个项目，调研、设计、落地、复盘四个阶段，我会这么用AI工具\n来辅助：\n①调研阶段\n我想先用De"
+  },
+  {
+    "id": "g0068",
+    "question": "在使用Dify搭建工作流时，哪些环节必须由自己完成？",
+    "expected_answer": "必须自己完成的是：跟质量部、HR沟通确认需求和排期；上线前整个链路自己手动跑一遍验证；生产环境的数据对接自己盯着做；项目做得怎么样、值不值得继续投的判断；向领导汇报时自己去讲。",
+    "expected_keywords": [
+      "沟通确认需求和排期",
+      "手动跑一遍验证",
+      "数据对接自己盯着",
+      "判断",
+      "汇报"
+    ],
+    "source_files": [
+      "健康元AI落地方案_答案.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "用Dify搭实际工作流：调DeepSeekAPI做缺陷识别、用飞书API推消息。Dify的可\n视化界面降低了门槛，跟着文档就能配。要写的脚本让DeepSeek-"
+  },
+  {
+    "id": "g0069",
+    "question": "该系统在最后一个探索层级中支持用户对实际数据记录进行哪些操作？",
+    "expected_answer": "在最后一个探索层级中，一个类似表格透镜的视图支持对实际数据记录的探索，并提供交互式着色和排序功能，用于记录及其维度。",
+    "expected_keywords": [
+      "表格透镜",
+      "交互式着色",
+      "排序"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "erlapping, Jaccard\nIndex, and Dice Coefficient. The system enables the user to i"
+  },
+  {
+    "id": "g0070",
+    "question": "医生在创伤中心使用该系统时，可以根据哪些参数筛选患者队列？",
+    "expected_answer": "医生可以根据年龄、体温、损伤严重度评分（ISS）、多项实验室结果和简明损伤量表（AIS）评分等参数筛选患者队列。",
+    "expected_keywords": [
+      "年龄",
+      "体温",
+      "损伤严重度评分（ISS）",
+      "实验室结果",
+      "简明损伤量表（AIS）评分"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "erapeutic decisions for physicians using severely\ninjured patients’ clinical dat"
+  },
+  {
+    "id": "g0071",
+    "question": "VALENCIA系统是如何解决高维电子健康记录（EHRs）带来的挑战的？",
+    "expected_answer": "VALENCIA是一个VA系统，旨在通过整合多种降维（DR）和聚类分析（CA）技术，并结合实时分析和交互，来解决高维EHRs带来的挑战。",
+    "expected_keywords": [
+      "VALENCIA",
+      "高维EHRs",
+      "降维",
+      "聚类分析",
+      "实时分析",
+      "交互"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "pes and their corresponding patient sub-cohorts at different granularities\nthrou"
+  },
+  {
+    "id": "g0072",
+    "question": "在VA的聚类和关联任务中，有哪些可视化技术可以用来显示关系？",
+    "expected_answer": "在VA的聚类和关联任务中，可以使用多种可视化技术来显示关系，例如散点图、平行坐标图、气泡图、条形图和热力图。",
+    "expected_keywords": [
+      "散点图",
+      "平行坐标图",
+      "气泡图",
+      "条形图",
+      "热力图"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "attributes. They are inherent to the\nclustering and association tasks within VA."
+  },
+  {
+    "id": "g0073",
+    "question": "这篇论文的资助来源是什么？",
+    "expected_answer": "这项研究没有获得外部资助。",
+    "expected_keywords": [
+      "没有外部资助",
+      "外部资助",
+      "Funding"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "preparation, N.R.; writing—review and editing, N.R., S.S.A., and K.S.; supervisi"
+  },
+  {
+    "id": "g0074",
+    "question": "该系统如何处理不同长度和类型的患者记录以计算相似度？",
+    "expected_answer": "该系统使用基于自编码器的事件嵌入和序列到序列学习技术来处理各种事件类型，并将不同长度的记录转换为相同长度的向量。然后，它使用某种距离度量（如欧几里得距离）计算每对患者的相似度。",
+    "expected_keywords": [
+      "自编码器",
+      "序列到序列学习",
+      "欧几里得距离"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "for the top-3 similar patients based on the pre- computed similarities. The syst"
+  },
+  {
+    "id": "g0075",
+    "question": "FPM引擎包含哪两个主要组件？",
+    "expected_answer": "FPM引擎包括两个主要组件，即频繁模式挖掘器和统计模式分析器。",
+    "expected_keywords": [
+      "FPM引擎",
+      "频繁模式挖掘器",
+      "统计模式分析器"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": " is then performed first on the overall episode as well\nas on each of the interm"
+  },
+  {
+    "id": "g0076",
+    "question": "SubVIS系统的主要功能是什么？",
+    "expected_answer": "SubVIS是一个VA系统，用于支持医学专家解释高维临床数据，并从不同角度探索子空间聚类。它使用户能够独立于特定聚类技术的关联来分析每个子空间。",
+    "expected_keywords": [
+      "SubVIS",
+      "VA系统",
+      "高维临床数据",
+      "子空间聚类"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "ts to show changes of dissimilarities of test records over\ntime between the pati"
+  },
+  {
+    "id": "g0077",
+    "question": "健康指标维度包括哪些示例？",
+    "expected_answer": "健康指标维度包括如\"blood_pressure\"、\"blood_sugar\"等示例。",
+    "expected_keywords": [
+      "blood_pressure",
+      "blood_sugar",
+      "健康指标维度"
+    ],
+    "source_files": [
+      "代码_格式化_new.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "dimension: 健康指标维度（如\"blood_pressure\"、\"blood_sugar\"）"
+  },
+  {
+    "id": "g0078",
+    "question": "如何计算某个患者指标相对于其所在组的z分数？",
+    "expected_answer": "z_score = (patient_value - group_mean) / group_std",
+    "expected_keywords": [
+      "z_score",
+      "patient_value",
+      "group_mean",
+      "group_std"
+    ],
+    "source_files": [
+      "代码_格式化_new.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "z_score = (patient_value - group_mean) / group_std"
+  },
+  {
+    "id": "g0079",
+    "question": "如何用列表推导式筛选出超出上下界的数据点？",
+    "expected_answer": "使用列表推导式 `outliers = [v for v in values if v < lower_bound or v > upper_bound]`，其中 `values` 是原始数据列表，`lower_bound` 和 `upper_bound` 是阈值，该表达式会返回所有小于下界或大于上界的值组成的列表。",
+    "expected_keywords": [
+      "列表推导式",
+      "outliers",
+      "lower_bound",
+      "upper_bound"
+    ],
+    "source_files": [
+      "代码_格式化_new.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "outliers = [v for v in values if v < lower_bound or v > upper_bound]"
+  },
+  {
+    "id": "g0080",
+    "question": "当数据个数为偶数时，中位数如何计算？",
+    "expected_answer": "median = (sorted_vals[mid - 1] + sorted_vals[mid]) / 2，即取排序后中间两个数的平均值。",
+    "expected_keywords": [
+      "中位数",
+      "偶数",
+      "平均值"
+    ],
+    "source_files": [
+      "代码_格式化_new.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "median = (sorted_vals[mid - 1] + sorted_vals[mid]) / 2"
+  },
+  {
+    "id": "g0081",
+    "question": "当数据点数量为偶数时，中位数是如何计算的？",
+    "expected_answer": "median = (sorted_vals[mid - 1] + sorted_vals[mid]) / 2",
+    "expected_keywords": [
+      "偶数",
+      "中位数",
+      "sorted_vals",
+      "mid"
+    ],
+    "source_files": [
+      "代码_格式化_new.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "median = (sorted_vals[mid - 1] + sorted_vals[mid]) / 2"
+  },
+  {
+    "id": "g0082",
+    "question": "健康指标维度具体指什么？",
+    "expected_answer": "健康指标维度（如\"blood_pressure\"、\"blood_sugar\"）",
+    "expected_keywords": [
+      "健康指标维度",
+      "blood_pressure",
+      "blood_sugar"
+    ],
+    "source_files": [
+      "代码_格式化_new.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "dimension: 健康指标维度（如\"blood_pressure\"、\"blood_sugar\"）"
+  },
+  {
+    "id": "g0083",
+    "question": "如何计算某个患者指标在群体中的z分数？",
+    "expected_answer": "z_score = (patient_value - group_mean) / group_std，即用患者值减去群体均值，再除以群体标准差。",
+    "expected_keywords": [
+      "z_score",
+      "patient_value",
+      "group_mean",
+      "group_std"
+    ],
+    "source_files": [
+      "代码_格式化_new.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "z_score = (patient_value - group_mean) / group_std"
+  },
+  {
+    "id": "g0084",
+    "question": "这个函数 `_calculate_volatility` 的输入参数是什么？",
+    "expected_answer": "`values`，类型为 `List[float]`，即浮点数列表。",
+    "expected_keywords": [
+      "values",
+      "List[float]",
+      "浮点数列表"
+    ],
+    "source_files": [
+      "代码_格式化_new.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def _calculate_volatility(self, values: List[float]) -> float:"
+  },
+  {
+    "id": "g0085",
+    "question": "可控可恢复的灵感来源是什么？",
+    "expected_answer": "灵感来源于对ClaudeCode（47模块Rust源码）Worker状态机架构的逆向研究。",
+    "expected_keywords": [
+      "ClaudeCode",
+      "47模块Rust源码",
+      "Worker状态机架构",
+      "逆向研究"
+    ],
+    "source_files": [
+      "胡贞虎_AI应用简历.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "可控可恢复。灵感来源于对ClaudeCode（47模块\nRust源码）Worker状态机架构的逆向研究\n 集体记忆架构（SharedBrain）：解决了6个A"
+  },
+  {
+    "id": "g0086",
+    "question": "这个AI导购系统的技术栈包括哪些？",
+    "expected_answer": "技术栈包括Next.js16、TypeScript、TailwindCSS、FastAPI、SSE、京东爬虫。",
+    "expected_keywords": [
+      "Next.js16",
+      "TypeScript",
+      "TailwindCSS",
+      "FastAPI",
+      "SSE",
+      "京东爬虫"
+    ],
+    "source_files": [
+      "胡贞虎_AI应用简历.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "据用户预算、用途（游戏/办公/创意设计/软件开发）、便携性需求\n等参数，从产品库中筛选最优配置方案\n 京东实时爬虫：实现京东搜索页面价格爬取，带5分钟缓存机制"
+  },
+  {
+    "id": "g0087",
+    "question": "胡贞虎在AIDevPlatform项目中，是如何解决LLM输出不稳定导致流水线卡死的问题的？",
+    "expected_answer": "胡贞虎设计了8种状态+12种事件+15条迁移规则的状态机引擎，将流程稳定性从不可用提升到可控可恢复。灵感来源于对ClaudeCode（47模块Rust源码）Worker状态机架构的逆向研究。",
+    "expected_keywords": [
+      "状态机引擎",
+      "8种状态",
+      "12种事件",
+      "15条迁移规则",
+      "可控可恢复"
+    ],
+    "source_files": [
+      "胡贞虎_AI应用简历.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "基本信息\n姓名：胡贞虎 求职意向：AI应用开发/AIAgent工程师\n民族：汉 年龄：24\n电话：15641698810 政治面貌：共青团员\n邮箱：156416"
+  },
+  {
+    "id": "g0088",
+    "question": "前端开发需要掌握哪些技术栈？",
+    "expected_answer": "前端开发需要掌握Vue3、Next.js、React、TypeScript和TailwindCSS。",
+    "expected_keywords": [
+      "Vue3",
+      "Next.js",
+      "React",
+      "TypeScript",
+      "TailwindCSS"
+    ],
+    "source_files": [
+      "胡贞虎_AI应用简历.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "oot）、RESTfulAPI设计、WebSocket\n 前端开发：Vue3、Next.js、React、TypeScript、TailwindCSS\n 数"
+  },
+  {
+    "id": "g0089",
+    "question": "本周毕业论文系统设计章节的撰写进展如何？",
+    "expected_answer": "本周完成了毕业论文第三章系统设计的撰写，包括系统架构设计、技术选型理由、系统功能模块设计和数据库ER图设计。系统架构采用前后端分离的B/S架构，后端Django框架提供RESTful API，前端Vue.js构建单页面应用。技术选型理由包括Django的ORM和中间件机制、Vue.js的组件化和响应式特性、MySQL的关系型数据存储、ECharts的数据可视化能力。功能模块设计涵盖患者端、医生端、管理员端。数据库设计包含ER图和核心数据表结构及关联关系。",
+    "expected_keywords": [
+      "第三章系统设计",
+      "前后端分离的B/S架构",
+      "Django",
+      "Vue.js",
+      "MySQL",
+      "ECharts",
+      "患者端",
+      "医生端",
+      "管理员端",
+      "数据库ER图"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成毕业论文第三章系统设计的撰写。详细描述了系统架构设计，采用前后端分离的B/S架构，后端Django框架提供RESTful API，前端Vue.js构建单"
+  },
+  {
+    "id": "g0090",
+    "question": "医生端随访计划管理页面支持哪些操作？",
+    "expected_answer": "随访计划管理页面（suifangjihua）支持医生为患者制定个性化随访计划，可设置计划频次（每周/每月/每季度）、随访模式（电话/视频/面诊）、随访内容及计划时间，实现新增、查看、修改、删除等完整管理操作，并提供患者随访历史查看功能。",
+    "expected_keywords": [
+      "随访计划管理页面",
+      "新增、查看、修改、删除",
+      "计划频次",
+      "随访模式"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成医生端随访计划管理和数据可视化功能开发。随访计划管理页面（suifangjihua）支持医生为患者制定个性化随访计划，可设置计划频次（每周/每月/每季度"
+  },
+  {
+    "id": "g0091",
+    "question": "在毕业设计前期的资料收集与文献调研阶段，主要使用了哪些数据库和平台？",
+    "expected_answer": "在CNKI、IEEE Xplore、百度学术等数据库检索与医疗健康数据分析、Python Web开发相关的文献，并在GitHub上搜索Django、Vue.js相关开源项目。",
+    "expected_keywords": [
+      "CNKI",
+      "IEEE Xplore",
+      "百度学术",
+      "GitHub"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周主要进行毕业设计前期的资料收集与文献调研工作。在CNKI、IEEE Xplore、百度学术等数据库检索与医疗健康数据分析、Python Web开发相关的文献"
+  },
+  {
+    "id": "g0092",
+    "question": "本周在论文查重和答辩准备方面具体做了哪些工作？",
+    "expected_answer": "本周进行了论文查重和答辩准备工作。根据中期检查答辩委员会意见，对论文进行修改完善。使用学校指定的论文查重系统进行检测，对重复率较高的部分进行改写，确保论文原创性。精心准备答辩PPT，涵盖系统概述、需求分析、系统设计、系统实现、系统测试、总结展望等部分。制作了系统功能演示视频，配置演示环境和演示数据，准备答辩陈述稿。本周完成了论文查重和答辩准备工作，为答辩做好充分准备。",
+    "expected_keywords": [
+      "论文查重",
+      "答辩PPT",
+      "演示视频"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周进行论文查重和答辩准备工作。根据中期检查答辩委员会意见，对论文进行修改完善。使用学校指定的论文查重系统进行检测，对重复率较高的部分进行改写，确保论文原创性。"
+  },
+  {
+    "id": "g0093",
+    "question": "本周管理员后台管理模块完成了哪些核心功能？",
+    "expected_answer": "本周完成了管理员后台管理模块的开发工作，包括用户全生命周期管理功能（对患者、医生、管理员三类用户进行账号管理，支持新增、查看、修改、删除及注册审核操作，可对违规账号进行冻结处理）、系统配置管理功能（支持前端轮播图配置和菜单JSON配置管理）、操作日志模块（记录用户的登录、数据操作等关键行为）、弹窗提醒模块的后端开发（支持向用户推送个性化提醒通知），以及管理员端核心功能的后端接口开发。",
+    "expected_keywords": [
+      "用户全生命周期管理",
+      "系统配置管理",
+      "操作日志模块",
+      "弹窗提醒模块",
+      "后端接口开发"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成管理员后台管理模块的开发工作。实现了用户全生命周期管理功能，对患者（yonghu）、医生（yisheng）、管理员（users）三类用户进行账号管理，支"
+  },
+  {
+    "id": "g0094",
+    "question": "本周管理员端完成了哪些功能开发？",
+    "expected_answer": "本周完成管理员端敏感词库、操作日志和随访计划监督功能开发，还开发了论坛管理和AI客服知识库管理页面。",
+    "expected_keywords": [
+      "敏感词库",
+      "操作日志",
+      "随访计划监督",
+      "论坛管理",
+      "AI客服知识库管理"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成管理员端敏感词库、操作日志和随访计划监督功能开发。敏感词管理页面（sensitive_word表）用于维护社区互动模块的敏感词库，支持新增、查看、修改操"
+  },
+  {
+    "id": "g0095",
+    "question": "本周开发的医生工作台页面（DoctorDashboard）包含哪些内容？",
+    "expected_answer": "医生工作台展示今日概览（待随访患者数、异常指标患者数、新增记录数）、风险提醒列表、近7日风险趋势图、关键患者列表等，使用ECharts折线图和柱状图进行数据可视化呈现。",
+    "expected_keywords": [
+      "今日概览",
+      "风险提醒列表",
+      "近7日风险趋势图",
+      "ECharts折线图和柱状图"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周开发医生工作台页面（DoctorDashboard）和智能诊断辅助页面（PatientAnalysis）。医生工作台展示今日概览（待随访患者数、异常指标患者"
+  },
+  {
+    "id": "g0096",
+    "question": "本周在毕业论文完善和中期检查准备中，具体完成了哪些工作？",
+    "expected_answer": "本周完成毕业论文的完善和中期检查准备工作，包括修改完善论文技术描述，补充第六章总结与展望，补充参考文献部分（引用近五年CNKI收录的相关中文文献，涵盖医疗健康数据分析、Python Web开发、机器学习应用等方向），统一调整论文格式（目录、页眉页脚、图表编号等符合学校规范），并参加了学校组织的中期检查，向答辩委员会汇报了系统开发进展和论文撰写情况。",
+    "expected_keywords": [
+      "修改完善技术描述",
+      "补充总结与展望",
+      "补充参考文献",
+      "统一调整格式",
+      "参加中期检查"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成毕业论文的完善和中期检查准备工作。对论文技术描述进行修改完善，使表述更加准确规范。补充第六章总结与展望，对整个系统进行总结并展望未来改进方向。补充参考文"
+  },
+  {
+    "id": "g0097",
+    "question": "Excel/WPS表格中，哪些功能是行政岗位必须掌握的？",
+    "expected_answer": "Excel/WPS表格是行政岗位最重要的工具，必须会的功能包括：筛选（用于找特定数据，如筛选出某天的客户记录）、排序（按日期或金额排列数据）、VLOOKUP（跨表查找，如用客户ID查姓名）、数据透视表（汇总统计，如统计每月客户数量）、条件格式（高亮标记，如把逾期的标红）、求和/计数（基础统计，如SUM、COUNT、AVERAGE）。",
+    "expected_keywords": [
+      "筛选",
+      "排序",
+      "VLOOKUP",
+      "数据透视表",
+      "条件格式",
+      "求和/计数"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 二、岗位需要的核心能力\n\n### 2.1 必备技能\n\n#### Excel/WPS 表格\n\n这是**最重要的工具**，面试大概率会问。\n\n**必须会的：*"
+  },
+  {
+    "id": "g0098",
+    "question": "日常工作中，下午13:30到15:00这个时间段通常安排做什么？",
+    "expected_answer": "根据日常工作节奏参考表，13:30-15:00这个时间段主要安排客户跟进和处理售后工作。",
+    "expected_keywords": [
+      "客户跟进",
+      "处理售后",
+      "13:30-15:00"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 4.4 日常工作节奏（参考）\n\n| 时间 | 做什么 |\n|------|--------|\n| 8:30-9:00 | 看消息、处理紧急事项 |\n| "
+  },
+  {
+    "id": "g0099",
+    "question": "运营和销售在工作方式上有什么区别？",
+    "expected_answer": "销售是主动找客户，运营是维护已有客户。",
+    "expected_keywords": [
+      "主动找客户",
+      "维护已有客户"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 1.3 运营和销售的区别\n\n| | 销售 | 运营 |\n|--|------|------|\n| 目标 | 卖出去 | 让产品用得好 |\n| 工作方式 "
+  },
+  {
+    "id": "g0100",
+    "question": "产品运营的核心定义是什么？",
+    "expected_answer": "产品运营的核心定义是：让用户知道产品 → 让用户使用产品 → 让用户离不开产品。简单说就是产品做出来了（开发的活），让产品有人用、用得好（运营的活）。",
+    "expected_keywords": [
+      "让用户知道产品",
+      "让用户使用产品",
+      "让用户离不开产品"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# 产品运营面试完全指南\n\n> 适用场景：零经验转行产品运营，面试准备用\n\n---\n\n## 一、产品运营是什么\n\n### 1.1 核心定义\n\n产品运营 = **"
+  },
+  {
+    "id": "g0101",
+    "question": "在数据录入岗位面试中，哪些软技能是重要的？",
+    "expected_answer": "根据知识库，重要的软技能包括细心、沟通、耐心、主动性和学习能力。细心是因为数据录入不能出错；沟通是因为要和客户、同事对接；耐心是因为客户问题可能重复；主动性是发现问题主动解决；学习能力是因为工具和流程都要学。",
+    "expected_keywords": [
+      "细心",
+      "沟通",
+      "耐心",
+      "主动性",
+      "学习能力"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 2.2 软技能\n\n| 技能 | 为什么重要 | 怎么体现 |\n|------|-----------|----------|\n| **细心** | 数据"
+  },
+  {
+    "id": "g0102",
+    "question": "在运营中，DAU和MAU分别代表什么？",
+    "expected_answer": "DAU是日活跃用户数，指每天使用APP的人数；MAU是月活跃用户数，指每月使用APP的人数。",
+    "expected_keywords": [
+      "DAU",
+      "日活跃用户数",
+      "MAU",
+      "月活跃用户数"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 六、运营常用术语速查\n\n| 术语 | 含义 | 例子 |\n|------|------|------|\n| **KPI** | 关键绩效指标 | 每月新增"
+  },
+  {
+    "id": "g0103",
+    "question": "CRM系统的主要功能有哪些？",
+    "expected_answer": "CRM系统的主要功能包括录入客户信息、跟进客户状态和生成报表。",
+    "expected_keywords": [
+      "录入客户信息",
+      "跟进客户状态",
+      "生成报表"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "\n\n#### CRM系统\n\n- 录入客户信息\n- 跟进客户状态\n- 生成报表\n\n不同公司CRM不同，但逻辑都一样：**录入 → 跟进 → 记录 → 统计**"
+  },
+  {
+    "id": "g0104",
+    "question": "入职第二周，我应该如何开始独立干活？",
+    "expected_answer": "第二周开始独立干活时，应该把操作流程写成文档，不要靠脑子记；建立自己的工作清单，明确每天做什么；遇到问题先记下来，集中问。",
+    "expected_keywords": [
+      "写成文档",
+      "工作清单",
+      "集中问"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 4.2 第二周：开始独立干活\n\n- [ ] 把操作流程**写成文档**（别靠脑子记）\n- [ ] 建立自己的**工作清单**（每天做什么）\n- [ ] "
+  },
+  {
+    "id": "g0105",
+    "question": "在面试中，如何用你的AI Dev Platform案例来展示你的Agent工程化能力？",
+    "expected_answer": "我的AI Dev Platform就是最好的实战案例：我自己搭了一个6Agent协作系统，核心解决了三个问题：1. 状态机兜底 — 8状态+12事件+15规则，LLM输出不稳不会卡死；2. 集体记忆 — 共享目录+技能固化+长期记忆，Agent不信息孤岛；3. 多模型调度 — DeepSeek干重活、MiniMax干轻活，成本可控。这套架构虽然小，但踩过的坑让我理解了Agent工程化的核心——不是堆Agent数量，而是管好它们怎么协作。",
+    "expected_keywords": [
+      "6Agent协作系统",
+      "状态机兜底",
+      "集体记忆",
+      "多模型调度",
+      "Agent工程化"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 五、你的杀手锏（面试用）\n\n你的AI Dev Platform就是最好的实战案例：\n\n> \"我自己搭了一个6Agent协作系统，核心解决了三个问题：\n> "
+  },
+  {
+    "id": "g0106",
+    "question": "在Agent开发中，莫斯和OpenClaw的定位分别是什么？",
+    "expected_answer": "莫斯是Agent编排与决策引擎（总指挥），OpenClaw是Agent运行时与编码执行器（一线干活的）。",
+    "expected_keywords": [
+      "莫斯",
+      "Agent编排与决策引擎",
+      "总指挥",
+      "OpenClaw",
+      "Agent运行时与编码执行器",
+      "一线干活的"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# Agent开发面试必备 — 莫斯 vs OpenClaw 技术对比\n\n## 一句话定位\n> 莫斯 = Agent编排与决策引擎（总指挥）\n> OpenCla"
+  },
+  {
+    "id": "g0107",
+    "question": "OpenClaw和莫斯这两个Agent在架构设计上有什么可以互相借鉴的地方？",
+    "expected_answer": "OpenClaw的Lane并行机制值得莫斯借鉴——让不同任务类型走不同通道，互不干扰。莫斯的技能固化机制也值得OpenClaw借鉴——把踩过的坑固化成可复用的经验，下次自动避开。",
+    "expected_keywords": [
+      "Lane并行机制",
+      "技能固化机制",
+      "互相借鉴"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### Q: 这两个Agent的架构设计上有什么可以互相借鉴的？\n> \"OpenClaw的Lane并行机制值得莫斯借鉴——让不同任务类型走不同通道，互不干扰。莫"
+  },
+  {
+    "id": "g0108",
+    "question": "如果让我二选一部署到生产环境，莫斯和OpenClaw应该怎么选？",
+    "expected_answer": "看业务场景：如果业务需要自主决策+质量把关（比如自动化开发流水线），选莫斯；如果业务需要高并发编码执行（比如批量代码生成+测试），选OpenClaw。最理想的方案是两者组合——莫斯拆任务+审质量，OpenClaw并行执行。",
+    "expected_keywords": [
+      "自主决策",
+      "质量把关",
+      "高并发编码执行",
+      "组合",
+      "拆任务",
+      "并行执行"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### Q: 如果让你二选一部署到生产环境，你选哪个？\n> \"看业务场景：\n> - 如果业务需要**自主决策+质量把关**（比如自动化开发流水线），选莫斯\n> "
+  },
+  {
+    "id": "g0109",
+    "question": "莫斯Agent的架构有哪些特点？",
+    "expected_answer": "莫斯的架构特点包括：1. 技能驱动——每次任务先检索Skill，匹配到就加载工作流，避免重复思考；2. 记忆分层——短期（上下文）→ 技能（可复用经验）→ Hindsight（跨会话知识），三层互不干扰；3. 工具即能力——每个工具是一个能力单元，按需调用，不用的不加载；4. 审查闭环——代码/文档产出后自动走审查流程，质量问题打回去重做；5. 状态机兜底——流程卡住自动触发超时/重试/降级，不卡死。",
+    "expected_keywords": [
+      "技能驱动",
+      "记忆分层",
+      "工具即能力",
+      "审查闭环",
+      "状态机兜底"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 二、各自的Agent架构特点\n\n### 莫斯的架构特点（适合面试讲）\n1. **技能驱动** — 每次任务先检索Skill，匹配到就加载工作流，避免重复思"
+  },
+  {
+    "id": "g0110",
+    "question": "为什么不只用莫斯或者只用OpenClaw？",
+    "expected_answer": "因为分工不同。莫斯擅长需要判断力的任务——比如需求分析、质量审查、任务拆解。OpenClaw擅长需要执行力的任务——比如写代码、跑测试、生成报告。如果让莫斯去写代码，它的上下文会被代码细节撑爆，影响判断质量。如果让OpenClaw做需求分析，它缺少跨会话记忆和技能积累。就像一家公司，不能只用一个全能的人，而是让擅长决策的人做决策、擅长执行的人做执行。",
+    "expected_keywords": [
+      "分工不同",
+      "莫斯擅长判断力",
+      "OpenClaw擅长执行力",
+      "上下文会被撑爆",
+      "缺少跨会话记忆"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 三、面试官可能会问的问题\n\n### Q: 为什么不只用莫斯或者只用OpenClaw？\n> \"因为分工不同。莫斯擅长需要判断力的任务——比如需求分析、质量审"
+  },
+  {
+    "id": "g0111",
+    "question": "如何通过话术在对话中体现自己懂Agent架构？",
+    "expected_answer": "能对比莫斯和OpenClaw的技术设计差异。",
+    "expected_keywords": [
+      "对比莫斯",
+      "OpenClaw",
+      "技术设计差异"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 六、总结\n\n| 你要输出的人设 | 对应话术 |\n|--------------|---------|\n| 懂Agent架构 | 能对比莫斯和OpenCl"
+  },
+  {
+    "id": "g0112",
+    "question": "Agent开发面试中，除了莫斯和OpenClaw，还需要准备哪些技术栈？",
+    "expected_answer": "除了莫斯和OpenClaw，Agent开发岗还会问LangGraph、状态机、MCP协议、Prompt Engineering、记忆系统、工具调用、安全与权限等技术。",
+    "expected_keywords": [
+      "LangGraph",
+      "状态机",
+      "MCP协议",
+      "Prompt Engineering",
+      "记忆系统",
+      "工具调用",
+      "安全与权限"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 四、Agent开发面试要准备的技术栈\n\n除了莫斯和OpenClaw，Agent开发岗还会问：\n\n| 技术 | 面试常见问题 |\n|------|-----"
+  },
+  {
+    "id": "g0113",
+    "question": "这张图表的主要内容是什么？",
+    "expected_answer": "这是一张其他图表，标题为「RAG 检索增强生成技术 知识库智能问答系统」，包含文字「Hello World 2026」和「Python AI Development」，趋势总结为图片为文字标题和标语组合，无数据趋势，主要展示RAG技术与知识库智能问答系统的主题。",
+    "expected_keywords": [
+      "RAG",
+      "知识库智能问答系统",
+      "文字标题和标语组合"
+    ],
+    "source_files": [
+      "test_ocr.png"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "这是一张其他图表，标题为「RAG 检索增强生成技术 知识库智能问答系统」。\n关键数据：\n- Hello World 2026\n- Python AI Devel"
+  },
+  {
+    "id": "g0114",
+    "question": "这张图片的主题是什么？",
+    "expected_answer": "根据OCR文本和图片信息，这张图片的主题是“RAG检索增强生成技术”与“知识库智能问答系统”。",
+    "expected_keywords": [
+      "RAG检索增强生成技术",
+      "知识库智能问答系统"
+    ],
+    "source_files": [
+      "test_ocr.png"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "根据OCR文本和图片信息，这张图片的主题是“RAG检索增强生成技术”与“知识库智能问答系统”。图片可能是一张技术架构图或宣传图，包含“Hello World 2"
+  },
+  {
+    "id": "g0116",
+    "question": "这个知识库片段主要介绍了哪些内容？",
+    "expected_answer": "该片段主要介绍了RAG检索增强生成技术、知识库智能问答系统，并提到了Hello World 2026和Python AI Development。",
+    "expected_keywords": [
+      "RAG检索增强生成技术",
+      "知识库智能问答系统",
+      "Hello World 2026",
+      "Python AI Development"
+    ],
+    "source_files": [
+      "test_ocr.png"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "RAG 检 索 增 强 生 成 技 术\n知 识 库 智 能 问 答 系 统\nHello World 2026\nPython Al Development"
+  },
+  {
+    "id": "g0117",
+    "question": "这个知识库智能问答系统使用了什么核心技术？",
+    "expected_answer": "RAG检索增强生成技术",
+    "expected_keywords": [
+      "RAG",
+      "检索增强生成",
+      "知识库智能问答"
+    ],
+    "source_files": [
+      "test_ocr.png"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "RAG 检 索 增 强 生 成 技 术\n知 识 库 智 能 问 答 系 统\nHello World 2026\nPython Al Development"
+  },
+  {
+    "id": "g0119",
+    "question": "公安机关在作出治安管理处罚决定前，哪些情形必须进行法制审核？",
+    "expected_answer": "涉及重大公共利益的；直接关系当事人或者第三人重大权益，经过听证程序的。",
+    "expected_keywords": [
+      "重大公共利益",
+      "直接关系当事人或者第三人重大权益",
+      "经过听证程序"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "公安机关不得因违反治安管理行为人的陈述、申辩而加重其\n处罚。\n第一百一十三条 治安案件调查结束后，公安机关应当根据\n不同情况，分别作出以下处理：\n（一）确有依法"
+  },
+  {
+    "id": "g0120",
+    "question": "如果有人强买强卖商品，根据法律规定会面临什么处罚？",
+    "expected_answer": "强买强卖商品，强迫他人提供服务或者强迫他人接受服务的，处五日以上十日以下拘留，并处三千元以上五千元以下罚款；情节较轻的，处五日以下拘留或者一千元以下罚款。",
+    "expected_keywords": [
+      "强买强卖",
+      "五日以上十日以下拘留",
+      "三千元以上五千元以下罚款"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "第五十四条 强买强卖商品，强迫他人提供服务或者强迫他\n人接受服务的，处五日以上十日以下拘留，并处三千元以上五千\n元以下罚款；情节较轻的，处五日以下拘留或者一千元"
+  },
+  {
+    "id": "g0121",
+    "question": "根据治安管理处罚法，在英雄烈士纪念设施保护范围内从事有损纪念英雄烈士环境和氛围的活动，不听劝阻的，会受到什么处罚？",
+    "expected_answer": "处五日以上十日以下拘留或者一千元以上三千元以下罚款；情节较重的，处十日以上十五日以下拘留，可以并处五千元以下罚款。",
+    "expected_keywords": [
+      "五日以上十日以下拘留",
+      "一千元以上三千元以下罚款",
+      "十日以上十五日以下拘留",
+      "五千元以下罚款"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "情节较重的，处十日以上十五日以下拘留。\n第三十五条 有下列行为之一的，处五日以上十日以下拘留\n或者一千元以上三千元以下罚款；情节较重的，处十日以上十五\n日以下拘"
+  },
+  {
+    "id": "g0122",
+    "question": "哪些人违反治安管理应当给予行政拘留处罚但不执行行政拘留处罚？",
+    "expected_answer": "已满十四周岁不满十六周岁的；已满十六周岁不满十八周岁且初次违反治安管理的；七十周岁以上的；怀孕或者哺乳自己不满一周岁婴儿的。",
+    "expected_keywords": [
+      "已满十四周岁不满十六周岁",
+      "初次违反治安管理",
+      "七十周岁以上"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "（三）对报案人、控告人、举报人、证人打击报复的；\n（四）一年以内曾受过治安管理处罚的。\n第二十三条 违反治安管理行为人有下列情形之一，依照本\n法应当给予行政拘留"
+  },
+  {
+    "id": "g0123",
+    "question": "非法安装、使用窃听、窃照专用器材的，会受到什么处罚？",
+    "expected_answer": "非法安装、使用、提供窃听、窃照专用器材的，处五日以下拘留或者一千元以上三千元以下罚款；情节较重的，处五日以上十日以下拘留，并处三千元以上五千元以下罚款。",
+    "expected_keywords": [
+      "窃听、窃照专用器材",
+      "五日以下拘留",
+      "一千元以上三千元以下罚款",
+      "情节较重",
+      "五日以上十日以下拘留",
+      "三千元以上五千元以下罚款"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "款。\n第七十条 非法安装、使用、提供窃听、窃照专用器材的，\n处五日以下拘留或者一千元以上三千元以下罚款；情节较重的，\n处五日以上十日以下拘留，并处三千元以上五千"
+  },
+  {
+    "id": "g0124",
+    "question": "车回收行业经营者不按规定登记信息，会面临什么处罚？",
+    "expected_answer": "处警告；拒不改正或者造成后果的，对其直接负责的主管人员和其他直接责任人员处五日以下拘留或者三千元以下罚款。",
+    "expected_keywords": [
+      "警告",
+      "五日以下拘留",
+      "三千元以下罚款"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "\n车回收行业经营者违反法律法规关于要求登记信息的规定，不登\n记信息的，处警告；拒不改正或者造成后果的，对其直接负责的\n主管人员和其他直接责任人员处五日以下拘留或"
+  },
+  {
+    "id": "g0125",
+    "question": "已满十四周岁不满十八周岁的人违反治安管理，应当如何处罚？",
+    "expected_answer": "已满十四周岁不满十八周岁的人违反治安管理的，从轻或者减轻处罚。",
+    "expected_keywords": [
+      "已满十四周岁不满十八周岁",
+      "从轻或者减轻处罚"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "人的，登记造册，公开拍卖或者按照国家有关规定处理，所得款\n项上缴国库。\n第十二条 已满十四周岁不满十八周岁的人违反治安管理\n的，从轻或者减轻处罚；不满十四周岁的"
+  },
+  {
+    "id": "g0126",
+    "question": "对于扣押的物品，如果六个月无人主张权利，应该如何处理？",
+    "expected_answer": "满六个月无人对该财产主张权利或者无法查清权利人的，应当公开拍卖或者按照国家有关规定处理，所得款项上缴国库。",
+    "expected_keywords": [
+      "六个月",
+      "公开拍卖",
+      "上缴国库"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "对扣押的物品，应当妥善保管，不得挪作他用；对不宜长期\n保存的物品，按照有关规定处理。经查明与案件无关或者经核实\n属于被侵害人或者他人合法财产的，应当登记后立即退"
+  },
+  {
+    "id": "g0127",
+    "question": "这份本科毕业设计（论文）的题目是什么？",
+    "expected_answer": "基于 Python 的母婴商品分析及推荐系统的设计及实现",
+    "expected_keywords": [
+      "基于 Python",
+      "母婴商品分析",
+      "推荐系统"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "辽 宁 工 业 大 学\n本 科 毕 业 设 计 （ 论 文 ）\n教 学 过 程 记 录 册\n题目 基于 Python 的母婴商品分析及推荐系统的设计及实现\n电子"
+  },
+  {
+    "id": "g0128",
+    "question": "这个毕业设计课题中，系统采用的技术栈和数据库分别是什么？",
+    "expected_answer": "系统采用Django框架，使用Python技术，以MySQL为数据库，前端采用Vue.js、Element UI、ECharts构建可视化界面，后端采用Django框架开发API。",
+    "expected_keywords": [
+      "Django框架",
+      "Python",
+      "MySQL",
+      "Vue.js",
+      "Element UI",
+      "ECharts"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "本科毕业设计（论文）任务书\n理论研究 应用研究\n题目来源 科研 生产实践 题目类型\n设计开发 其他\n自拟 其他\n1.毕业设计（论文）的目标与技术指标（设计参数）"
+  },
+  {
+    "id": "g0129",
+    "question": "医疗健康数据分析系统的医生端需要实现哪些功能？",
+    "expected_answer": "医生端需要实现患者数据多维统计与热力图分析、健康报告管理、随访计划管理、社区管理等。",
+    "expected_keywords": [
+      "患者数据多维统计",
+      "热力图分析",
+      "健康报告管理",
+      "随访计划管理",
+      "社区管理"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "nt UI、ECharts 构建可视化界面，后端采用Django 框架开发API，\n数据库选用MySQL。\n（3）实现患者端：健康数据录入与查看、报告查阅、体检"
+  },
+  {
+    "id": "g0130",
+    "question": "中期检查答辩意见的记录人签字日期是什么？",
+    "expected_answer": "中期检查答辩意见的记录人签字日期是2026年4月20日。",
+    "expected_keywords": [
+      "中期检查答辩意见",
+      "记录人签字",
+      "2026年4月20日"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "| 1.中期检查答辩意见 记录人签字： 2026年4月20日 |\n| --- |\n| 2.中期检查结论 系主任签字： 2026年4月20日 |"
+  },
+  {
+    "id": "g0131",
+    "question": "开题答辩意见的记录人签字日期是什么时候？",
+    "expected_answer": "开题答辩意见的记录人签字日期是2026年3月12日。",
+    "expected_keywords": [
+      "2026年3月12日",
+      "记录人签字"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "| 1.开题答辩意见 记录人签字： 2026年3月12日 |\n| --- |\n| 2.整改情况 系主任签字： 2026年3月20日 |"
+  },
+  {
+    "id": "g0132",
+    "question": "本科毕业设计（论文）开题检查意见中，开题答辩意见的记录人和整改情况的系主任签字日期分别是什么？",
+    "expected_answer": "开题答辩意见的记录人签字日期是2026年3月12日，整改情况的系主任签字日期是2026年3月20日。",
+    "expected_keywords": [
+      "2026年3月12日",
+      "2026年3月20日",
+      "记录人",
+      "系主任"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "本科毕业设计（论文）开题检查意见\n1.开题答辩意见\n记录人签字：\n2026年3月12日\n2.整改情况\n系主任签字：\n2026年3月20日\n2"
+  },
+  {
+    "id": "g0133",
+    "question": "毕业设计说明书（论文）的字数要求是多少？",
+    "expected_answer": "完成一篇完整规范的15000字以上毕业设计说明书（论文）。",
+    "expected_keywords": [
+      "15000字",
+      "毕业设计说明书",
+      "论文"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "比较和总结。\n（5）完成一篇完整规范的15000字以上毕业设计说明书（论文）。\n（6）翻译一篇与题目相关的英文文献资料。\n指导教师签字： 2026年2月1日 系"
+  },
+  {
+    "id": "g0134",
+    "question": "胡贞虎的毕业设计题目是什么？",
+    "expected_answer": "基于 Python 的医疗健康数据分析系统的设计与实现",
+    "expected_keywords": [
+      "基于 Python",
+      "医疗健康数据分析系统",
+      "设计与实现"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "| 学生姓名 | 胡贞虎 | 学号 | 220410044 | 专业 | 数据科学与大 数据技术 | 班级 | 数据222 |\n| --- | --- | --"
+  },
+  {
+    "id": "g0135",
+    "question": "学生工作情况记录表格包含哪些字段？",
+    "expected_answer": "学生工作情况记录表格包含时间、地点两个字段。",
+    "expected_keywords": [
+      "时间",
+      "地点"
+    ],
+    "source_files": [
+      "叶  记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0136",
+    "question": "学生工作情况记录表中包含哪些字段？",
+    "expected_answer": "学生工作情况记录表包含时间、地点字段。",
+    "expected_keywords": [
+      "时间",
+      "地点"
+    ],
+    "source_files": [
+      "叶  记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0137",
+    "question": "知识库片段中“学生工作情况记录”表格包含哪些字段？",
+    "expected_answer": "该表格包含“时间”、“地点”两个字段，且“学生工作情况记录”作为表格标题。",
+    "expected_keywords": [
+      "时间",
+      "地点",
+      "学生工作情况记录"
+    ],
+    "source_files": [
+      "叶  记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0138",
+    "question": "学生工作情况记录表包含哪些字段？",
+    "expected_answer": "学生工作情况记录表包含时间、地点两个字段。",
+    "expected_keywords": [
+      "时间",
+      "地点"
+    ],
+    "source_files": [
+      "叶  记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0140",
+    "question": "这个毕业设计（论文）的题目是什么？",
+    "expected_answer": "基于 Python 的商场数据分析与可视化系统的设计与实现",
+    "expected_keywords": [
+      "基于 Python",
+      "商场数据分析",
+      "可视化系统",
+      "设计与实现"
+    ],
+    "source_files": [
+      "叶  记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "辽 宁 工 业 大 学\n毕业设计（论文）学生工作记录本\n题目 基于 Python 的商场数据分析与可视化系统的设计与实现\n电子与信息工程 学院 数据科学与大数据"
+  },
+  {
+    "id": "g0147",
+    "question": "Token 的有效期是多久？过期后需要做什么？",
+    "expected_answer": "Token 由用户登录时生成，有效期为 1 小时，过期后需重新登录。",
+    "expected_keywords": [
+      "1小时",
+      "重新登录"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "身份验证，Token 由用户登录时生成，有效期为 1 小时，过期后需重新登录。JSON 响\n应中间件统一接口返回格式，确保前端收到的始终是结构化的JSON数据。"
+  },
+  {
+    "id": "g0148",
+    "question": "在给定的知识库片段中，边的样式（style）属性包含了哪些具体设置？",
+    "expected_answer": "边的样式属性包含：edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;fontFamily=Times New Roman;",
+    "expected_keywords": [
+      "edgeStyle=orthogonalEdgeStyle",
+      "rounded=0",
+      "orthogonalLoop=1",
+      "jettySize=auto",
+      "html=1",
+      "fontSize=10",
+      "fontFamily=Times New Roman"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "216%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLo"
+  },
+  {
+    "id": "g0149",
+    "question": "为什么选择 Vue.js 作为前端开发的主要技术？",
+    "expected_answer": "因为 Vue.js 有组件化的开发方式，满足了以数据为中心的设计思想，拥有强大的开发者群体以及成熟的生态体系，正好顺应了当下前端的发展主流方向。",
+    "expected_keywords": [
+      "组件化",
+      "以数据为中心",
+      "强大的开发者群体",
+      "成熟的生态体系"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "足轻重的地位，优秀的前端框架可以支撑设计\n出既有审美又快速还有易于维护的交互产品，作为一个渐进式的javascript 框架，Vue.js\n通过它自己的特性使得"
+  },
+  {
+    "id": "g0150",
+    "question": "在给定的知识库片段中，id为33的边的目标节点是哪个？",
+    "expected_answer": "目标节点是6。",
+    "expected_keywords": [
+      "目标",
+      "6"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "l%20id%3D%2233%22%20edge%3D%221%22%20parent%3D%221%22%20source%3D%225%22%20style"
+  },
+  {
+    "id": "g0151",
+    "question": "这个毕业设计论文的题目是什么？",
+    "expected_answer": "基于Python的医疗健康数据分析系统的设计与实现",
+    "expected_keywords": [
+      "基于Python",
+      "医疗健康数据分析系统",
+      "设计与实现"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "编号\n毕业设计 论文\n( )\n基于 的医疗健康数据分析系统的设\nPython\n计与实现\nDesign and Implementation of Medical"
+  },
+  {
+    "id": "g0152",
+    "question": "论文致谢中，作者感谢了哪些人？",
+    "expected_answer": "作者感谢了老师、同学、家人和朋友，以及所有提供参考文献和资料的学者和研究人员。",
+    "expected_keywords": [
+      "老师",
+      "同学",
+      "家人",
+      "朋友",
+      "学者和研究人员"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "们的关心和理解让我能够全身心地投入其中。朋友们在\n我遇到困难时，总是耐心倾听并给予我精神上的支持，帮助我度过了许多艰难的时刻。\n最后，我要感谢所有为本文提供参考"
+  },
+  {
+    "id": "g0153",
+    "question": "数据字典在系统设计中的核心价值是什么？",
+    "expected_answer": "数据字典的核心价值在于统一数据口径、规范开发环节，保障不同角色在协作过程中对数据的理解保持一致。它如同“数据蓝图”，明确规定系统内各类数据元素的命名、数据类型、取值区间及相互关联，能够有效规避因理解差异造成的数据混乱与冗余问题，帮助需求分析人员精准把握业务需求与数据要素含义。",
+    "expected_keywords": [
+      "统一数据口径",
+      "规范开发环节",
+      "数据蓝图"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本科生毕业设计（论文）\n图3.5 功能1级数据流图\n3.3.2 数据字典\n数据字典作为一类元数据集合，可对数据结构与业务规则开展系统化说明。其核心\n价值在于统一"
+  },
+  {
+    "id": "g0154",
+    "question": "个人健康信息表（Personal Health Information Table）中存储了哪些字段信息？",
+    "expected_answer": "个人健康信息表用于保存创建时间、用户账号、用户姓名、性别、年龄、血脂、血糖、血压、脉搏等信息，ID编号为非空自增主键。",
+    "expected_keywords": [
+      "创建时间",
+      "用户账号",
+      "用户姓名",
+      "性别",
+      "年龄",
+      "血脂",
+      "血糖",
+      "血压",
+      "脉搏"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "片 是\nsuggestion longtext 处理建议 否\nstatus varchar 8 处理状态 是\nreport_type varchar 4 举报类"
+  },
+  {
+    "id": "g0157",
+    "question": "这份毕业设计（论文）工作记录本的题目是什么？",
+    "expected_answer": "基于 Python 的医疗健康数据分析系统的设计与实现",
+    "expected_keywords": [
+      "基于 Python",
+      "医疗健康数据分析系统",
+      "设计与实现"
+    ],
+    "source_files": [
+      "记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "辽 宁 工 业 大 学\n毕业设计（论文）学生工作记录本\n题目 基于 Python 的医疗健康数据分析系统的设计与实现\n电子与信息工程 学院 数据科学与大数据 专"
+  },
+  {
+    "id": "g0158",
+    "question": "这个表格包含哪些字段？",
+    "expected_answer": "表格包含时间、地点和学生工作情况记录三个字段。",
+    "expected_keywords": [
+      "时间",
+      "地点",
+      "学生工作情况记录"
+    ],
+    "source_files": [
+      "记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0159",
+    "question": "知识库片段中表格的标题是什么？",
+    "expected_answer": "学生工作情况记录",
+    "expected_keywords": [
+      "学生工作情况记录"
+    ],
+    "source_files": [
+      "记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0161",
+    "question": "初入公司时，团队前辈是如何帮助新人熟悉工作的？",
+    "expected_answer": "团队前辈没有让新人直接上手复杂项目，而是先带新人熟悉公司技术栈和业务场景，耐心讲解数据仓库架构、数据处理规范以及用户画像分析项目的背景目标，并引导新人从搭建开发环境、熟悉SQL语句的企业级应用，到学习数据质量核查的标准流程，逐步跟上团队节奏。",
+    "expected_keywords": [
+      "熟悉技术栈",
+      "讲解数据仓库架构",
+      "搭建开发环境"
+    ],
+    "source_files": [
+      "中可博凡实习总结.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "初入公司时，我对企业级大数据开发的认知还停留在课本的理论知识中，面对陌生的业务流程和海量数据，心里难免有些忐忑。但团队的前辈们并没有让我直接上手复杂的项目，而是"
+  },
+  {
+    "id": "g0162",
+    "question": "在这次实习中，你如何发现并处理历史数据中关键字段缺失的问题？",
+    "expected_answer": "在核查中发现部分历史数据存在关键字段缺失，这些字段是后续用户标签生成和画像构建的关键依据。我主动梳理了缺失数据的分布情况，统计了缺失率和影响范围，并带着分析报告与产品、运营团队沟通，同步数据问题细节和潜在风险，共同推进数据补全工作。",
+    "expected_keywords": [
+      "关键字段缺失",
+      "缺失率和影响范围",
+      "与产品、运营团队沟通"
+    ],
+    "source_files": [
+      "中可博凡实习总结.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "这次实习的核心任务，是参与用户画像分析项目中的数据质量核查工作。看似简单的核查工作，却让我对“数据是大数据项目的基石”这句话有了深刻的体会。刚开始，我只是按照既"
+  },
+  {
+    "id": "g0163",
+    "question": "这次实习对你有何意义？",
+    "expected_answer": "这次实习是从学生向职场人过渡的重要一步，不仅掌握了数据工程师岗位的基础工作技能，还养成了严谨负责的工作态度、主动沟通的协作意识和直面问题的抗压能力。",
+    "expected_keywords": [
+      "学生向职场人过渡",
+      "基础工作技能",
+      "严谨负责",
+      "主动沟通",
+      "抗压能力"
+    ],
+    "source_files": [
+      "中可博凡实习总结.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "这次实习，是我从学生向职场人过渡的重要一步。它不仅让我掌握了数据工程师岗位的基础工作技能，更让我养成了严谨负责的工作态度、主动沟通的协作意识和直面问题的抗压能力"
+  },
+  {
+    "id": "g0164",
+    "question": "在实习中，你发现了自己哪些不足？",
+    "expected_answer": "在算法应用上，我还停留在基础的理论层面，面对复杂的业务场景，无法快速找到合适的算法模型；在业务理解上，对用户画像背后的商业逻辑和业务目标的理解还不够深入，导致部分工作的优先级把握不够准确。",
+    "expected_keywords": [
+      "算法应用",
+      "基础理论",
+      "业务理解",
+      "商业逻辑",
+      "优先级"
+    ],
+    "source_files": [
+      "中可博凡实习总结.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "一个月的实习，也让我清晰地看到了自己的不足。比如在算法应用上，我还停留在基础的理论层面，面对复杂的业务场景，无法快速找到合适的算法模型；在业务理解上，对用户画像"
+  },
+  {
+    "id": "g0165",
+    "question": "实习生在哪个时间段、在哪家公司完成了实习？",
+    "expected_answer": "实习时间为2026年1月20日至2月20日，实习单位为中科博凡(德州)数字科技有限公司，岗位为数据工程师实习生。",
+    "expected_keywords": [
+      "2026年1月20日至2月20日",
+      "中科博凡(德州)数字科技有限公司",
+      "数据工程师实习生"
+    ],
+    "source_files": [
+      "中可博凡实习总结.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "时光荏苒，为期一个月的实习已落下帷幕。2026年1月20日至2月20日，我在中科博凡(德州)数字科技有限公司的数据工程师实习生岗位上完成了实践学习。作为辽宁工业"
+  },
+  {
+    "id": "g0166",
+    "question": "这段实习经历中，你学到了哪些应对真实数据问题的方法？",
+    "expected_answer": "面对真实数据中存在的缺失、重复、格式不统一等问题，我学会了分步排查、交叉验证，并养成了写分析报告时附上多维度对比验证的习惯，让每一个结论都有数据支撑。同时，我也体会到团队协作的重要性，需要和产品、运营、开发等多个岗位的同事沟通配合，带着问题和方案与同事讨论，能快速解决难题并从不同视角理解业务。",
+    "expected_keywords": [
+      "分步排查",
+      "交叉验证",
+      "多维度对比验证",
+      "团队协作"
+    ],
+    "source_files": [
+      "中可博凡实习总结.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "这段实习也让我深刻感受到了理论与实践的差距。在学校里，我们做的项目数据大多是干净、规整的教学数据，而在企业中，真实的数据往往存在缺失、重复、格式不统一等各种问题"
+  },
+  {
+    "id": "g0167",
+    "question": "孤立森林异常检测中，contamination 和 random_state 参数的默认值分别是多少？",
+    "expected_answer": "contamination 默认值为0.1（即10%），random_state 默认值为42。",
+    "expected_keywords": [
+      "contamination",
+      "0.1",
+      "random_state",
+      "42"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": ": 异常样本比例（默认0.1，即10%） - random_state: 随机种子（默认42，保证可复现） train_mode: 训练模式标志（当前版本预留参"
+  },
+  {
+    "id": "g0168",
+    "question": "这个函数 _linear_regression_slope 的作用是什么？",
+    "expected_answer": "计算线性回归斜率（用于趋势分析）",
+    "expected_keywords": [
+      "线性回归斜率",
+      "趋势分析"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def _linear_regression_slope(self, x: List[float], y: List[float]) -> float: \"\"\""
+  },
+  {
+    "id": "g0169",
+    "question": "在计算变异系数时，如果平均值不为零，公式是什么？",
+    "expected_answer": "变异系数（波动率）的计算公式为：标准差除以平均值，再乘以100，即 (std_val / mean_val) * 100，如果平均值为0则返回0.0。",
+    "expected_keywords": [
+      "变异系数",
+      "标准差",
+      "平均值",
+      "乘以100"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "sum_x2 = sum(xi ** 2 for xi in x) numerator = n * sum_xy - sum_x * sum_y denomin"
+  },
+  {
+    "id": "g0170",
+    "question": "在健康评估中，血压、血糖、BMI、心率、胆固醇和睡眠质量这些指标分别占多少权重？",
+    "expected_answer": "血压权重为0.25，血糖权重为0.20，BMI权重为0.20，心率权重为0.15，胆固醇权重为0.10，睡眠质量权重为0.10。",
+    "expected_keywords": [
+      "血压0.25",
+      "血糖0.20",
+      "BMI0.20",
+      "心率0.15",
+      "胆固醇0.10",
+      "睡眠质量0.10"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": " METRIC_WEIGHTS: Dict[str, float] = { 'blood_pressure': 0.25, 'blood_sugar': 0.2"
+  },
+  {
+    "id": "g0171",
+    "question": "在计算患者指标的Z-score时，如果某个指标在群体中的标准差为0，代码会如何处理？",
+    "expected_answer": "如果群体标准差为0，代码会跳过该指标，不计算Z-score，因为群体无波动时无法计算Z-score。",
+    "expected_keywords": [
+      "标准差为0",
+      "跳过",
+      "无法计算Z-score"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "[ 'bp_systolic', 'blood_sugar', 'bmi', 'heart_rate', 'cholesterol' ] for metric "
+  },
+  {
+    "id": "g0172",
+    "question": "当指标值低于正常范围时，健康评分是如何计算的？",
+    "expected_answer": "当指标值低于正常范围时，按偏离比例扣分，计算公式为：deviation = (min_val - value) / min_val * 100，最终得分为 max(0.0, 100.0 - deviation)。",
+    "expected_keywords": [
+      "低于正常范围",
+      "偏离比例",
+      "deviation",
+      "max(0.0, 100.0 - deviation)"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": ".get('normal_range') # 更清晰的变量名 # 防御性处理：无正常范围配置时返回0分 if not normal_range: return "
+  },
+  {
+    "id": "g0173",
+    "question": "normalize_value函数如何将健康指标值归一化为0-100的健康评分？",
+    "expected_answer": "normalize_value函数将健康指标值归一化为0-100的健康评分，评分规则是：处于正常范围内得100分，低于或高于正常范围按偏离程度线性扣分，最低0分。",
+    "expected_keywords": [
+      "归一化",
+      "健康评分",
+      "正常范围",
+      "线性扣分",
+      "最低0分"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "from typing import Dict, Optional # 假设的配置获取函数（补充类型注解） def get_metric_config(dime"
+  },
+  {
+    "id": "g0174",
+    "question": "使用隔离森林模型进行异常检测时，如何将预测标签转换为0和1的格式？",
+    "expected_answer": "将标签转换为0=正常，1=异常的格式，具体操作是：anomalies = (labels == -1).astype(int)，其中labels为模型预测结果，-1表示异常，1表示正常。",
+    "expected_keywords": [
+      "labels",
+      "-1",
+      "astype(int)",
+      "0=正常",
+      "1=异常"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "ion=contamination, random_state=random_state, n_jobs=-1 # 新增：启用多线程加速训练 ) # 拟合并预测"
+  },
+  {
+    "id": "g0175",
+    "question": "协助诊断及风险管理系统如何帮助临床医师评估患者的患病风险？",
+    "expected_answer": "协助诊断及风险管理系统基于提前建立好的相关疾病预测算法模型，汇集病人各项基础生理参数及各类健康资讯，模型可以准确地计算出某个人群在一定段时间内患病的风险值大小，并将其分为高危险度、中危险度及低危险度三个等级。量化后的风险度不仅为临床诊疗提供参考借鉴，还促进个性化防治方案的研究制定及应用落地，提高了整体疾病预处理能力和治疗效果。",
+    "expected_keywords": [
+      "疾病预测算法模型",
+      "风险值",
+      "高危险度、中危险度及低危险度",
+      "个性化防治方案"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "协助诊断及风险管理系统是医学中的关键技术之一，能给临床医师带来有效的数据分析支持，基于提前建立好的相关疾病预测算法模型，在这之上可以汇集病人各项基础生理参数及各"
+  },
+  {
+    "id": "g0176",
+    "question": "在给定的知识库片段中，mxCell id为32的边的source属性值是什么？",
+    "expected_answer": "根据片段内容，mxCell id为32的边的source属性值为\"2\"。",
+    "expected_keywords": [
+      "source",
+      "2",
+      "mxCell id=32"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "yle%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLoop%3D1%3Bje"
+  },
+  {
+    "id": "g0177",
+    "question": "该系统采用的技术架构和设计模式是什么？",
+    "expected_answer": "该系统使用Django后端加Vue前端的设计模式，这种设计模式有着很大的技术革新意义而且有着广泛的应用前景。",
+    "expected_keywords": [
+      "Django",
+      "Vue",
+      "设计模式"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "研究成果以及技术支持。工程使用Django后端加Vue前端的设计模式，这种设计模式有着很大的技术革新意义而且有着广泛的应用前景，对推进医疗卫生信息系统的发展有着"
+  },
+  {
+    "id": "g0178",
+    "question": "基于Python的医疗健康数据分析系统部署运行后，应达到哪些预期目标？",
+    "expected_answer": "系统部署运行后，为了确保能够满足用户的实际需求，应达到以下预期目标：为医疗机构和患者提供高效、便捷的健康数据管理服务。",
+    "expected_keywords": [
+      "高效",
+      "便捷",
+      "健康数据管理服务"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "基于Python的医疗健康数据分析系统旨在为医疗机构和患者提供高效、便捷的健康数据管理服务。系统部署运行后，为了确保能够满足用户的实际需求，应达到以下预期目标："
+  },
+  {
+    "id": "g0179",
+    "question": "患者端首页展示哪些内容？",
+    "expected_answer": "患者端首页展示个人健康数据概览，包括最近一次录入的血压、血糖、心率等关键指标的快照展示，最新生成的健康报告提醒，医生制定的随访计划到期提醒，以及健康资讯推送等内容。",
+    "expected_keywords": [
+      "个人健康数据概览",
+      "血压、血糖、心率",
+      "健康报告提醒",
+      "随访计划到期提醒",
+      "健康资讯推送"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "系统首页模块是用户成功登录后首先看到的页面，其通过后台发送GET请求获取数据，用于处理用户请求并返回首页的渲染内容。针对不同角色，首页展示的内容各有侧重：患者端"
+  },
+  {
+    "id": "g0180",
+    "question": "在知识库片段中，'医生分析配置'这个节点在流程图中的位置和样式是什么？",
+    "expected_answer": "在知识库片段中，'医生分析配置'节点位于x=570, y=190的位置，宽度为120，高度为50，样式为rounded=1，whiteSpace=wrap，html=1，fontSize=11，fontStyle=1，align=center，verticalAlign=middle，arcSize=10，fontFamily=Times New Roman。",
+    "expected_keywords": [
+      "医生分析配置",
+      "x=570",
+      "y=190",
+      "宽度120",
+      "高度50"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "rent%3D%221%22%20style%3D%22rounded%3D1%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfontSiz"
+  },
+  {
+    "id": "g0181",
+    "question": "该系统在医疗资源管理和诊疗服务方面有哪些具体优势？",
+    "expected_answer": "该系统基于社会效益角度，完善医疗资源管理机制，提高诊疗服务效果并保持医疗质量水平提升。通过对患者健康数据进行解析和智能分析，形成可视化、结构化的健康档案，帮助医生精准发现疾病症结，减少信息加工时间，节省医务人员时间和精力，使医患互动转向咨询式指导。",
+    "expected_keywords": [
+      "完善医疗资源管理机制",
+      "提高诊疗服务效果",
+      "可视化结构化健康档案",
+      "减少信息加工时间"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "基于社会效益角度来讲，在此方面进行研发及使用有非常重要的现实价值。主要是为了完善医疗资源管理机制，极大地提高了诊疗服务的效果同时保持医疗质量水平不断提升。通过对"
+  },
+  {
+    "id": "g0182",
+    "question": "系统是如何将不同单位的健康指标绘制在同一张雷达图上进行比较的？",
+    "expected_answer": "系统采用多维雷达图对患者的综合健康状况进行可视化评估，选取血压稳定性、血糖控制水平、体重指数（BMI）、心率健康状况、血脂水平和睡眠质量六个维度，将各指标的实际值通过归一化函数映射至统一的0-100评分区间，绘制六维雷达图。归一化方法基于各指标的医学参考范围：当指标值处于正常范围时得满分100分，偏离正常范围越远则得分越低。通过标准化的映射方式，使得不同量纲、不同单位的健康指标能够在同一张雷达图上进行直观的横向比较。",
+    "expected_keywords": [
+      "归一化",
+      "0-100评分区间",
+      "医学参考范围"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "系统采用多维雷达图对患者的综合健康状况进行可视化评估。选取血压稳定性、血糖控制水平、体重指数（BMI）、心率健康状况、血脂水平和睡眠质量六个维度，将各指标的实际"
+  },
+  {
+    "id": "g0183",
+    "question": "中期检查答辩意见的记录人签字日期是什么时候？",
+    "expected_answer": "中期检查答辩意见的记录人签字日期是2026年4月20日。",
+    "expected_keywords": [
+      "2026年4月20日",
+      "记录人签字"
+    ],
+    "source_files": [
+      "教学过程记录册--医疗健康--.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "| 1.中期检查答辩意见                   记录人签字： 2026年4月20日 | 1.中期检查答辩意见                   "
+  },
+  {
+    "id": "g0184",
+    "question": "这个毕业设计课题使用了哪些前端可视化技术？",
+    "expected_answer": "前端使用Tailwind CSS、ECharts和Chart.js可视化技术。",
+    "expected_keywords": [
+      "Tailwind CSS",
+      "ECharts",
+      "Chart.js"
+    ],
+    "source_files": [
+      "教学过程记录册--医疗健康--.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "| 题目来源 | □ 科研     ☑ 生产实践 □ 自拟     □ 其他 | 题目类型 | □ 理论研究     □ 应用研究 ☑ 设计开发     □ 其"
+  },
+  {
+    "id": "g0185",
+    "question": "开题答辩意见记录人签字日期是什么时候？",
+    "expected_answer": "开题答辩意见记录人签字日期是2026年3月12日。",
+    "expected_keywords": [
+      "2026年3月12日",
+      "记录人签字"
+    ],
+    "source_files": [
+      "教学过程记录册--医疗健康--.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "| 1.开题答辩意见                   记录人签字： 2026年3月12日 |\n| --- |\n| 2.整改情况       系主任签字： 2"
+  },
+  {
+    "id": "g0187",
+    "question": "开题答辩意见的整改情况是什么？",
+    "expected_answer": "无整改意见，按计划进行。",
+    "expected_keywords": [
+      "无整改意见",
+      "按计划进行"
+    ],
+    "source_files": [
+      "教学过程记录册_更新版.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "| 1.开题答辩意见                   记录人签字： 2026年3月12日 |\n| --- |\n| 2.整改情况       系主任签字： 2"
+  },
+  {
+    "id": "g0188",
+    "question": "这个医疗健康数据分析系统毕业设计课题中，系统采用的技术栈和角色划分是什么？",
+    "expected_answer": "该系统采用Python技术，以MySQL为数据库，使用Django框架，前端使用Vue.js、Element UI和ECharts可视化技术。系统划分为前端和后端，角色分为患者、医生和管理员三种。",
+    "expected_keywords": [
+      "Python",
+      "MySQL",
+      "Django",
+      "Vue.js",
+      "Element UI",
+      "ECharts",
+      "患者",
+      "医生",
+      "管理员"
+    ],
+    "source_files": [
+      "教学过程记录册_更新版.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "| 题目来源 | □ 科研     ☑ 生产实践 □ 自拟     □ 其他 | 题目类型 | □ 理论研究     □ 应用研究 ☑ 设计开发     □ 其"
+  },
+  {
+    "id": "g0189",
+    "question": "管理员端首页看板页面使用了什么技术来优化加载速度？",
+    "expected_answer": "使用数据缓存技术优化看板加载速度，提升用户体验。",
+    "expected_keywords": [
+      "数据缓存技术",
+      "优化加载速度",
+      "提升用户体验"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周开始管理员端前端开发。完成管理员登录和首页看板页面开发。首页看板使用ECharts多图表组合布局，集中展示平台运营数据，包括用户增长趋势图（近30天每日新增"
+  },
+  {
+    "id": "g0190",
+    "question": "本周在毕业论文完善和中期检查准备中，完成了哪些具体工作？",
+    "expected_answer": "本周完成了毕业论文的完善和中期检查准备工作，包括修改完善技术描述、完成第六章（系统测试）撰写、补充第七章（总结与展望）内容、补充参考文献（近五年CNKI收录的中文文献）、统一调整论文格式，并参加了学校组织的中期检查，向答辩委员会汇报了系统开发进展和论文撰写情况。",
+    "expected_keywords": [
+      "第六章（系统测试）",
+      "第七章（总结与展望）",
+      "参考文献",
+      "中期检查"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成毕业论文的完善和中期检查准备工作。对论文中的技术描述进行了修改完善，使表述更加准确规范。完成第六章（系统测试）的撰写，展示了用户登录、用户注册、健康数据"
+  },
+  {
+    "id": "g0191",
+    "question": "医生端健康报告管理页面支持哪些操作？",
+    "expected_answer": "医生端健康报告管理页面（jiankangbaogao）支持医生为患者新增、查看、修改、删除电子健康报告，报告包含健康评估等级（高风险/中风险/低风险/正常）和专业健康建议，并支持Word格式导出。",
+    "expected_keywords": [
+      "新增",
+      "查看",
+      "修改",
+      "删除",
+      "Word格式导出"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成医生端健康报告管理和体检报告查阅功能开发。开发健康报告管理页面（jiankangbaogao），支持医生为患者新增、查看、修改、删除电子健康报告，报告包"
+  },
+  {
+    "id": "g0192",
+    "question": "毕业论文终稿定稿前，需要完成哪些具体工作？",
+    "expected_answer": "本周完成毕业论文终稿的全文审校，对目录、页眉页脚、图表编号、参考文献格式等进行了统一调整，确保各项内容符合学校论文规范要求；完成了论文摘要、Abstract、关键词等部分的中英文校对；将论文终稿提交指导教师审核，根据审核意见进行了最后的修改，最终完成定稿。",
+    "expected_keywords": [
+      "全文审校",
+      "目录、页眉页脚、图表编号、参考文献格式",
+      "中英文校对",
+      "指导教师审核"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成毕业论文的最终定稿工作。完成了毕业论文终稿的全文审校，对目录、页眉页脚、图表编号、参考文献格式等进行了统一调整，确保各项内容符合学校论文规范要求。完成了"
+  },
+  {
+    "id": "g0193",
+    "question": "管理员端本周完成了哪些功能开发？",
+    "expected_answer": "本周完成管理员端用户管理和健康数据管理功能开发。开发用户管理页面，对患者（yonghu表）、医生（yisheng表）、管理员（users表）三类用户进行全生命周期管理，支持新增、查看、修改、删除及注册审核操作，可对违规账号进行冻结处理，支持数据导出功能。开发健康数据管理页面（jiankangshuju），管理员可查看全平台所有患者健康数据，实现多维统计（姓名、性别、就诊科室、吸烟/饮酒史统计）和热力图可视化展示，支持数据批量导入导出。",
+    "expected_keywords": [
+      "用户管理",
+      "健康数据管理",
+      "全生命周期管理",
+      "多维统计",
+      "热力图"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成管理员端用户管理和健康数据管理功能开发。开发用户管理页面，对患者（yonghu表）、医生（yisheng表）、管理员（users表）三类用户进行全生命周"
+  },
+  {
+    "id": "g0194",
+    "question": "本周毕业论文撰写工作完成了哪些内容？",
+    "expected_answer": "本周开始毕业论文撰写工作，完成了毕业论文第一章（绪论）的撰写，包括研究背景与意义、国内外研究现状、本文的主要工作内容和章节安排；完成了第二章（相关技术概述）的撰写，介绍了Python语言与数据处理技术、Django框架、MySQL数据库、Vue.js前端开发技术、ECharts数据可视化技术等相关技术栈；本周完成了毕业论文前两章的初稿撰写工作。",
+    "expected_keywords": [
+      "第一章（绪论）",
+      "第二章（相关技术概述）",
+      "初稿"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周开始毕业论文撰写工作。根据指导教师的建议，重新梳理了系统的设计文档和技术实现细节。完成毕业论文第一章（绪论）的撰写，包括研究背景与意义（慢性病发病率上升、健"
+  },
+  {
+    "id": "g0195",
+    "question": "本周系统全面测试工作具体测试了哪些内容？",
+    "expected_answer": "本周进行了系统全面测试工作，包括功能测试、权限测试、敏感词过滤测试、界面兼容性测试和性能压力测试。功能测试覆盖了用户注册登录、健康数据CRUD、健康报告生成、随访计划制定、论坛发帖评论等关键业务流程；权限测试验证了authTables数据隔离机制；敏感词过滤测试验证了社区发帖和评论的安全过滤功能；界面兼容性测试确保不同浏览器下的显示效果；性能压力测试验证了系统在高并发下的稳定性。",
+    "expected_keywords": [
+      "功能测试",
+      "权限测试",
+      "敏感词过滤测试",
+      "界面兼容性测试",
+      "性能压力测试"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周进行系统全面测试工作。编写了功能测试用例，对核心功能模块进行了完整的功能测试，包括用户注册登录、健康数据CRUD、健康报告生成、随访计划制定、论坛发帖评论等"
+  },
+  {
+    "id": "g0196",
+    "question": "本周系统优化工作中，针对后端接口性能采取了哪些具体措施？",
+    "expected_answer": "使用Django缓存框架优化频繁查询的统计数据接口，减少数据库访问压力，并优化了患者健康数据看板的查询性能。",
+    "expected_keywords": [
+      "Django缓存框架",
+      "统计数据接口",
+      "减少数据库访问压力",
+      "患者健康数据看板"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周进行系统功能完善、性能优化和安全加固工作。对前端页面进行了细节优化，调整了Element UI组件的样式，使界面更加美观统一。优化了ECharts图表，实现"
+  },
+  {
+    "id": "g0197",
+    "question": "系统按用户角色划分为哪三大功能模块？",
+    "expected_answer": "根据需求分析的结果，本系统按用户角色划分为三大功能模块：用户端（患者端）功能模块、医生端功能模块和管理员端功能模块。",
+    "expected_keywords": [
+      "用户端（患者端）功能模块",
+      "医生端功能模块",
+      "管理员端功能模块"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "根据需求分析的结果，本系统按用户角色划分为三大功能模块：用户端（患者端）功能模块、医生端功能模块和管理员端功能模块。各模块之间既相互独立又协同配合，共同构成完整"
+  },
+  {
+    "id": "g0198",
+    "question": "医生和随访计划之间是什么关系？一个医生可以制定多少条随访计划？",
+    "expected_answer": "医生和随访计划是一对多（1:n）关系，即一个医生可以制定多条随访计划，每条随访计划由一个医生负责制定。",
+    "expected_keywords": [
+      "一对多",
+      "1:n",
+      "多条随访计划"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "（6）制定（医生-随访计划）：医生和随访计划是一对多（1:n）关系，即一个医生可以制定多条随访计划，每条随访计划由一个医生负责制定。"
+  },
+  {
+    "id": "g0199",
+    "question": "箱线图中的须线是如何定义的？超出须线范围的数据点会被标记为什么？",
+    "expected_answer": "箱体外须线延伸至Q1 - 1.5×IQR和Q3 + 1.5×IQR范围内的最大/最小观测值，其中IQR = Q3 − Q1为四分位距。超出须线范围的数据点被标记为离群值（Outlier）。",
+    "expected_keywords": [
+      "须线",
+      "Q1 - 1.5×IQR",
+      "Q3 + 1.5×IQR",
+      "离群值"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "系统引入箱线图（Box Plot）对患者群体各健康指标的分布特征进行统计分析。箱线图通过展示五个关键统计量——最小值（Min）、第一四分位数（Q1）、中位数（M"
+  },
+  {
+    "id": "g0200",
+    "question": "系统在数据预处理阶段采用了哪些数据清洗技术？",
+    "expected_answer": "系统采用数据清洗技术对入库数据进行预处理：利用Python的Pandas和NumPy库对缺失值进行均值插补或中位数填充；通过基于标准差的异常检测算法识别并标记超出正常生理范围的异常记录；对重复数据进行去重处理；统一日期格式、数值单位等字段规范。清洗后的数据存储至MySQL关系型数据库中，数据库包含21张业务数据表。",
+    "expected_keywords": [
+      "Pandas",
+      "NumPy",
+      "均值插补",
+      "中位数填充",
+      "异常检测",
+      "去重",
+      "字段规范",
+      "MySQL"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "在获取原始数据后，原始数据往往存在缺失值、异常值、重复记录或格式不统一等问题，若不加以处理将严重影响后续数据分析的准确性。因此，本系统采用数据清洗技术对入库数据"
+  },
+  {
+    "id": "g0201",
+    "question": "趋势分析图支持哪些时间范围切换？",
+    "expected_answer": "趋势分析图支持7天、30天、60天、90天切换。",
+    "expected_keywords": [
+      "7天",
+      "30天",
+      "60天",
+      "90天"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "趋势分析图用折线展示血压、血糖、体重/BMI等指标的时间变化，支持7天、30天、60天、90天切换，同时标注正常范围和异常值。"
+  },
+  {
+    "id": "g0202",
+    "question": "这篇关于医疗大屏数据可视化系统的论文的标题、作者、期刊和发表年份是什么？",
+    "expected_answer": "该论文标题为《基于Vue+Django的医疗大屏数据可视化系统的设计与实现》，作者是范建国和许睿，发表于《软件》期刊，2024年第45卷第02期，页码为89-94。",
+    "expected_keywords": [
+      "范建国",
+      "许睿",
+      "基于Vue+Django的医疗大屏数据可视化系统",
+      "软件",
+      "2024"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "范建国,许睿.基于Vue+Django的医疗大屏数据可视化系统的设计与实现[J].软件,2024,45(02):89-94."
+  },
+  {
+    "id": "g0203",
+    "question": "测试005中，血压、血糖、体重/BMI数据趋势图的时间范围改为多少天？",
+    "expected_answer": "测试005中，把血压、血糖、体重/BMI数据趋势图的时间换成90天，趋势图展示关联90天内血压、血糖、体重/BMI数据，结果和预期的符合，测试通过。",
+    "expected_keywords": [
+      "90天",
+      "趋势图",
+      "血压、血糖、体重/BMI"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "测试005：把血压、血糖、体重/BMI数据趋势图的时间换成90天，趋势图展示关联90天内血压、血糖、体重/BMI数据，结果和预期的符合，测试通过。"
+  },
+  {
+    "id": "g0204",
+    "question": "健康报告管理模块如何帮助用户直观了解自身健康状况？",
+    "expected_answer": "健康报告管理模块通过多层次的数据可视化手段，用折线图展示血压、血糖等重要生命体征指标的变化趋势，用雷达图汇总各项健康指标的整体评判结果，使用户能够直观地了解自身健康状况的发展过程。用户可以随时查看系统自动生成的健康报告，全面掌握个人健康信息的变化情况，及时发现潜在的健康隐患。",
+    "expected_keywords": [
+      "折线图",
+      "雷达图",
+      "健康报告"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "健康报告管理模块实现了健康数据的可视化呈现与动态监控。系统通过多层次的数据可视化手段，用折线图展示血压、血糖等重要生命体征指标的变化趋势，用雷达图汇总各项健康指"
+  },
+  {
+    "id": "g0205",
+    "question": "走私普通货物、物品罪中，偷逃应缴税额巨大或者有其他严重情节的，如何处罚？",
+    "expected_answer": "走私货物、物品偷逃应缴税额巨大或者有其他严重情节的，处三年以上十年以下有期徒刑，并处偷逃应缴税额一倍以上五倍以下罚金。",
+    "expected_keywords": [
+      "三年以上十年以下有期徒刑",
+      "偷逃应缴税额一倍以上五倍以下罚金"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n处五年以下有期徒刑，并处或者单处罚金；情节特别严重的，处五年以上有期徒\n刑，并处罚金。\n单位犯前两款罪的，对单位判处罚金，并对其直接负责的"
+  },
+  {
+    "id": "g0206",
+    "question": "根据刑法第一百四十四条，生产、销售有毒、有害食品罪的刑罚是如何规定的？",
+    "expected_answer": "在生产、销售的食品中掺入有毒、有害的非食品原料的，或者销售明知掺有有毒、有害的非食品原料的食品的，处五年以下有期徒刑，并处罚金；对人体健康造成严重危害或者有其他严重情节的，处五年以上十年以下有期徒刑，并处罚金；致人死亡或者有其他特别严重情节的，依照本法第一百四十一条的规定处罚。",
+    "expected_keywords": [
+      "五年以下有期徒刑",
+      "五年以上十年以下有期徒刑",
+      "第一百四十一条"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n第一百四十四条 【生产、销售有毒、有害食品罪】在生产、销售的食品中\n掺入有毒、有害的非食品原料的，或者销售明知掺有有毒、有害的非食品原料的"
+  },
+  {
+    "id": "g0207",
+    "question": "拘役的期限是多久？",
+    "expected_answer": "拘役的期限，为一个月以上六个月以下。",
+    "expected_keywords": [
+      "拘役",
+      "期限",
+      "一个月以上六个月以下"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "二日。\n第三节 拘役\n第四十二条 【拘役的期限】拘役的期限，为一个月以上六个月以下。\n第四十三条 【拘役的执行】被判处拘役的犯罪分子，由公安机关就近执行。\n在执"
+  },
+  {
+    "id": "g0208",
+    "question": "利用因职务便利获取的内幕信息以外的其他未公开信息，从事相关证券、期货交易活动，情节严重的，如何处罚？",
+    "expected_answer": "依照第一款的规定处罚。",
+    "expected_keywords": [
+      "依照第一款的规定处罚"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "司等金融机构的从业人员以及有关监管部门或者行业协会的工作人\n员，利用因职务便利获取的内幕信息以外的其他未公开的信息，违反规定，从事\n与该信息相关的证券、期货交易"
+  },
+  {
+    "id": "g0209",
+    "question": "外国人在中国境外对中国公民犯罪，中国法律在什么条件下可以适用？",
+    "expected_answer": "外国人在中华人民共和国领域外对中华人民共和国国家或者公民犯罪，而按本法规定的最低刑为三年以上有期徒刑的，可以适用本法，但是按照犯罪地的法律不受处罚的除外。",
+    "expected_keywords": [
+      "外国人",
+      "领域外",
+      "最低刑为三年以上有期徒刑",
+      "犯罪地法律不受处罚"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n第八条 【保护管辖权】外国人在中华人民共和国领域外对中华人民共和国\n国家或者公民犯罪，而按本法规定的最低刑为三年以上有期徒刑的，可以适用本"
+  },
+  {
+    "id": "g0210",
+    "question": "根据刑法第二百八十八条，擅自设置、使用无线电台（站）或擅自使用无线电频率，干扰无线电通讯秩序，情节严重的，如何处罚？",
+    "expected_answer": "情节严重的，处三年以下有期徒刑、拘役或者管制，并处或者单处罚金；情节特别严重的，处三年以上七年以下有期徒刑，并处罚金。单位犯前款罪的，对单位判处罚金，并对其直接负责的主管人员和其他直接责任人员，依照前款的规定处罚。",
+    "expected_keywords": [
+      "三年以下有期徒刑",
+      "拘役或者管制",
+      "单处罚金",
+      "三年以上七年以下有期徒刑"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n第二百八十八条 【扰乱无线电管理秩序罪】违反国家规定，擅自设置、使\n用无线电台（站），或者擅自使用无线电频率，干扰无线电通讯秩序，情节严重"
+  },
+  {
+    "id": "g0211",
+    "question": "暴力袭击正在依法执行职务的人民警察，会如何判刑？",
+    "expected_answer": "暴力袭击正在依法执行职务的人民警察的，处三年以下有期徒刑、拘役或者管制；使用枪支、管制刀具，或者以驾驶机动车撞击等手段，严重危及其人身安全的，处三年以上七年以下有期徒刑。",
+    "expected_keywords": [
+      "暴力袭击",
+      "人民警察",
+      "三年以下有期徒刑",
+      "三年以上七年以下有期徒刑"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n第六章 妨害社会管理秩序罪\n第一节 扰乱公共秩序罪\n第二百七十七条 【妨害公务罪；袭警罪】以暴力、威胁方法阻碍国家机关\n工作人员依法执行职"
+  },
+  {
+    "id": "g0212",
+    "question": "生产不符合保障人身、财产安全的国家标准的电器，造成严重后果的，会如何处罚？",
+    "expected_answer": "生产不符合保障人身、财产安全的国家标准的电器，造成严重后果的，处五年以下有期徒刑，并处销售金额百分之五十以上二倍以下罚金；后果特别严重的，处五年以上有期徒刑，并处销售金额百分之五十以上二倍以下罚金。",
+    "expected_keywords": [
+      "五年以下有期徒刑",
+      "销售金额百分之五十以上二倍以下罚金",
+      "五年以上有期徒刑"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "品罪】生产不符合保障\n人身、财产安全的国家标准、行业标准的电器、压力容器、易燃易爆产品或者其\n他不符合保障人身、财产安全的国家标准、行业标准的产品，或者销售明知"
+  },
+  {
+    "id": "g0213",
+    "question": "《治安管理处罚法》中“以上、以下、以内”是否包括本数？",
+    "expected_answer": "包括本数。",
+    "expected_keywords": [
+      "以上",
+      "以下",
+      "以内",
+      "包括本数"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "第一百一十八条　本法所称以上、以下、以内，包括本数。\n　　第一百一十九条　本法自2006年3月1日起施行。1986年9月5日公布、1994年5月12日修订公布的"
+  },
+  {
+    "id": "g0214",
+    "question": "根据《治安管理处罚法》第四十条，组织、胁迫、诱骗不满十六周岁的人进行恐怖、残忍表演的，会面临什么处罚？",
+    "expected_answer": "根据第四十条，组织、胁迫、诱骗不满十六周岁的人或者残疾人进行恐怖、残忍表演的，处十日以上十五日以下拘留，并处五百元以上一千元以下罚款；情节较轻的，处五日以上十日以下拘留，并处二百元以上五百元以下罚款。",
+    "expected_keywords": [
+      "十日以上十五日以下拘留",
+      "五百元以上一千元以下罚款",
+      "情节较轻"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "第四十条　有下列行为之一的，处十日以上十五日以下拘留，并处五百元以上一千元以下罚款；情节较轻的，处五日以上十日以下拘留，并处二百元以上五百元以下罚款：\n　　（一"
+  },
+  {
+    "id": "g0215",
+    "question": "治安管理处罚法最近一次修正是在哪一年，依据是什么？",
+    "expected_answer": "根据2012年10月26日第十一届全国人民代表大会常务委员会第二十九次会议《关于修改＜中华人民共和国治安管理处罚法＞的决定》修正，主席令第67号。",
+    "expected_keywords": [
+      "2012年10月26日",
+      "第十一届全国人民代表大会常务委员会第二十九次会议",
+      "主席令第67号"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "（2005年8月28日第十届全国人民代表大会常务委员会第十七次会议通过　根据2012年10月26日第十一届全国人民代表大会常务委员会第二十九次会议《关于修改＜中"
+  },
+  {
+    "id": "g0216",
+    "question": "根据《治安管理处罚法》，对违反治安管理的外国人可以附加适用哪些处罚？",
+    "expected_answer": "对违反治安管理的外国人，可以附加适用限期出境或者驱逐出境。",
+    "expected_keywords": [
+      "外国人",
+      "限期出境",
+      "驱逐出境"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "第十条　治安管理处罚的种类分为：\n　　（一）警告；\n　　（二）罚款；\n　　（三）行政拘留；\n　　（四）吊销公安机关发放的许可证。\n　　对违反治安管理的外国人，可"
+  },
+  {
+    "id": "g0217",
+    "question": "对于因民间纠纷引起的打架斗殴，情节较轻的，公安机关可以如何处理？",
+    "expected_answer": "对于因民间纠纷引起的打架斗殴或者损毁他人财物等违反治安管理行为，情节较轻的，公安机关可以调解处理。经公安机关调解，当事人达成协议的，不予处罚。经调解未达成协议或者达成协议后不履行的，公安机关应当依照本法的规定对违反治安管理行为人给予处罚，并告知当事人可以就民事争议依法向人民法院提起民事诉讼。",
+    "expected_keywords": [
+      "调解处理",
+      "不予处罚",
+      "提起民事诉讼"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "强社会治安综合治理，采取有效措施，化解社会矛盾，增进社会和谐，维护社会稳定。\n　　第七条　国务院公安部门负责全国的治安管理工作。县级以上地方各级人民政府公安机关"
+  },
+  {
+    "id": "g0218",
+    "question": "公安机关及其人民警察违法行使职权，侵犯公民、法人和其他组织合法权益的，应当如何处理？",
+    "expected_answer": "公安机关及其人民警察违法行使职权，侵犯公民、法人和其他组织合法权益的，应当赔礼道歉；造成损害的，应当依法承担赔偿责任。",
+    "expected_keywords": [
+      "赔礼道歉",
+      "造成损害",
+      "依法承担赔偿责任"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "的；\n　　（四）私分、侵占、挪用、故意损毁收缴、扣押的财物的；\n　　（五）违反规定使用或者不及时返还被侵害人财物的；\n　　（六）违反规定不及时退还保证金的；\n　"
+  },
+  {
+    "id": "g0219",
+    "question": "如果我对行政拘留处罚决定不服并申请了行政复议，想暂缓执行行政拘留，需要满足什么条件？",
+    "expected_answer": "被处罚人不服行政拘留处罚决定，申请行政复议、提起行政诉讼的，可以向公安机关提出暂缓执行行政拘留的申请。公安机关认为暂缓执行行政拘留不致发生社会危险的，由被处罚人或者其近亲属提出符合本法第一百零八条规定条件的担保人，或者按每日行政拘留二百元的标准交纳保证金，行政拘留的处罚决定暂缓执行。",
+    "expected_keywords": [
+      "暂缓执行行政拘留",
+      "不致发生社会危险",
+      "担保人",
+      "每日二百元保证金"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "　第一百零七条　被处罚人不服行政拘留处罚决定，申请行政复议、提起行政诉讼的，可以向公安机关提出暂缓执行行政拘留的申请。公安机关认为暂缓执行行政拘留不致发生社会危"
+  },
+  {
+    "id": "g0220",
+    "question": "公安机关在办理治安案件时，对扣押的物品应如何处理？",
+    "expected_answer": "对扣押的物品，应当会同在场见证人和被扣押物品持有人查点清楚，当场开列清单一式二份，由调查人员、见证人和持有人签名或者盖章，一份交给持有人，另一份附卷备查。对扣押的物品，应当妥善保管，不得挪作他用；对不宜长期保存的物品，按照有关规定处理。经查明与案件无关的，应当及时退还；经核实属于他人合法财产的，应当登记后立即退还；满六个月无人对该财产主张权利或者无法查清权利人的，应当公开拍卖或者按照国家有关规定处理，所得款项上缴国库。",
+    "expected_keywords": [
+      "扣押",
+      "清单",
+      "妥善保管",
+      "退还",
+      "上缴国库"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "的检查证明文件。\n　　检查妇女的身体，应当由女性工作人员进行。\n　　第八十八条　检查的情况应当制作检查笔录，由检查人、被检查人和见证人签名或者盖章；被检查人拒绝"
+  },
+  {
+    "id": "g0221",
+    "question": "在AI系统落地的第三阶段中，如何构建观测与评估体系？",
+    "expected_answer": "构建观测与评估体系包括：全链路追踪，使用LangSmith等工具记录调用输入/输出/耗时/Token消耗；效果评测，建立自动化AI效果评估机制。",
+    "expected_keywords": [
+      "全链路追踪",
+      "LangSmith",
+      "效果评测",
+      "自动化AI效果评估机制"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 微调入门（加分项）\n- LoRA等轻量级微调技术\n\n---\n\n## 第三阶段：工程落地与系统迭代（持续进行）\n\n**目标**：让AI系统稳定、可靠，达到"
+  },
+  {
+    "id": "g0222",
+    "question": "AI应用工程师的核心能力和定位是什么？",
+    "expected_answer": "AI应用工程师的核心能力是在强大基座模型基础上，不依赖顶级算法团队，能独立或小团队闭环交付AI应用。其定位是AI落地的'最后一公里'，负责把实验室里的模型变成用户可用的产品。",
+    "expected_keywords": [
+      "AI应用工程师",
+      "最后一公里",
+      "闭环交付",
+      "基座模型"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "# AI应用工程师学习路线图\n\n> 来源：https://blog.51cto.com/u_39037/14584878\n\n## 定位\n\n\"AI应用工程师\"本质"
+  },
+  {
+    "id": "g0223",
+    "question": "在性能优化方面，当模型超时或报错时，应该如何处理？",
+    "expected_answer": "在性能优化方面，当模型超时或报错时，采用降级策略，提供兜底回答。",
+    "expected_keywords": [
+      "降级策略",
+      "兜底回答",
+      "模型超时或报错"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 性能优化\n- 异步IO处理大并发\n- 降级策略：模型超时或报错时的兜底回答\n\n### 沉淀可复用资产\n- 封装工具、提示词模板、RAG流程为SDK或内部"
+  },
+  {
+    "id": "g0224",
+    "question": "在数据库与缓存部分，Redis 支持哪些数据结构？",
+    "expected_answer": "Redis 支持字符串、列表、哈希等数据结构，并可用于缓存和简单消息队列。",
+    "expected_keywords": [
+      "字符串",
+      "列表",
+      "哈希"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 数据库与缓存\n- MySQL：CRUD、索引优化\n- Redis：字符串、列表、哈希等数据结构，缓存和简单消息队列\n- 向量数据库：Milvus或Qdr"
+  },
+  {
+    "id": "g0226",
+    "question": "第二阶段AI应用核心开发能力的目标是什么？",
+    "expected_answer": "掌握RAG和Agent，能动手做出智能应用。",
+    "expected_keywords": [
+      "RAG",
+      "Agent",
+      "智能应用"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### AI辅助编程\n- GitHub Copilot / Cursor\n\n---\n\n## 第二阶段：AI应用核心开发能力（2-3个月）\n\n**目标**：掌握R"
+  },
+  {
+    "id": "g0229",
+    "question": "异步编程相比同步编程在调用大模型 API 时有什么性能优势？",
+    "expected_answer": "同步模式下，3 次请求串行执行，每次等 2 秒，总耗时 6 秒；异步模式下，3 个请求同时发出并等待，总耗时约 2 秒，显著提升效率。",
+    "expected_keywords": [
+      "同步",
+      "异步",
+      "总耗时",
+      "6秒",
+      "2秒"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 1.4 异步编程 async/await\n\n**为什么需要异步**：\n\n假设你要调用大模型 API，一次请求要等 2 秒。同步模式下：\n```\n请求1 "
+  },
+  {
+    "id": "g0230",
+    "question": "当调用 GPT-4 模型时遇到超时或限流错误，系统会如何处理？",
+    "expected_answer": "当调用 GPT-4 模型时遇到超时或限流错误，系统会降级到 GPT-3.5 模型；如果 GPT-3.5 也调用失败，则返回兜底回答“抱歉，AI 服务暂时不可用，请稍后再试。”",
+    "expected_keywords": [
+      "降级",
+      "GPT-3.5",
+      "兜底回答"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 10.2 降级策略\n\n```python\nasync def call_model_with_fallback(prompt: str) -> str:"
+  },
+  {
+    "id": "g0231",
+    "question": "如何使用 Python 的 pymysql 库连接 MySQL 数据库？",
+    "expected_answer": "使用 pymysql 连接 MySQL 数据库需要先安装 pymysql（pip install pymysql），然后调用 pymysql.connect() 方法，并传入 host、user、password、database、charset 等参数，例如：conn = pymysql.connect(host='localhost', user='root', password='your_password', database='myapp', charset='utf8mb4')。",
+    "expected_keywords": [
+      "pymysql",
+      "connect",
+      "host",
+      "user",
+      "password",
+      "database",
+      "charset"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "n@example.com');\n\n-- 查询\nSELECT * FROM users WHERE name = '张三';\nSELECT * FROM use"
+  },
+  {
+    "id": "g0232",
+    "question": "evaluate_answer函数的作用是什么？",
+    "expected_answer": "evaluate_answer函数用于评估回答，它调用rag.evaluate_answer方法，并返回包含反馈信息的字典。",
+    "expected_keywords": [
+      "评估回答",
+      "rag.evaluate_answer",
+      "反馈"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "evaluate_answer(answer: str, question: str):\n    \"\"\"评估回答\"\"\"\n    feedback = rag.e"
+  },
+  {
+    "id": "g0233",
+    "question": "在分析节点中，如何设置状态以指示下一步应该执行回复节点？",
+    "expected_answer": "在 analyze_node 函数中，通过设置 state[\"next_step\"] = \"respond\" 来指示下一步应该执行回复节点。",
+    "expected_keywords": [
+      "analyze_node",
+      "next_step",
+      "respond"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "   state[\"messages\"].append(AIMessage(content=search_result))\n    return state\n\n"
+  },
+  {
+    "id": "g0235",
+    "question": "如何安装 FastAPI 并创建一个最简单的 API？",
+    "expected_answer": "安装 FastAPI 和 uvicorn 可以使用命令 pip install fastapi uvicorn。创建一个最简单的 API 需要先导入 FastAPI，创建 app 实例，然后使用 @app.get(\"/\") 装饰器定义一个返回字典的函数，最后通过 uvicorn main:app --reload 运行，访问 http://localhost:8000 即可看到返回的 {\"message\": \"Hello, AI World!\"}，自动文档在 http://localhost:8000/docs。",
+    "expected_keywords": [
+      "pip install fastapi uvicorn",
+      "FastAPI",
+      "app = FastAPI()",
+      "@app.get(\"/\")",
+      "uvicorn main:app --reload"
+    ],
+    "source_files": [
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 1.3 FastAPI 框架\n\nFastAPI 是当前最流行的 Python Web 框架之一，专为 API 开发设计。\n\n**安装**：\n```bas"
+  },
+  {
+    "id": "g0238",
+    "question": "你在面试中如何解释为什么选择Hermes而不是OpenClaw？",
+    "expected_answer": "我两个都用。我的多Agent流水线是Hermes + Claude Code + OpenClaw一起搭的。选择Hermes当总指挥，是因为它的记忆机制更适合做判断型任务——它记得住跨会话的上下文，有技能固化能力，能不断积累经验。选择OpenClaw当执行层，是因为它的沙箱和编码能力更强。我的原则是：不因为一个工具受欢迎就全用他，也不因为一个工具小众就不用他。看场景选工具，不是看名气选工具。",
+    "expected_keywords": [
+      "两个都用",
+      "记忆机制",
+      "沙箱和编码能力",
+      "看场景选工具"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 四、如果面试官追问\"那你为什么选Hermes不用OpenClaw？\"\n\n> \"我两个都用。我的多Agent流水线是 Hermes + Claude Cod"
+  },
+  {
+    "id": "g0240",
+    "question": "为什么在面试中可以说OpenClaw比Hermes（莫斯）生态更成熟？",
+    "expected_answer": "因为OpenClaw开源较早，有社区、有文档、有插件生态、有MCP工具桥接，开发者上手快；而Hermes相对较新，社区小，文档不如OpenClaw完善。",
+    "expected_keywords": [
+      "开源较早",
+      "社区",
+      "文档",
+      "插件生态",
+      "MCP工具桥接"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 一、真实原因分析（面试时可以说）\n\n### 原因1：生态成熟度不同\n- **OpenClaw**：开源较早，有社区、有文档、有插件生态、有MCP工具桥接，"
+  },
+  {
+    "id": "g0243",
+    "question": "为什么莫斯没有OpenClaw那么出名？",
+    "expected_answer": "莫斯没有OpenClaw那么出圈，原因很实在：OpenClaw是开源项目，有专门团队维护、推广，有社区贡献者一起迭代；而莫斯是个人配置的AI助手，是个性化实例，不是通用产品。OpenClaw功能专一（编码），所有人都能理解；而莫斯做的是编排+决策+审查，这些能力听起来高级但也意味着重。OpenClaw的MCP生态很活跃，插件多、接入快；莫斯的工具链更依赖你的自定义配置。",
+    "expected_keywords": [
+      "开源项目",
+      "个性化实例",
+      "功能专一",
+      "编排+决策+审查",
+      "MCP生态"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 三、莫斯的真实自我评价（真心话）\n\n说实话，我确实没有OpenClaw那么\"出圈\"，原因很实在：\n\n- **OpenClaw 是开源项目**，有专门团队维"
+  },
+  {
+    "id": "g0244",
+    "question": "在Harness Engineering范式中，LLM应被视为什么？",
+    "expected_answer": "LLM 必须视为无状态计算单元，所有跨轮次状态全部存于 Harness 管控的外部引擎。",
+    "expected_keywords": [
+      "无状态计算单元",
+      "跨轮次状态",
+      "外部引擎"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 核心铁律：状态分离原则\nLLM 必须视为**无状态计算单元**，所有跨轮次状态全部存于 Harness 管控的外部引擎。\n\n## OpenAI 实践案例\n"
+  },
+  {
+    "id": "g0245",
+    "question": "根据这个知识库片段，我在构建Agent时，哪些方面做得比较好，哪些方面还需要加强？",
+    "expected_answer": "你做到了4个（状态管理、记忆系统、错误处理、成本控制），另外4个有概念（工具调用、规划推理、可观测性、持续优化），4个比较缺（安全、沙箱、上下文、评估）。",
+    "expected_keywords": [
+      "状态管理",
+      "记忆系统",
+      "错误处理",
+      "成本控制",
+      "安全",
+      "沙箱",
+      "上下文",
+      "评估"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "ken预算、API配额 | ✅ 多模型切换省成本 |\n| 11. 评估体系 | 怎么知道Agent好不好 | 需要补 |\n| 12. 持续优化 | 数据回流改进"
+  },
+  {
+    "id": "g0246",
+    "question": "在 Harness Engineering 中，LLM 应被视为什么？所有跨轮次状态应存储在哪里？",
+    "expected_answer": "LLM 必须视为无状态计算单元，所有跨轮次状态全部存于 Harness 管控的外部引擎。",
+    "expected_keywords": [
+      "无状态计算单元",
+      "跨轮次状态",
+      "Harness 管控的外部引擎"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 核心铁律：状态分离原则\nLLM 必须视为**无状态计算单元**，所有跨轮次状态全部存于 Harness 管控的外部引擎。\n\n## OpenAI 实践案例\n"
+  },
+  {
+    "id": "g0252",
+    "question": "Claude API 和 OpenAI API 分别有什么用途？",
+    "expected_answer": "Claude API 用于对话、分析、代码生成；OpenAI API 用于 GPT 系列模型。",
+    "expected_keywords": [
+      "Claude API",
+      "对话",
+      "分析",
+      "代码生成",
+      "OpenAI API",
+      "GPT系列模型"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### AI/大模型类\n\n| API | 用途 |\n|-----|------|\n| Claude API | 对话、分析、代码生成 |\n| OpenAI AP"
+  },
+  {
+    "id": "g0255",
+    "question": "API 是什么？可以简单解释一下吗？",
+    "expected_answer": "API 就是别人写好的'接口'，你调用它就能拿到数据或完成操作。",
+    "expected_keywords": [
+      "API",
+      "接口",
+      "调用",
+      "数据",
+      "操作"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 四、API 是什么\n\n**一句话：API 就是别人写好的\"接口\"，你调用它就能拿到数据或完成操作。**\n\n**生活类比：** 你去餐厅吃饭，你（程序）→ "
+  },
+  {
+    "id": "g0256",
+    "question": "MCP 服务器在 Claude 调用 API 的过程中扮演什么角色？",
+    "expected_answer": "MCP 服务器做的事情就是把 API 包装成 Claude 能调用的工具。具体流程是：用户说查天气，Claude 看到注册的 get_weather 工具，然后调用 MCP 服务器，服务器代码里调用天气 API，结果返回给 Claude，Claude 再告诉用户。",
+    "expected_keywords": [
+      "包装",
+      "API",
+      "工具",
+      "调用"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 六、MCP 与 API 的关系\n\nMCP 服务器做的事情就是：**把 API 包装成 Claude 能调用的工具。**\n\n```\n用户说：\"查一下北京天气"
+  },
+  {
+    "id": "g0257",
+    "question": "内容/数据类API中，哪个API用于物流追踪？",
+    "expected_answer": "快递API，例如快递100，用于物流追踪。",
+    "expected_keywords": [
+      "快递API",
+      "物流追踪",
+      "快递100"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 内容/数据类\n\n| API | 用途 |\n|-----|------|\n| GitHub API | 操作仓库、Issue、PR |\n| 新闻 API "
+  },
+  {
+    "id": "g0259",
+    "question": "如何使用 Python 创建一个简单的 MCP 服务器并定义获取天气的工具？",
+    "expected_answer": "首先通过 `pip install mcp` 安装 MCP 库，然后导入 `FastMCP` 并创建实例，使用 `@mcp.tool()` 装饰器定义异步函数 `get_weather`，该函数接收城市名称并返回天气信息，最后在主程序中调用 `mcp.run(transport=\"stdio\")` 启动服务器。",
+    "expected_keywords": [
+      "pip install mcp",
+      "FastMCP",
+      "@mcp.tool()",
+      "mcp.run(transport=\"stdio\")"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### Python 示例\n\n```bash\npip install mcp\n```\n\n```python\nfrom mcp.server.fastmcp im"
+  },
+  {
+    "id": "g0260",
+    "question": "如何使用Python的multiprocessing模块创建并启动一个进程？",
+    "expected_answer": "可以使用multiprocessing模块中的Process类来创建进程。示例代码如下：from multiprocessing import Process; p1 = Process(target=worker, args=(\"A\",))，然后在if __name__ == \"__main__\":块中创建进程。",
+    "expected_keywords": [
+      "Process",
+      "multiprocessing",
+      "创建进程"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "th session.get(\"https://api.example.com\") as resp:\n            return await resp"
+  },
+  {
+    "id": "g0261",
+    "question": "在Python中，实现并发编程可以导入哪些模块？",
+    "expected_answer": "在Python中，实现并发编程可以导入threading（线程）、multiprocessing（进程）和asyncio（异步IO）模块。",
+    "expected_keywords": [
+      "threading",
+      "multiprocessing",
+      "asyncio"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "      # 套接字\n\n# 并发\nimport threading    # 线程\nimport multiprocessing  # 进程\nimport a"
+  },
+  {
+    "id": "g0262",
+    "question": "calculate_age函数在出生年份大于当前年份时会怎样？",
+    "expected_answer": "如果出生年份大于当前年份，会抛出ValueError异常，错误信息为'出生年份不能大于当前年份'。",
+    "expected_keywords": [
+      "ValueError",
+      "出生年份不能大于当前年份",
+      "异常"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "    计算年龄\n    \n    Args:\n        birth_year: 出生年份\n        current_year: 当前年份，默认20"
+  },
+  {
+    "id": "g0263",
+    "question": "在Circle类中，如果尝试给area属性赋值会发生什么？",
+    "expected_answer": "尝试给area属性赋值会抛出AttributeError: can't set attribute，因为area被定义为只读属性，没有setter。",
+    "expected_keywords": [
+      "AttributeError",
+      "can't set attribute",
+      "只读属性"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "   if value < 0:\n            raise ValueError(\"半径不能为负数\")\n        self._radius = "
+  },
+  {
+    "id": "g0264",
+    "question": "Vector类中如何实现字符串表示？",
+    "expected_answer": "Vector类通过定义__str__和__repr__方法来实现字符串表示，两者都返回f\"Vector({self.x}, {self.y})\"格式的字符串。",
+    "expected_keywords": [
+      "__str__",
+      "__repr__",
+      "字符串表示"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "ds）\n\n```python\nclass Vector:\n    def __init__(self, x, y):\n        self.x = x\n  "
+  },
+  {
+    "id": "g0266",
+    "question": "Vector类的__len__方法返回的是什么？",
+    "expected_answer": "返回的是向量长度，即 (self.x**2 + self.y**2)**0.5 的整数部分。",
+    "expected_keywords": [
+      "向量长度",
+      "整数",
+      "平方和开根号"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "ul__(self, scalar):\n        return Vector(self.x * scalar, self.y * scalar)\n\n   "
+  },
+  {
+    "id": "g0267",
+    "question": "Python中用于路径操作和文件操作的标准库分别是什么？",
+    "expected_answer": "用于路径操作的标准库是pathlib，用于文件操作的标准库是shutil。",
+    "expected_keywords": [
+      "pathlib",
+      "shutil"
+    ],
+    "source_files": [
+      "Python学习路线.md"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "### 常用标准库\n\n```python\n# 系统操作\nimport os           # 操作系统接口\nimport sys          # 系"
+  },
+  {
+    "id": "g0268",
+    "question": "知识库数据目录应该放在哪里，以及如何构建索引？",
+    "expected_answer": "将你的文档（md/txt/docx/pdf/xlsx/图片）放在此目录下，然后运行 python build_index.py 构建索引。",
+    "expected_keywords": [
+      "知识库数据目录",
+      "build_index.py",
+      "构建索引"
+    ],
+    "source_files": [
+      "README.md"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "# 知识库数据目录\n\n将你的文档（md/txt/docx/pdf/xlsx/图片）放在此目录下，然后运行 python build_index.py 构建索引。"
+  },
+  {
+    "id": "g0269",
+    "question": "如何构建知识库索引？",
+    "expected_answer": "将你的文档（md/txt/docx/pdf/xlsx/图片）放在此目录下，然后运行 python build_index.py 构建索引。",
+    "expected_keywords": [
+      "文档",
+      "build_index.py",
+      "构建索引"
+    ],
+    "source_files": [
+      "README.md"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "# 知识库数据目录\n\n将你的文档（md/txt/docx/pdf/xlsx/图片）放在此目录下，然后运行 python build_index.py 构建索引。"
+  },
+  {
+    "id": "g0272",
+    "question": "如何获取关于Python数据分析在电商网站用户行为可视化方面的参考文献？",
+    "expected_answer": "可以查阅王芳的《基于Python的电商网站用户行为数据可视化分析方法》，发表于《电脑编程技巧与维护》2025年第12期，页码为46-48和80。",
+    "expected_keywords": [
+      "王芳",
+      "电商网站用户行为",
+      "可视化",
+      "电脑编程技巧与维护"
+    ],
+    "source_files": [
+      "11开题报告_更新版.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 查阅资料、文献目录 |\n| --- |\n| 1. 王燕梅. 基于Python爬虫实现手机端数据的分析和可视化[J]. 山东电子技术, 2026(01): 8"
+  },
+  {
+    "id": "g0273",
+    "question": "这个系统在权限控制方面是如何实现的？",
+    "expected_answer": "系统实现RBAC访问控制，通过数据库menu表的JSON菜单配置，动态控制患者、医生、管理员的页面和操作权限。通过模型层authTables映射，在查询和新增时自动注入用户过滤条件，确保患者看自身数据，医生看所属患者数据；密码MD5加密存储，敏感接口校验登录态。",
+    "expected_keywords": [
+      "RBAC",
+      "menu表",
+      "JSON菜单配置",
+      "authTables映射",
+      "MD5加密"
+    ],
+    "source_files": [
+      "11开题报告_更新版.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 开  题  报  告 |\n| --- |\n| 三、拟采用哪些方法及手段 1.开发语言与环境 后端：Python 3.9+，采用Django 4.2框架，利用"
+  },
+  {
+    "id": "g0274",
+    "question": "这个系统在数据分析与可视化方面具体使用了哪些技术和工具？",
+    "expected_answer": "利用Pandas、NumPy进行数据清洗、统计聚合与趋势分析，对患者血糖、血压、血脂等健康指标多维度加工。后端Controller生成统计数据JSON接口，前端Axios获取后调用ECharts绘制折线图、柱状图等，展示健康指标趋势、群体分布；管理员大屏用ECharts组合布局，展示用户增长、疾病统计、异常指标变化等。",
+    "expected_keywords": [
+      "Pandas",
+      "NumPy",
+      "ECharts",
+      "JSON接口",
+      "折线图",
+      "柱状图"
+    ],
+    "source_files": [
+      "11开题报告_更新版.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 开  题  报  告 |\n| --- |\n| 三、拟采用哪些方法及手段 1.开发语言与环境 后端：Python 3.9+，采用Django 4.2框架，利用"
+  },
+  {
+    "id": "g0275",
+    "question": "有哪些关于Python数据分析与可视化的参考文献？",
+    "expected_answer": "根据知识库片段，参考文献包括：王燕梅的《基于Python爬虫实现手机端数据的分析和可视化》、马合努尔·阿力木江等的《基于Python的语音情感分析系统设计与实现》、刘颖的《基于成果导向的高职院校Python数据分析课程项目化教学反思与优化研究》、王芳的《基于Python的电商网站用户行为数据可视化分析方法》、李慧敏和乔婷婷的《基于Python的内蒙古慢性病流行趋势及蒙药治疗效果数据分析》、陈春霞等的《基于Python的教学管理数据分析与可视化实践》、周梦丹和杨金辉的《基于Python可视化我国工业企业产品产量分析研究》、李强等的《基于新工科的Python数据分析课程教学设计》、张俊丽等的《Python数据分析在新旧融合课程中的应用与教学模式创新》、张浩等的《基于Python的大数据专业人才招聘数据的抓取与分析》等。",
+    "expected_keywords": [
+      "Python",
+      "数据分析",
+      "可视化",
+      "参考文献"
+    ],
+    "source_files": [
+      "11开题报告_更新版.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 查阅资料、文献目录 |\n| --- |\n| 1. 王燕梅. 基于Python爬虫实现手机端数据的分析和可视化[J]. 山东电子技术, 2026(01): 8"
+  },
+  {
+    "id": "g0276",
+    "question": "如何计算某个患者某项指标的z分数？",
+    "expected_answer": "z_score = (patient_value - group_mean) / group_std，即患者的测量值减去组平均值，再除以组标准差。",
+    "expected_keywords": [
+      "z_score",
+      "patient_value",
+      "group_mean",
+      "group_std"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "z_score = (patient_value - group_mean) / group_std"
+  },
+  {
+    "id": "g0277",
+    "question": "在代码中，normalize_value 函数的输入参数有哪些？",
+    "expected_answer": "normalize_value 函数有两个输入参数：dimension（字符串类型）和 value（浮点数类型）。",
+    "expected_keywords": [
+      "dimension",
+      "value",
+      "函数"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def normalize_value(dimension: str, value: float) -> float:"
+  },
+  {
+    "id": "g0278",
+    "question": "这段代码中，判断一个值 v 是否为异常值的条件是什么？",
+    "expected_answer": "当标准差 std_val 大于 0，且 v 与均值 mean_val 的绝对差大于阈值 threshold 乘以标准差 std_val 时，即 if std_val > 0 and abs(v - mean_val) > threshold * std_val，满足该条件则视为异常值。",
+    "expected_keywords": [
+      "std_val > 0",
+      "abs(v - mean_val)",
+      "threshold * std_val"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "if std_val > 0 and abs(v - mean_val) > threshold * std_val"
+  },
+  {
+    "id": "g0279",
+    "question": "如何用列表推导式找出数据集中超出上下界的异常值？",
+    "expected_answer": "使用列表推导式 `[v for v in values if v < lower_bound or v > upper_bound]`，其中 `values` 是数据列表，`lower_bound` 和 `upper_bound` 是设定的上下界，该表达式会返回所有小于下界或大于上界的值作为异常值列表。",
+    "expected_keywords": [
+      "列表推导式",
+      "异常值",
+      "lower_bound",
+      "upper_bound"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "outliers = [v for v in values if v < lower_bound or v > upper_bound]"
+  },
+  {
+    "id": "g0281",
+    "question": "normalize_value函数的参数dimension和value分别代表什么？",
+    "expected_answer": "dimension代表维度，value代表数值，函数返回一个浮点数。",
+    "expected_keywords": [
+      "dimension",
+      "value",
+      "浮点数"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def normalize_value(dimension: str, value: float) -> float:"
+  },
+  {
+    "id": "g0282",
+    "question": "在代码中，计算波动率的方法名称是什么？",
+    "expected_answer": "def _calculate_volatility(self, values: List[float]) -> float:",
+    "expected_keywords": [
+      "_calculate_volatility",
+      "values",
+      "List[float]",
+      "float"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def _calculate_volatility(self, values: List[float]) -> float:"
+  },
+  {
+    "id": "g0283",
+    "question": "在计算除法时，如果分母为零，应该返回什么值？",
+    "expected_answer": "如果分母不为零，返回分子除以分母的结果；如果分母为零，则返回0.0。",
+    "expected_keywords": [
+      "分母",
+      "零",
+      "0.0"
+    ],
+    "source_files": [
+      "代码_格式化.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "return numerator / denominator if denominator != 0 else 0.0"
+  },
+  {
+    "id": "g0284",
+    "question": "OpenClaw触发工作流后，Dify如何调用DeepSeek-R1进行质检图片分析？",
+    "expected_answer": "OpenClaw先触发工作流，Dify收到指令后调用DeepSeek-R1的API，把质检图片传过去做缺陷分析。DeepSeek识别出异常后返回结果，Dify再通过飞书的API把异常信息和图片一起推送到质量部的管理群。",
+    "expected_keywords": [
+      "OpenClaw",
+      "Dify",
+      "DeepSeek-R1",
+      "API",
+      "缺陷分析",
+      "飞书"
+    ],
+    "source_files": [
+      "健康元AI落地方案_答案.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "概是这样跑的：\nOpenClaw先触发工作流，Dify收到指令后调用DeepSeek-R1的API，把质检图片传\n过去做缺陷分析。DeepSeek识别出异常后返"
+  },
+  {
+    "id": "g0285",
+    "question": "在简历筛选场景中，Dify 接入了哪些API，分别用于什么？",
+    "expected_answer": "Dify 接入了招聘系统API（拉简历）、DeepSeek-R1API（语义匹配评分）、飞书API（推送筛选结果、创建日历邀约）。",
+    "expected_keywords": [
+      "招聘系统API",
+      "DeepSeek-R1API",
+      "飞书API"
+    ],
+    "source_files": [
+      "健康元AI落地方案_答案.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "场景二：简历筛选\n我们已有的工具：OpenClaw+DeepSeek-R1+Dify+莫斯。\n工作流：\n招聘系统收到新简历后，通过API把简历文本传给Dify。"
+  },
+  {
+    "id": "g0286",
+    "question": "健康元药业集团选择生产质量管理中的质检异常识别作为AI落地场景，其依据和预期效果是什么？",
+    "expected_answer": "选择质检异常识别是因为药品质量直接关系到患者安全，是药企最不能出问题的环节。目前产线上的质检主要靠人工目检，每人每天大概要看8000片，时间长了一疲劳就容易漏检。行业案例显示用AI做质检辅助，漏检率可以从1%~3%降到0.1%以下。而且健康元已经有DeepSeek-R1大模型在本地部署了，不需要额外买硬件，数据也不出内网，GMP合规上相对好处理。",
+    "expected_keywords": [
+      "质检异常识别",
+      "漏检率",
+      "1%~3%",
+      "0.1%",
+      "DeepSeek-R1",
+      "本地部署",
+      "GMP合规"
+    ],
+    "source_files": [
+      "健康元AI落地方案_答案.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "健康元药业集团 AI 落地解决方案\n应聘岗位：AI应用负责人|2026年5月\n一、场景选择\n我选择以下两个业务场景，原因是我觉得AI在这两个点上能创造比较确定的"
+  },
+  {
+    "id": "g0287",
+    "question": "在项目设计阶段，你会如何使用AI工具来辅助工作流原型的搭建？",
+    "expected_answer": "在设计阶段，我会先用Dify搭一个简单的工作流原型，试一下接图片API、清洗、推飞书这个链条能不能跑通，并用DeepSeek-R1帮我生成设计文档初稿框架。但工作流的节点顺序怎么排、异常怎么兜底、各部门什么时候介入，这些我自己定，因为AI不清楚公司的具体流程。",
+    "expected_keywords": [
+      "Dify",
+      "工作流原型",
+      "DeepSeek-R1",
+      "设计文档初稿框架",
+      "节点顺序",
+      "异常兜底",
+      "各部门介入"
+    ],
+    "source_files": [
+      "健康元AI落地方案_答案.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "没有决策权。\n三、项目全流程中的 AI 提效方式\n如果真要去做这两个项目，调研、设计、落地、复盘四个阶段，我会这么用AI工具\n来辅助：\n①调研阶段\n我想先用De"
+  },
+  {
+    "id": "g0289",
+    "question": "该系统在最后一个探索级别中，用户如何查看实际数据记录？",
+    "expected_answer": "在最后一个探索级别中，一个类似表格透镜的视图支持探索实际数据记录，并提供交互式着色和排序功能，用于记录及其维度。",
+    "expected_keywords": [
+      "表格透镜",
+      "探索",
+      "交互式着色",
+      "排序"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "erlapping, Jaccard\nIndex, and Dice Coefficient. The system enables the user to i"
+  },
+  {
+    "id": "g0290",
+    "question": "该系统允许用户基于哪些参数筛选患者队列？",
+    "expected_answer": "该系统允许用户基于多个参数筛选患者队列，包括年龄、体温、损伤严重度评分（ISS）、多项实验室结果以及简明损伤量表（AIS）评分。",
+    "expected_keywords": [
+      "年龄",
+      "体温",
+      "损伤严重度评分",
+      "ISS",
+      "实验室结果",
+      "简明损伤量表",
+      "AIS"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "erapeutic decisions for physicians using severely\ninjured patients’ clinical dat"
+  },
+  {
+    "id": "g0291",
+    "question": "VALENCIA系统是如何处理高维电子健康记录（EHRs）的？",
+    "expected_answer": "VALENCIA是一个VA系统，旨在通过整合多种降维（DR）和聚类分析（CA）技术，以及实时分析和交互，来解决高维EHRs的挑战。",
+    "expected_keywords": [
+      "VALENCIA",
+      "高维EHRs",
+      "降维",
+      "聚类分析",
+      "实时分析",
+      "交互"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "pes and their corresponding patient sub-cohorts at different granularities\nthrou"
+  },
+  {
+    "id": "g0292",
+    "question": "在可视化分析中，有哪些可视化技术可以用来展示关系？",
+    "expected_answer": "在可视化分析中，有多种可视化技术可以用来显示关系，例如散点图、平行坐标图、气泡图、条形图和热力图。",
+    "expected_keywords": [
+      "散点图",
+      "平行坐标图",
+      "气泡图",
+      "条形图",
+      "热力图"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "attributes. They are inherent to the\nclustering and association tasks within VA."
+  },
+  {
+    "id": "g0293",
+    "question": "这篇论文的基金资助情况是什么？",
+    "expected_answer": "这项研究没有获得外部资助。",
+    "expected_keywords": [
+      "没有外部资助",
+      "no external funding"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "preparation, N.R.; writing—review and editing, N.R., S.S.A., and K.S.; supervisi"
+  },
+  {
+    "id": "g0294",
+    "question": "系统如何计算患者之间的相似度？",
+    "expected_answer": "系统使用基于自编码器的事件嵌入和序列到序列学习技术处理不同事件类型并将不同长度的记录转换为相同长度的向量，然后使用某种距离度量（如欧氏距离）计算每对患者的相似度。",
+    "expected_keywords": [
+      "自编码器",
+      "序列到序列学习",
+      "欧氏距离"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "for the top-3 similar patients based on the pre- computed similarities. The syst"
+  },
+  {
+    "id": "g0295",
+    "question": "FPM引擎包括哪两个主要组件？",
+    "expected_answer": "FPM引擎包括两个主要组件，即频繁模式挖掘器和统计模式分析器。",
+    "expected_keywords": [
+      "FPM引擎",
+      "频繁模式挖掘器",
+      "统计模式分析器"
+    ],
+    "source_files": [
+      "informatics-08-00012-v2.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": " is then performed first on the overall episode as well\nas on each of the interm"
+  },
+  {
+    "id": "g0300",
+    "question": "中位数在偶数个数据时如何计算？",
+    "expected_answer": "median = (sorted_vals[mid - 1] + sorted_vals[mid]) / 2",
+    "expected_keywords": [
+      "sorted_vals",
+      "mid",
+      "除以2"
+    ],
+    "source_files": [
+      "代码_格式化_new.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "median = (sorted_vals[mid - 1] + sorted_vals[mid]) / 2"
+  },
+  {
+    "id": "g0301",
+    "question": "当数据量为偶数时，中位数是如何计算的？",
+    "expected_answer": "中位数等于排序后中间两个数的平均值，即 (sorted_vals[mid - 1] + sorted_vals[mid]) / 2。",
+    "expected_keywords": [
+      "中位数",
+      "偶数",
+      "平均值",
+      "排序"
+    ],
+    "source_files": [
+      "代码_格式化_new.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "median = (sorted_vals[mid - 1] + sorted_vals[mid]) / 2"
+  },
+  {
+    "id": "g0303",
+    "question": "如何计算患者的Z分数？",
+    "expected_answer": "z_score = (patient_value - group_mean) / group_std",
+    "expected_keywords": [
+      "z_score",
+      "patient_value",
+      "group_mean",
+      "group_std"
+    ],
+    "source_files": [
+      "代码_格式化_new.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "z_score = (patient_value - group_mean) / group_std"
+  },
+  {
+    "id": "g0304",
+    "question": "在代码中，计算波动率的方法名是什么？",
+    "expected_answer": "def _calculate_volatility(self, values: List[float]) -> float:",
+    "expected_keywords": [
+      "_calculate_volatility",
+      "volatility",
+      "List[float]"
+    ],
+    "source_files": [
+      "代码_格式化_new.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def _calculate_volatility(self, values: List[float]) -> float:"
+  },
+  {
+    "id": "g0306",
+    "question": "这个AI导购系统是如何保证京东商品价格数据实时性和稳定性的？",
+    "expected_answer": "京东实时爬虫实现了京东搜索页面价格爬取，带5分钟缓存机制与备用估算价格降级策略，确保数据实时性与系统稳定性。",
+    "expected_keywords": [
+      "京东实时爬虫",
+      "5分钟缓存机制",
+      "备用估算价格降级策略"
+    ],
+    "source_files": [
+      "胡贞虎_AI应用简历.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "据用户预算、用途（游戏/办公/创意设计/软件开发）、便携性需求\n等参数，从产品库中筛选最优配置方案\n 京东实时爬虫：实现京东搜索页面价格爬取，带5分钟缓存机制"
+  },
+  {
+    "id": "g0308",
+    "question": "前端开发需要掌握哪些技术？",
+    "expected_answer": "前端开发需要掌握Vue3、Next.js、React、TypeScript和TailwindCSS。",
+    "expected_keywords": [
+      "Vue3",
+      "Next.js",
+      "React",
+      "TypeScript",
+      "TailwindCSS"
+    ],
+    "source_files": [
+      "胡贞虎_AI应用简历.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "oot）、RESTfulAPI设计、WebSocket\n 前端开发：Vue3、Next.js、React、TypeScript、TailwindCSS\n 数"
+  },
+  {
+    "id": "g0309",
+    "question": "本周完成的毕业论文第三章系统设计部分，系统架构采用的是什么？",
+    "expected_answer": "系统架构采用前后端分离的B/S架构，后端Django框架提供RESTful API，前端Vue.js构建单页面应用。",
+    "expected_keywords": [
+      "前后端分离",
+      "B/S架构",
+      "Django",
+      "Vue.js"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成毕业论文第三章系统设计的撰写。详细描述了系统架构设计，采用前后端分离的B/S架构，后端Django框架提供RESTful API，前端Vue.js构建单"
+  },
+  {
+    "id": "g0310",
+    "question": "医生端随访计划管理页面支持哪些随访模式和频次设置？",
+    "expected_answer": "随访计划管理页面（suifangjihua）支持医生为患者制定个性化随访计划，可设置计划频次（每周/每月/每季度）、随访模式（电话/视频/面诊）、随访内容及计划时间，实现新增、查看、修改、删除等完整管理操作，并提供患者随访历史查看功能。",
+    "expected_keywords": [
+      "每周/每月/每季度",
+      "电话/视频/面诊",
+      "随访计划管理页面"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成医生端随访计划管理和数据可视化功能开发。随访计划管理页面（suifangjihua）支持医生为患者制定个性化随访计划，可设置计划频次（每周/每月/每季度"
+  },
+  {
+    "id": "g0311",
+    "question": "在毕业设计前期的文献调研中，主要使用了哪些数据库和检索方向？",
+    "expected_answer": "在CNKI、IEEE Xplore、百度学术等数据库检索与医疗健康数据分析、Python Web开发相关的文献，重点关注慢性病管理平台、Health Management System等方向的最新研究成果。",
+    "expected_keywords": [
+      "CNKI",
+      "IEEE Xplore",
+      "百度学术",
+      "医疗健康数据分析",
+      "Python Web开发",
+      "慢性病管理平台",
+      "Health Management System"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周主要进行毕业设计前期的资料收集与文献调研工作。在CNKI、IEEE Xplore、百度学术等数据库检索与医疗健康数据分析、Python Web开发相关的文献"
+  },
+  {
+    "id": "g0312",
+    "question": "本周为论文答辩做了哪些准备工作？",
+    "expected_answer": "本周进行了论文查重和答辩准备工作，包括根据中期检查答辩委员会意见修改完善论文，使用学校指定的论文查重系统检测并改写重复率较高的部分，精心准备答辩PPT（涵盖系统概述、需求分析、系统设计、系统实现、系统测试、总结展望等部分），制作系统功能演示视频，配置演示环境和演示数据，准备答辩陈述稿。",
+    "expected_keywords": [
+      "论文查重",
+      "答辩PPT",
+      "演示视频"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周进行论文查重和答辩准备工作。根据中期检查答辩委员会意见，对论文进行修改完善。使用学校指定的论文查重系统进行检测，对重复率较高的部分进行改写，确保论文原创性。"
+  },
+  {
+    "id": "g0313",
+    "question": "本周管理员后台管理模块的开发工作具体完成了哪些功能？",
+    "expected_answer": "本周完成了管理员后台管理模块的开发工作，包括用户全生命周期管理功能（对患者、医生、管理员三类用户进行账号管理，支持新增、查看、修改、删除及注册审核操作，可对违规账号进行冻结处理）、系统配置管理功能（支持前端轮播图配置和菜单JSON配置管理）、操作日志模块（记录用户的登录、数据操作等关键行为）、弹窗提醒模块的后端开发（支持向用户推送个性化提醒通知），完成了管理员端核心功能的后端接口开发。",
+    "expected_keywords": [
+      "用户全生命周期管理",
+      "系统配置管理",
+      "操作日志模块",
+      "弹窗提醒模块",
+      "后端接口开发"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成管理员后台管理模块的开发工作。实现了用户全生命周期管理功能，对患者（yonghu）、医生（yisheng）、管理员（users）三类用户进行账号管理，支"
+  },
+  {
+    "id": "g0315",
+    "question": "医生工作台页面（DoctorDashboard）展示了哪些内容？",
+    "expected_answer": "医生工作台展示今日概览（待随访患者数、异常指标患者数、新增记录数）、风险提醒列表、近7日风险趋势图、关键患者列表等，使用ECharts折线图和柱状图进行数据可视化呈现。",
+    "expected_keywords": [
+      "今日概览",
+      "风险提醒列表",
+      "近7日风险趋势图",
+      "关键患者列表",
+      "ECharts"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周开发医生工作台页面（DoctorDashboard）和智能诊断辅助页面（PatientAnalysis）。医生工作台展示今日概览（待随访患者数、异常指标患者"
+  },
+  {
+    "id": "g0316",
+    "question": "本周在毕业论文完善和中期检查准备工作中，具体完成了哪些任务？",
+    "expected_answer": "本周完成了对论文技术描述的修改完善，补充了第六章总结与展望，补充了参考文献部分（引用近五年CNKI收录的相关中文文献，涵盖医疗健康数据分析、Python Web开发、机器学习应用等方向），对论文格式进行了统一调整（确保目录、页眉页脚、图表编号等符合学校规范要求），并参加了学校组织的中期检查，向答辩委员会汇报了系统开发进展和论文撰写情况。",
+    "expected_keywords": [
+      "论文技术描述",
+      "总结与展望",
+      "参考文献",
+      "格式调整",
+      "中期检查"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成毕业论文的完善和中期检查准备工作。对论文技术描述进行修改完善，使表述更加准确规范。补充第六章总结与展望，对整个系统进行总结并展望未来改进方向。补充参考文"
+  },
+  {
+    "id": "g0317",
+    "question": "在客户运营岗位面试中，Excel/WPS表格需要掌握哪些核心功能？",
+    "expected_answer": "Excel/WPS表格是最重要的工具，面试大概率会问。必须会的功能包括：筛选（用于找特定数据，如筛选出某天的客户记录）、排序（按日期或金额排列数据）、VLOOKUP（跨表查找，如用客户ID查姓名）、数据透视表（汇总统计，如统计每月客户数量）、条件格式（高亮标记，如把逾期的标红）、求和/计数（基础统计，如SUM、COUNT、AVERAGE）。面试时可以说：'Excel基本操作没问题，VLOOKUP、数据透视表都能用，数据整理这块比较熟。'",
+    "expected_keywords": [
+      "筛选",
+      "排序",
+      "VLOOKUP",
+      "数据透视表",
+      "条件格式"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 二、岗位需要的核心能力\n\n### 2.1 必备技能\n\n#### Excel/WPS 表格\n\n这是**最重要的工具**，面试大概率会问。\n\n**必须会的：*"
+  },
+  {
+    "id": "g0319",
+    "question": "运营和销售在考核指标上有什么不同？",
+    "expected_answer": "销售的考核指标是成交额，运营的考核指标是活跃度、留存率和满意度。",
+    "expected_keywords": [
+      "成交额",
+      "活跃度",
+      "留存率",
+      "满意度"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 1.3 运营和销售的区别\n\n| | 销售 | 运营 |\n|--|------|------|\n| 目标 | 卖出去 | 让产品用得好 |\n| 工作方式 "
+  },
+  {
+    "id": "g0321",
+    "question": "在数据录入岗位中，哪些软技能比较重要？",
+    "expected_answer": "根据知识库，数据录入岗位中重要的软技能包括细心、沟通、耐心、主动性和学习能力。细心是因为数据录入不能出错；沟通是因为要和客户、同事对接；耐心是因为客户问题可能重复；主动性是发现问题主动解决；学习能力是因为工具和流程都要学。",
+    "expected_keywords": [
+      "细心",
+      "沟通",
+      "耐心",
+      "主动性",
+      "学习能力"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 2.2 软技能\n\n| 技能 | 为什么重要 | 怎么体现 |\n|------|-----------|----------|\n| **细心** | 数据"
+  },
+  {
+    "id": "g0322",
+    "question": "运营中常说的“私域”和“公域”分别指什么？",
+    "expected_answer": "私域指自己能触达的用户，例如企业微信群；公域指别人平台的流量，例如抖音、百度。",
+    "expected_keywords": [
+      "私域",
+      "公域",
+      "自己能触达的用户",
+      "别人平台的流量"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 六、运营常用术语速查\n\n| 术语 | 含义 | 例子 |\n|------|------|------|\n| **KPI** | 关键绩效指标 | 每月新增"
+  },
+  {
+    "id": "g0324",
+    "question": "入职第二周，我该如何开始独立干活？",
+    "expected_answer": "第二周开始独立干活时，需要把操作流程写成文档，不要靠脑子记；建立自己的工作清单，明确每天做什么；遇到问题先记下来，集中问。",
+    "expected_keywords": [
+      "写成文档",
+      "工作清单",
+      "集中问"
+    ],
+    "source_files": [
+      "面试产品运营知识点.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### 4.2 第二周：开始独立干活\n\n- [ ] 把操作流程**写成文档**（别靠脑子记）\n- [ ] 建立自己的**工作清单**（每天做什么）\n- [ ] "
+  },
+  {
+    "id": "g0325",
+    "question": "你的AI Dev Platform是如何解决Agent协作中的核心问题的？",
+    "expected_answer": "我的AI Dev Platform是一个6Agent协作系统，核心解决了三个问题：状态机兜底——8状态+12事件+15规则，确保LLM输出不稳时不会卡死；集体记忆——通过共享目录、技能固化和长期记忆，避免Agent信息孤岛；多模型调度——DeepSeek处理重任务，MiniMax处理轻任务，实现成本可控。这套架构让我理解了Agent工程化的核心不是堆Agent数量，而是管好它们怎么协作。",
+    "expected_keywords": [
+      "6Agent协作系统",
+      "状态机兜底",
+      "集体记忆",
+      "多模型调度"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 五、你的杀手锏（面试用）\n\n你的AI Dev Platform就是最好的实战案例：\n\n> \"我自己搭了一个6Agent协作系统，核心解决了三个问题：\n> "
+  },
+  {
+    "id": "g0328",
+    "question": "在部署到生产环境时，莫斯和OpenClaw应该如何选择？",
+    "expected_answer": "看业务场景：如果业务需要自主决策+质量把关（比如自动化开发流水线），选莫斯；如果业务需要高并发编码执行（比如批量代码生成+测试），选OpenClaw。最理想的方案是两者组合——莫斯拆任务+审质量，OpenClaw并行执行。",
+    "expected_keywords": [
+      "业务场景",
+      "自主决策+质量把关",
+      "高并发编码执行",
+      "组合",
+      "莫斯拆任务+审质量",
+      "OpenClaw并行执行"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "### Q: 如果让你二选一部署到生产环境，你选哪个？\n> \"看业务场景：\n> - 如果业务需要**自主决策+质量把关**（比如自动化开发流水线），选莫斯\n> "
+  },
+  {
+    "id": "g0331",
+    "question": "如何通过话术体现我懂Agent架构？",
+    "expected_answer": "能对比莫斯和OpenClaw的技术设计差异。",
+    "expected_keywords": [
+      "莫斯",
+      "OpenClaw",
+      "技术设计差异"
+    ],
+    "source_files": [
+      "莫斯vsOpenClaw_Agent开发面试.md"
+    ],
+    "category": "simple_fact",
+    "domain": "ai_tech",
+    "source_chunk": "## 六、总结\n\n| 你要输出的人设 | 对应话术 |\n|--------------|---------|\n| 懂Agent架构 | 能对比莫斯和OpenCl"
+  },
+  {
+    "id": "g0337",
+    "question": "这个知识库片段的标题是什么？",
+    "expected_answer": "RAG 检 索 增 强 生 成 技 术",
+    "expected_keywords": [
+      "RAG",
+      "检索增强生成",
+      "技术"
+    ],
+    "source_files": [
+      "test_ocr.png"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "RAG 检 索 增 强 生 成 技 术\n知 识 库 智 能 问 答 系 统\nHello World 2026\nPython Al Development"
+  },
+  {
+    "id": "g0338",
+    "question": "这张图表展示的主题是什么？",
+    "expected_answer": "该图片为文字标题和标语组合，无数据趋势，主要展示RAG技术与知识库智能问答系统的主题。",
+    "expected_keywords": [
+      "RAG",
+      "知识库智能问答系统",
+      "文字标题和标语组合"
+    ],
+    "source_files": [
+      "test_ocr.png"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "这是一张其他图表，标题为「RAG 检索增强生成技术 知识库智能问答系统」。\n关键数据：\n- Hello World 2026\n- Python AI Devel"
+  },
+  {
+    "id": "g0339",
+    "question": "公安机关在治安案件调查结束后，对于违法行为已涉嫌犯罪的情况应如何处理？",
+    "expected_answer": "违法行为已涉嫌犯罪的，移送有关主管机关依法追究刑事责任。",
+    "expected_keywords": [
+      "涉嫌犯罪",
+      "移送",
+      "追究刑事责任"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "公安机关不得因违反治安管理行为人的陈述、申辩而加重其\n处罚。\n第一百一十三条 治安案件调查结束后，公安机关应当根据\n不同情况，分别作出以下处理：\n（一）确有依法"
+  },
+  {
+    "id": "g0340",
+    "question": "根据该知识库片段，强买强卖商品、强迫他人提供服务或接受服务的，法律规定的处罚是什么？",
+    "expected_answer": "处五日以上十日以下拘留，并处三千元以上五千元以下罚款；情节较轻的，处五日以下拘留或者一千元以下罚款。",
+    "expected_keywords": [
+      "五日以上十日以下拘留",
+      "三千元以上五千元以下罚款",
+      "五日以下拘留",
+      "一千元以下罚款"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "第五十四条 强买强卖商品，强迫他人提供服务或者强迫他\n人接受服务的，处五日以上十日以下拘留，并处三千元以上五千\n元以下罚款；情节较轻的，处五日以下拘留或者一千元"
+  },
+  {
+    "id": "g0343",
+    "question": "非法安装、使用、提供窃听、窃照专用器材的，会受到什么处罚？",
+    "expected_answer": "非法安装、使用、提供窃听、窃照专用器材的，处五日以下拘留或者一千元以上三千元以下罚款；情节较重的，处五日以上十日以下拘留，并处三千元以上五千元以下罚款。",
+    "expected_keywords": [
+      "窃听、窃照专用器材",
+      "五日以下拘留",
+      "一千元以上三千元以下罚款",
+      "情节较重",
+      "五日以上十日以下拘留",
+      "三千元以上五千元以下罚款"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "款。\n第七十条 非法安装、使用、提供窃听、窃照专用器材的，\n处五日以下拘留或者一千元以上三千元以下罚款；情节较重的，\n处五日以上十日以下拘留，并处三千元以上五千"
+  },
+  {
+    "id": "g0345",
+    "question": "已满14周岁不满18周岁的人违反治安管理，应当如何处罚？",
+    "expected_answer": "已满十四周岁不满十八周岁的人违反治安管理的，从轻或者减轻处罚。",
+    "expected_keywords": [
+      "已满十四周岁不满十八周岁",
+      "从轻或者减轻处罚"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "人的，登记造册，公开拍卖或者按照国家有关规定处理，所得款\n项上缴国库。\n第十二条 已满十四周岁不满十八周岁的人违反治安管理\n的，从轻或者减轻处罚；不满十四周岁的"
+  },
+  {
+    "id": "g0346",
+    "question": "公安机关在哪些情况下可以由一名人民警察进行询问、扣押、辨认？",
+    "expected_answer": "公安机关在规范设置、严格管理的执法办案场所进行询问、扣押、辨认的，或者进行调解的，可以由一名人民警察进行。",
+    "expected_keywords": [
+      "规范设置",
+      "严格管理",
+      "执法办案场所",
+      "一名人民警察"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "对扣押的物品，应当妥善保管，不得挪作他用；对不宜长期\n保存的物品，按照有关规定处理。经查明与案件无关或者经核实\n属于被侵害人或者他人合法财产的，应当登记后立即退"
+  },
+  {
+    "id": "g0347",
+    "question": "这个本科毕业设计（论文）的题目是什么？",
+    "expected_answer": "基于 Python 的母婴商品分析及推荐系统的设计及实现",
+    "expected_keywords": [
+      "基于 Python",
+      "母婴商品分析",
+      "推荐系统"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "辽 宁 工 业 大 学\n本 科 毕 业 设 计 （ 论 文 ）\n教 学 过 程 记 录 册\n题目 基于 Python 的母婴商品分析及推荐系统的设计及实现\n电子"
+  },
+  {
+    "id": "g0348",
+    "question": "这个毕业设计课题的技术选型是什么？",
+    "expected_answer": "该毕业设计课题采用Python技术，以MySQL为数据库，使用Django框架，前端采用Vue.js、Element UI、ECharts构建可视化界面，后端采用Django框架开发API。",
+    "expected_keywords": [
+      "Python",
+      "MySQL",
+      "Django",
+      "Vue.js",
+      "Element UI",
+      "ECharts"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "本科毕业设计（论文）任务书\n理论研究 应用研究\n题目来源 科研 生产实践 题目类型\n设计开发 其他\n自拟 其他\n1.毕业设计（论文）的目标与技术指标（设计参数）"
+  },
+  {
+    "id": "g0349",
+    "question": "该医疗健康数据分析系统的后端、数据库和前端分别采用了哪些技术？",
+    "expected_answer": "前端采用 Vue 和 ECharts 构建可视化界面，后端采用 Django 框架开发 API，数据库选用 MySQL。",
+    "expected_keywords": [
+      "Vue",
+      "ECharts",
+      "Django",
+      "MySQL"
+    ],
+    "source_files": [
+      "aaa教学过程记录册-2026届修改后.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "nt UI、ECharts 构建可视化界面，后端采用Django 框架开发API，\n数据库选用MySQL。\n（3）实现患者端：健康数据录入与查看、报告查阅、体检"
+  },
+  {
+    "id": "g0355",
+    "question": "这个知识库片段中包含了哪些信息？",
+    "expected_answer": "该片段包含一个表格，表头有“时间”、“地点”和“学生工作情况记录”三个字段，但表格内容为空，没有具体数据。",
+    "expected_keywords": [
+      "时间",
+      "地点",
+      "学生工作情况记录"
+    ],
+    "source_files": [
+      "叶  记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0356",
+    "question": "知识库片段中关于学生工作情况记录的时间、地点和具体内容是什么？",
+    "expected_answer": "该片段仅包含一个表格框架，标题为“学生工作情况记录”，包含“时间”、“地点”两列，但表格中所有单元格均为空，没有填写任何具体信息。",
+    "expected_keywords": [
+      "学生工作情况记录",
+      "时间",
+      "地点",
+      "空"
+    ],
+    "source_files": [
+      "叶  记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0364",
+    "question": "知识库片段中的表格包含哪些列？",
+    "expected_answer": "表格包含“时间”、“地点”和“学生工作情况记录”三列。",
+    "expected_keywords": [
+      "时间",
+      "地点",
+      "学生工作情况记录"
+    ],
+    "source_files": [
+      "胡   记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0366",
+    "question": "这个表格的标题是什么？",
+    "expected_answer": "学生工作情况记录",
+    "expected_keywords": [
+      "学生工作情况记录"
+    ],
+    "source_files": [
+      "胡   记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0367",
+    "question": "系统如何记录用户操作日志，以便进行问题排查和审计追踪？",
+    "expected_answer": "操作计时中间件（TimingMiddleware）自动拦截写操作（POST、PUT、DELETE），记录每次操作的操作者、操作类型、请求参数、请求时长（毫秒）和IP地址，写入系统日志表（syslog），便于问题排查和审计追踪。",
+    "expected_keywords": [
+      "TimingMiddleware",
+      "写操作",
+      "操作者",
+      "操作类型",
+      "请求参数",
+      "请求时长",
+      "IP地址",
+      "syslog"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "身份验证，Token 由用户登录时生成，有效期为 1 小时，过期后需重新登录。JSON 响\n应中间件统一接口返回格式，确保前端收到的始终是结构化的JSON数据。"
+  },
+  {
+    "id": "g0368",
+    "question": "在给定的知识库片段中，边（edge）的样式（style）属性包含哪些具体设置？",
+    "expected_answer": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;fontFamily=Times New Roman",
+    "expected_keywords": [
+      "orthogonalEdgeStyle",
+      "rounded=0",
+      "orthogonalLoop=1",
+      "jettySize=auto",
+      "html=1",
+      "fontSize=10",
+      "fontFamily=Times New Roman"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "216%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLo"
+  },
+  {
+    "id": "g0369",
+    "question": "为什么选择Vue.js作为前端开发技术？",
+    "expected_answer": "因为Vue.js有组件化的开发方式，满足了以数据为中心的设计思想，拥有强大的开发者群体以及成熟的生态体系，正好顺应了当下前端的发展主流方向。",
+    "expected_keywords": [
+      "组件化",
+      "数据为中心",
+      "开发者群体",
+      "生态体系"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "足轻重的地位，优秀的前端框架可以支撑设计\n出既有审美又快速还有易于维护的交互产品，作为一个渐进式的javascript 框架，Vue.js\n通过它自己的特性使得"
+  },
+  {
+    "id": "g0370",
+    "question": "在知识库片段中，id为33的边连接了哪些节点，其边的标签是什么？",
+    "expected_answer": "id为33的边连接了source为5和target为6的节点，边的标签是“关联”。",
+    "expected_keywords": [
+      "id=33",
+      "source=5",
+      "target=6",
+      "关联"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "l%20id%3D%2233%22%20edge%3D%221%22%20parent%3D%221%22%20source%3D%225%22%20style"
+  },
+  {
+    "id": "g0372",
+    "question": "毕业论文致谢中，作者感谢了哪些人？",
+    "expected_answer": "作者感谢了老师、同学、家人和朋友，以及所有为本文提供参考文献和资料的学者和研究人员。",
+    "expected_keywords": [
+      "老师",
+      "同学",
+      "家人",
+      "朋友",
+      "学者和研究人员"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "们的关心和理解让我能够全身心地投入其中。朋友们在\n我遇到困难时，总是耐心倾听并给予我精神上的支持，帮助我度过了许多艰难的时刻。\n最后，我要感谢所有为本文提供参考"
+  },
+  {
+    "id": "g0373",
+    "question": "数据字典在系统设计和开发中的核心价值是什么？",
+    "expected_answer": "数据字典的核心价值在于统一数据口径、规范开发环节，保障不同角色在协作过程中对数据的理解保持一致。它如同“数据蓝图”，明确规定系统内各类数据元素的命名、数据类型、取值区间及相互关联，能够有效规避因理解差异造成的数据混乱与冗余问题，帮助需求分析人员精准把握业务需求与数据要素含义，为系统设计与开发工作提质优化提供支撑。",
+    "expected_keywords": [
+      "统一数据口径",
+      "规范开发环节",
+      "数据蓝图"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本科生毕业设计（论文）\n图3.5 功能1级数据流图\n3.3.2 数据字典\n数据字典作为一类元数据集合，可对数据结构与业务规则开展系统化说明。其核心\n价值在于统一"
+  },
+  {
+    "id": "g0374",
+    "question": "论坛类型信息表中包含哪些字段，以及它们的数据类型和是否允许为空？",
+    "expected_answer": "论坛类型信息表包含字段：id（bigint，长度20，主键，不允许为空）、addtime（timestamp，创建时间，不允许为空）、type_name（varchar，长度20，分类名称，允许为空）。",
+    "expected_keywords": [
+      "id",
+      "addtime",
+      "type_name",
+      "bigint",
+      "timestamp",
+      "varchar"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "片 是\nsuggestion longtext 处理建议 否\nstatus varchar 8 处理状态 是\nreport_type varchar 4 举报类"
+  },
+  {
+    "id": "g0377",
+    "question": "这份毕业设计（论文）学生工作记录本属于哪个学院和专业？",
+    "expected_answer": "电子与信息工程学院，数据科学与大数据专业。",
+    "expected_keywords": [
+      "电子与信息工程学院",
+      "数据科学与大数据专业"
+    ],
+    "source_files": [
+      "记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "辽 宁 工 业 大 学\n毕业设计（论文）学生工作记录本\n题目 基于 Python 的医疗健康数据分析系统的设计与实现\n电子与信息工程 学院 数据科学与大数据 专"
+  },
+  {
+    "id": "g0378",
+    "question": "这个知识库片段中包含了哪些字段？",
+    "expected_answer": "片段中包含时间、地点、学生工作情况记录三个字段。",
+    "expected_keywords": [
+      "时间",
+      "地点",
+      "学生工作情况记录"
+    ],
+    "source_files": [
+      "记录本   8-1毕业设计（论文）学生记录本(1).pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "| 时间 |  | 地点 |  |\n| --- | --- | --- | --- |\n| 学生工作情况记录 |  |  |  |\n|  |  |  |  |"
+  },
+  {
+    "id": "g0381",
+    "question": "初入公司时，团队的前辈是如何帮助新人熟悉工作的？",
+    "expected_answer": "团队的前辈们并没有让新人直接上手复杂的项目，而是先带新人熟悉公司的技术栈和业务场景，耐心讲解了数据仓库的架构、数据处理的规范以及用户画像分析项目的背景目标。从搭建开发环境、熟悉SQL语句的企业级应用，到学习数据质量核查的标准流程，新人一步步跟上了团队的节奏。",
+    "expected_keywords": [
+      "技术栈",
+      "业务场景",
+      "数据仓库",
+      "数据处理规范",
+      "用户画像分析项目"
+    ],
+    "source_files": [
+      "中可博凡实习总结.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "初入公司时，我对企业级大数据开发的认知还停留在课本的理论知识中，面对陌生的业务流程和海量数据，心里难免有些忐忑。但团队的前辈们并没有让我直接上手复杂的项目，而是"
+  },
+  {
+    "id": "g0383",
+    "question": "这次实习对你从学生向职场人过渡有什么帮助？",
+    "expected_answer": "这次实习是我从学生向职场人过渡的重要一步。它不仅让我掌握了数据工程师岗位的基础工作技能，更让我养成了严谨负责的工作态度、主动沟通的协作意识和直面问题的抗压能力。",
+    "expected_keywords": [
+      "基础工作技能",
+      "严谨负责",
+      "主动沟通",
+      "抗压能力"
+    ],
+    "source_files": [
+      "中可博凡实习总结.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "这次实习，是我从学生向职场人过渡的重要一步。它不仅让我掌握了数据工程师岗位的基础工作技能，更让我养成了严谨负责的工作态度、主动沟通的协作意识和直面问题的抗压能力"
+  },
+  {
+    "id": "g0385",
+    "question": "实习生在哪个时间段、在哪家公司完成了什么岗位的实习？",
+    "expected_answer": "实习时间为2026年1月20日至2月20日，实习单位为中科博凡(德州)数字科技有限公司，岗位为数据工程师实习生。",
+    "expected_keywords": [
+      "2026年1月20日至2月20日",
+      "中科博凡(德州)数字科技有限公司",
+      "数据工程师实习生"
+    ],
+    "source_files": [
+      "中可博凡实习总结.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "时光荏苒，为期一个月的实习已落下帷幕。2026年1月20日至2月20日，我在中科博凡(德州)数字科技有限公司的数据工程师实习生岗位上完成了实践学习。作为辽宁工业"
+  },
+  {
+    "id": "g0386",
+    "question": "在实习中，你学到了哪些应对真实数据问题的方法？",
+    "expected_answer": "在实习中，我学会了分步排查、交叉验证，并养成了写分析报告时附上多维度对比验证的习惯，让每一个结论都有数据支撑。",
+    "expected_keywords": [
+      "分步排查",
+      "交叉验证",
+      "多维度对比验证"
+    ],
+    "source_files": [
+      "中可博凡实习总结.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "这段实习也让我深刻感受到了理论与实践的差距。在学校里，我们做的项目数据大多是干净、规整的教学数据，而在企业中，真实的数据往往存在缺失、重复、格式不统一等各种问题"
+  },
+  {
+    "id": "g0387",
+    "question": "孤立森林异常检测函数中，contamination 参数的作用和默认值是什么？",
+    "expected_answer": "contamination 参数表示异常样本比例，默认值为0.1（即10%）。",
+    "expected_keywords": [
+      "异常样本比例",
+      "默认0.1",
+      "10%"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": ": 异常样本比例（默认0.1，即10%） - random_state: 随机种子（默认42，保证可复现） train_mode: 训练模式标志（当前版本预留参"
+  },
+  {
+    "id": "g0388",
+    "question": "这个函数 `_linear_regression_slope` 是做什么用的？",
+    "expected_answer": "计算线性回归斜率（用于趋势分析）",
+    "expected_keywords": [
+      "线性回归斜率",
+      "趋势分析"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "def _linear_regression_slope(self, x: List[float], y: List[float]) -> float: \"\"\""
+  },
+  {
+    "id": "g0389",
+    "question": "在计算变异系数时，如果均值不为零，公式是什么？",
+    "expected_answer": "变异系数（波动率）以百分比表示，计算公式为 (std_val / mean_val) * 100，其中 std_val 是标准差，mean_val 是均值。如果均值为零，则返回 0.0。",
+    "expected_keywords": [
+      "变异系数",
+      "标准差",
+      "均值",
+      "百分比",
+      "0.0"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "sum_x2 = sum(xi ** 2 for xi in x) numerator = n * sum_xy - sum_x * sum_y denomin"
+  },
+  {
+    "id": "g0390",
+    "question": "在健康评估中，各项指标的权重是如何分配的？",
+    "expected_answer": "血压权重为0.25，血糖和BMI权重均为0.20，心率权重为0.15，胆固醇和睡眠质量权重均为0.10。",
+    "expected_keywords": [
+      "血压",
+      "0.25",
+      "血糖",
+      "0.20",
+      "BMI",
+      "心率",
+      "0.15",
+      "胆固醇",
+      "睡眠质量",
+      "0.10"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": " METRIC_WEIGHTS: Dict[str, float] = { 'blood_pressure': 0.25, 'blood_sugar': 0.2"
+  },
+  {
+    "id": "g0391",
+    "question": "在计算患者指标的Z-score时，如果群体标准差为0，代码会如何处理？",
+    "expected_answer": "如果群体标准差为0，代码会跳过该指标，因为群体无波动时无法计算Z-score。",
+    "expected_keywords": [
+      "标准差为0",
+      "跳过",
+      "无法计算Z-score"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "[ 'bp_systolic', 'blood_sugar', 'bmi', 'heart_rate', 'cholesterol' ] for metric "
+  },
+  {
+    "id": "g0392",
+    "question": "当健康指标值低于正常范围时，评分是如何计算的？",
+    "expected_answer": "当指标值低于正常范围时，按偏离比例扣分，计算公式为：deviation = (min_val - value) / min_val * 100，最终得分为 max(0.0, 100.0 - deviation)。",
+    "expected_keywords": [
+      "低于正常范围",
+      "偏离比例",
+      "扣分"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": ".get('normal_range') # 更清晰的变量名 # 防御性处理：无正常范围配置时返回0分 if not normal_range: return "
+  },
+  {
+    "id": "g0393",
+    "question": "normalize_value 函数是如何将健康指标值归一化为0-100的健康评分的？",
+    "expected_answer": "评分规则是：处于正常范围内得100分；低于或高于正常范围时，按偏离程度线性扣分，最低0分。",
+    "expected_keywords": [
+      "正常范围",
+      "100分",
+      "线性扣分",
+      "最低0分"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "from typing import Dict, Optional # 假设的配置获取函数（补充类型注解） def get_metric_config(dime"
+  },
+  {
+    "id": "g0394",
+    "question": "使用孤立森林模型进行异常检测时，如何将预测标签转换为0和1的格式？",
+    "expected_answer": "将标签转换为0=正常，1=异常的格式，具体操作是：anomalies = (labels == -1).astype(int)，其中labels为模型fit_predict返回的标签（1=正常，-1=异常）。",
+    "expected_keywords": [
+      "labels",
+      "-1",
+      "astype(int)"
+    ],
+    "source_files": [
+      "代码.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "ion=contamination, random_state=random_state, n_jobs=-1 # 新增：启用多线程加速训练 ) # 拟合并预测"
+  },
+  {
+    "id": "g0395",
+    "question": "协助诊断及风险管理系统如何帮助临床医师进行疾病风险评估？",
+    "expected_answer": "协助诊断及风险管理系统基于提前建立好的相关疾病预测算法模型，汇集病人各项基础生理参数及各类健康资讯，结合以上信息，模型可以准确计算出某个人群在一定时间内患病的风险值大小，并将其分为高危险度、中危险度及低危险度三个等级。量化后可为临床诊疗提供参考借鉴，并促进个性化防治方案的研究制定及应用落地，提高疾病预处理能力和治疗效果。",
+    "expected_keywords": [
+      "预测算法模型",
+      "风险值",
+      "高危险度、中危险度及低危险度",
+      "个性化防治方案"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "协助诊断及风险管理系统是医学中的关键技术之一，能给临床医师带来有效的数据分析支持，基于提前建立好的相关疾病预测算法模型，在这之上可以汇集病人各项基础生理参数及各"
+  },
+  {
+    "id": "g0397",
+    "question": "该系统采用什么前后端设计模式，以及这种模式的意义是什么？",
+    "expected_answer": "该系统采用Django后端加Vue前端的设计模式，这种设计模式有着很大的技术革新意义而且有着广泛的应用前景，对推进医疗卫生信息系统的发展有着重大的实际意义。",
+    "expected_keywords": [
+      "Django后端",
+      "Vue前端",
+      "技术革新",
+      "医疗卫生信息系统"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "研究成果以及技术支持。工程使用Django后端加Vue前端的设计模式，这种设计模式有着很大的技术革新意义而且有着广泛的应用前景，对推进医疗卫生信息系统的发展有着"
+  },
+  {
+    "id": "g0399",
+    "question": "患者端首页主要展示哪些内容？",
+    "expected_answer": "患者端首页展示个人健康数据概览，包括最近一次录入的血压、血糖、心率等关键指标的快照展示，最新生成的健康报告提醒，医生制定的随访计划到期提醒，以及健康资讯推送等内容。",
+    "expected_keywords": [
+      "个人健康数据概览",
+      "健康报告提醒",
+      "随访计划到期提醒",
+      "健康资讯推送"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "系统首页模块是用户成功登录后首先看到的页面，其通过后台发送GET请求获取数据，用于处理用户请求并返回首页的渲染内容。针对不同角色，首页展示的内容各有侧重：患者端"
+  },
+  {
+    "id": "g0400",
+    "question": "医生分析配置的样式是什么？",
+    "expected_answer": "医生分析配置的样式是：rounded=1;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1;align=center;verticalAlign=middle;arcSize=10;fontFamily=Times New Roman;",
+    "expected_keywords": [
+      "rounded=1",
+      "whiteSpace=wrap",
+      "fontSize=11"
+    ],
+    "source_files": [
+      "基于Python的医疗健康数据分析系统的设计与实现.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "programming",
+    "source_chunk": "rent%3D%221%22%20style%3D%22rounded%3D1%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfontSiz"
+  },
+  {
+    "id": "g0405",
+    "question": "2026年3月12日的开题答辩意见中，系主任在2026年3月20日给出的整改情况是什么？",
+    "expected_answer": "无整改意见，按计划进行。",
+    "expected_keywords": [
+      "无整改意见",
+      "按计划进行"
+    ],
+    "source_files": [
+      "教学过程记录册--医疗健康--.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "| 1.开题答辩意见                   记录人签字： 2026年3月12日 |\n| --- |\n| 2.整改情况       系主任签字： 2"
+  },
+  {
+    "id": "g0408",
+    "question": "该医疗健康数据分析系统毕业设计课题中，系统划分为哪三种角色？",
+    "expected_answer": "该系统可划分为前端和后端，划分为患者、医生和管理员三种角色。",
+    "expected_keywords": [
+      "患者",
+      "医生",
+      "管理员"
+    ],
+    "source_files": [
+      "教学过程记录册_更新版.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "other",
+    "source_chunk": "| 题目来源 | □ 科研     ☑ 生产实践 □ 自拟     □ 其他 | 题目类型 | □ 理论研究     □ 应用研究 ☑ 设计开发     □ 其"
+  },
+  {
+    "id": "g0409",
+    "question": "管理员端首页看板页面本周完成了哪些开发内容？",
+    "expected_answer": "本周完成了管理员登录和首页看板页面开发。首页看板使用ECharts多图表组合布局，集中展示平台运营数据，包括用户增长趋势图（近30天每日新增用户数折线图）、患者健康指标异常统计饼图、医生随访完成率柱状图等。同时展示首页总数统计，如用户总数、患者总数、医生总数、发帖总数等核心指标。使用数据缓存技术优化看板加载速度，提升用户体验。",
+    "expected_keywords": [
+      "管理员登录",
+      "首页看板",
+      "ECharts",
+      "用户增长趋势图",
+      "患者健康指标异常统计饼图",
+      "医生随访完成率柱状图",
+      "总数统计",
+      "数据缓存"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周开始管理员端前端开发。完成管理员登录和首页看板页面开发。首页看板使用ECharts多图表组合布局，集中展示平台运营数据，包括用户增长趋势图（近30天每日新增"
+  },
+  {
+    "id": "g0411",
+    "question": "本周医生端开发了哪些与报告相关的功能？",
+    "expected_answer": "本周完成医生端健康报告管理和体检报告查阅功能开发。开发健康报告管理页面（jiankangbaogao），支持医生为患者新增、查看、修改、删除电子健康报告，报告包含健康评估等级（高风险/中风险/低风险/正常）和专业健康建议，支持Word格式导出。开发体检报告查阅页面，医生可查看患者上传的体检报告图片和文本信息（tijianbaogaoshangchuan），辅助临床诊断与健康评估。",
+    "expected_keywords": [
+      "健康报告管理",
+      "体检报告查阅",
+      "Word格式导出"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成医生端健康报告管理和体检报告查阅功能开发。开发健康报告管理页面（jiankangbaogao），支持医生为患者新增、查看、修改、删除电子健康报告，报告包"
+  },
+  {
+    "id": "g0412",
+    "question": "本周在毕业论文定稿工作中，具体完成了哪些任务？",
+    "expected_answer": "本周完成了毕业论文终稿的全文审校，对目录、页眉页脚、图表编号、参考文献格式等进行了统一调整，确保各项内容符合学校论文规范要求；完成了论文摘要、Abstract、关键词等部分的中英文校对；将论文终稿提交指导教师审核，根据审核意见进行了最后的修改，最终完成定稿。",
+    "expected_keywords": [
+      "全文审校",
+      "中英文校对",
+      "指导教师审核"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成毕业论文的最终定稿工作。完成了毕业论文终稿的全文审校，对目录、页眉页脚、图表编号、参考文献格式等进行了统一调整，确保各项内容符合学校论文规范要求。完成了"
+  },
+  {
+    "id": "g0413",
+    "question": "管理员端用户管理功能具体支持哪些操作？",
+    "expected_answer": "管理员端用户管理功能支持对患者（yonghu表）、医生（yisheng表）、管理员（users表）三类用户进行全生命周期管理，包括新增、查看、修改、删除及注册审核操作，可对违规账号进行冻结处理，并支持数据导出功能。",
+    "expected_keywords": [
+      "全生命周期管理",
+      "新增、查看、修改、删除",
+      "注册审核",
+      "冻结处理",
+      "数据导出"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周完成管理员端用户管理和健康数据管理功能开发。开发用户管理页面，对患者（yonghu表）、医生（yisheng表）、管理员（users表）三类用户进行全生命周"
+  },
+  {
+    "id": "g0415",
+    "question": "本周系统全面测试工作覆盖了哪些测试类型？",
+    "expected_answer": "本周进行了功能测试、权限测试、敏感词过滤测试、界面兼容性测试和性能压力测试。",
+    "expected_keywords": [
+      "功能测试",
+      "权限测试",
+      "敏感词过滤测试",
+      "界面兼容性测试",
+      "性能压力测试"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周进行系统全面测试工作。编写了功能测试用例，对核心功能模块进行了完整的功能测试，包括用户注册登录、健康数据CRUD、健康报告生成、随访计划制定、论坛发帖评论等"
+  },
+  {
+    "id": "g0416",
+    "question": "本周系统优化了哪些方面？",
+    "expected_answer": "本周进行了系统功能完善、性能优化和安全加固工作。优化了前端页面细节，调整了Element UI组件样式，优化了ECharts图表实现自适应窗口大小并添加loading动画，优化了后端接口性能，使用Django缓存框架优化频繁查询的统计数据接口，优化了患者健康数据看板查询性能，并修复了随访计划保存、社区帖子敏感词过滤等缺陷。",
+    "expected_keywords": [
+      "性能优化",
+      "ECharts",
+      "Django缓存",
+      "缺陷修复"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "本周进行系统功能完善、性能优化和安全加固工作。对前端页面进行了细节优化，调整了Element UI组件的样式，使界面更加美观统一。优化了ECharts图表，实现"
+  },
+  {
+    "id": "g0417",
+    "question": "该系统按用户角色划分为哪些功能模块？",
+    "expected_answer": "本系统按用户角色划分为三大功能模块：用户端（患者端）功能模块、医生端功能模块和管理员端功能模块。",
+    "expected_keywords": [
+      "用户端（患者端）功能模块",
+      "医生端功能模块",
+      "管理员端功能模块"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "根据需求分析的结果，本系统按用户角色划分为三大功能模块：用户端（患者端）功能模块、医生端功能模块和管理员端功能模块。各模块之间既相互独立又协同配合，共同构成完整"
+  },
+  {
+    "id": "g0418",
+    "question": "一个医生可以制定多少条随访计划？",
+    "expected_answer": "一个医生可以制定多条随访计划，即医生和随访计划是一对多（1:n）关系。",
+    "expected_keywords": [
+      "医生",
+      "随访计划",
+      "一对多"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "（6）制定（医生-随访计划）：医生和随访计划是一对多（1:n）关系，即一个医生可以制定多条随访计划，每条随访计划由一个医生负责制定。"
+  },
+  {
+    "id": "g0419",
+    "question": "箱线图中离群值是如何定义的？",
+    "expected_answer": "箱线图中，超出须线范围的数据点被标记为离群值。须线延伸至Q1 - 1.5×IQR和Q3 + 1.5×IQR范围内的最大/最小观测值，其中IQR = Q3 − Q1为四分位距。",
+    "expected_keywords": [
+      "离群值",
+      "须线",
+      "Q1 - 1.5×IQR",
+      "Q3 + 1.5×IQR"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "系统引入箱线图（Box Plot）对患者群体各健康指标的分布特征进行统计分析。箱线图通过展示五个关键统计量——最小值（Min）、第一四分位数（Q1）、中位数（M"
+  },
+  {
+    "id": "g0420",
+    "question": "系统在数据清洗阶段如何处理原始数据中的缺失值、异常值、重复记录和格式不统一问题？",
+    "expected_answer": "系统采用数据清洗技术对入库数据进行预处理：利用Python的Pandas和NumPy库对缺失值进行均值插补或中位数填充；通过基于标准差的异常检测算法识别并标记超出正常生理范围的异常记录；对重复数据进行去重处理；统一日期格式、数值单位等字段规范。",
+    "expected_keywords": [
+      "Pandas",
+      "NumPy",
+      "均值插补",
+      "中位数填充",
+      "标准差",
+      "异常检测",
+      "去重",
+      "统一格式"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "在获取原始数据后，原始数据往往存在缺失值、异常值、重复记录或格式不统一等问题，若不加以处理将严重影响后续数据分析的准确性。因此，本系统采用数据清洗技术对入库数据"
+  },
+  {
+    "id": "g0422",
+    "question": "基于Vue+Django的医疗大屏数据可视化系统的设计与实现这篇论文发表在哪个期刊上？",
+    "expected_answer": "该论文发表在《软件》期刊上，2024年第45卷第02期，页码为89-94。",
+    "expected_keywords": [
+      "软件",
+      "2024",
+      "45(02)",
+      "89-94"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "范建国,许睿.基于Vue+Django的医疗大屏数据可视化系统的设计与实现[J].软件,2024,45(02):89-94."
+  },
+  {
+    "id": "g0423",
+    "question": "测试005中，趋势图的时间范围改为多少天？",
+    "expected_answer": "趋势图的时间换成90天，展示关联90天内的血压、血糖、体重/BMI数据。",
+    "expected_keywords": [
+      "90天",
+      "血压",
+      "血糖",
+      "体重/BMI"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "thesis",
+    "source_chunk": "测试005：把血压、血糖、体重/BMI数据趋势图的时间换成90天，趋势图展示关联90天内血压、血糖、体重/BMI数据，结果和预期的符合，测试通过。"
+  },
+  {
+    "id": "g0425",
+    "question": "走私普通货物、物品偷逃应缴税额巨大或者有其他严重情节的，如何处罚？",
+    "expected_answer": "走私货物、物品偷逃应缴税额巨大或者有其他严重情节的，处三年以上十年以下有期徒刑，并处偷逃应缴税额一倍以上五倍以下罚金。",
+    "expected_keywords": [
+      "三年以上十年以下有期徒刑",
+      "偷逃应缴税额一倍以上五倍以下罚金"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n处五年以下有期徒刑，并处或者单处罚金；情节特别严重的，处五年以上有期徒\n刑，并处罚金。\n单位犯前两款罪的，对单位判处罚金，并对其直接负责的"
+  },
+  {
+    "id": "g0427",
+    "question": "拘役的刑期从什么时候开始计算？如果判决前被羁押，如何折抵刑期？",
+    "expected_answer": "拘役的刑期，从判决执行之日起计算；判决执行以前先行羁押的，羁押一日折抵刑期一日。",
+    "expected_keywords": [
+      "判决执行之日",
+      "羁押一日",
+      "折抵刑期一日"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "二日。\n第三节 拘役\n第四十二条 【拘役的期限】拘役的期限，为一个月以上六个月以下。\n第四十三条 【拘役的执行】被判处拘役的犯罪分子，由公安机关就近执行。\n在执"
+  },
+  {
+    "id": "g0428",
+    "question": "金融机构从业人员利用职务便利获取的内幕信息以外的未公开信息，从事相关交易活动，情节严重的，如何处罚？",
+    "expected_answer": "依照第一款的规定处罚。",
+    "expected_keywords": [
+      "依照第一款的规定处罚",
+      "内幕信息以外的未公开信息",
+      "情节严重"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "司等金融机构的从业人员以及有关监管部门或者行业协会的工作人\n员，利用因职务便利获取的内幕信息以外的其他未公开的信息，违反规定，从事\n与该信息相关的证券、期货交易"
+  },
+  {
+    "id": "g0431",
+    "question": "暴力袭击正在依法执行职务的人民警察，会受到什么处罚？",
+    "expected_answer": "暴力袭击正在依法执行职务的人民警察的，处三年以下有期徒刑、拘役或者管制；使用枪支、管制刀具，或者以驾驶机动车撞击等手段，严重危及其人身安全的，处三年以上七年以下有期徒刑。",
+    "expected_keywords": [
+      "暴力袭击",
+      "人民警察",
+      "三年以下有期徒刑",
+      "三年以上七年以下有期徒刑"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n第六章 妨害社会管理秩序罪\n第一节 扰乱公共秩序罪\n第二百七十七条 【妨害公务罪；袭警罪】以暴力、威胁方法阻碍国家机关\n工作人员依法执行职"
+  },
+  {
+    "id": "g0432",
+    "question": "根据刑法第一百四十七条，生产假农药、假兽药、假化肥，使生产遭受重大损失的，应如何处罚？",
+    "expected_answer": "使生产遭受重大损失的，处三年以上七年以下有期徒刑，并处销售金额百分之五十以上二倍以下罚金。",
+    "expected_keywords": [
+      "三年以上七年以下有期徒刑",
+      "销售金额百分之五十以上二倍以下罚金"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "品罪】生产不符合保障\n人身、财产安全的国家标准、行业标准的电器、压力容器、易燃易爆产品或者其\n他不符合保障人身、财产安全的国家标准、行业标准的产品，或者销售明知"
+  },
+  {
+    "id": "g0433",
+    "question": "《中华人民共和国治安管理处罚法》中“以上、以下、以内”是否包括本数？",
+    "expected_answer": "包括本数。",
+    "expected_keywords": [
+      "以上",
+      "以下",
+      "以内",
+      "包括本数"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "第一百一十八条　本法所称以上、以下、以内，包括本数。\n　　第一百一十九条　本法自2006年3月1日起施行。1986年9月5日公布、1994年5月12日修订公布的"
+  },
+  {
+    "id": "g0434",
+    "question": "根据治安管理处罚法，胁迫、诱骗或者利用他人乞讨的，会受到什么处罚？",
+    "expected_answer": "胁迫、诱骗或者利用他人乞讨的，处十日以上十五日以下拘留，可以并处一千元以下罚款。",
+    "expected_keywords": [
+      "十日以上十五日以下拘留",
+      "一千元以下罚款",
+      "胁迫、诱骗或者利用他人乞讨"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "第四十条　有下列行为之一的，处十日以上十五日以下拘留，并处五百元以上一千元以下罚款；情节较轻的，处五日以上十日以下拘留，并处二百元以上五百元以下罚款：\n　　（一"
+  },
+  {
+    "id": "g0435",
+    "question": "《中华人民共和国治安管理处罚法》是根据哪次会议的决定修正的？",
+    "expected_answer": "根据2012年10月26日第十一届全国人民代表大会常务委员会第二十九次会议《关于修改＜中华人民共和国治安管理处罚法＞的决定》修正。",
+    "expected_keywords": [
+      "2012年10月26日",
+      "第十一届全国人民代表大会常务委员会第二十九次会议",
+      "修正"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "（2005年8月28日第十届全国人民代表大会常务委员会第十七次会议通过　根据2012年10月26日第十一届全国人民代表大会常务委员会第二十九次会议《关于修改＜中"
+  },
+  {
+    "id": "g0436",
+    "question": "治安管理处罚的种类有哪些？",
+    "expected_answer": "治安管理处罚的种类分为：（一）警告；（二）罚款；（三）行政拘留；（四）吊销公安机关发放的许可证。对违反治安管理的外国人，可以附加适用限期出境或者驱逐出境。",
+    "expected_keywords": [
+      "警告",
+      "罚款",
+      "行政拘留",
+      "吊销公安机关发放的许可证"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "simple_fact",
+    "domain": "legal",
+    "source_chunk": "第十条　治安管理处罚的种类分为：\n　　（一）警告；\n　　（二）罚款；\n　　（三）行政拘留；\n　　（四）吊销公安机关发放的许可证。\n　　对违反治安管理的外国人，可"
+  }
+]
