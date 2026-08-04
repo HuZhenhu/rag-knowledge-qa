@@ -50,12 +50,15 @@ class LangChainRAGEngine:
         relevance_threshold: float | None = None,
         temperature: float | None = None,
         use_query_expansion: bool = False,
+        use_reranker: bool = False,
     ):
         self.top_k = top_k
         self.use_hybrid = use_hybrid
         self.relevance_threshold = relevance_threshold if relevance_threshold is not None else RELEVANCE_THRESHOLD
         self.temperature = temperature if temperature is not None else 0.0
         self.use_query_expansion = use_query_expansion
+        self.use_reranker = use_reranker
+        self._reranker = None
 
         # 初始化LLM
         self.llm = ChatOpenAI(
@@ -233,6 +236,27 @@ class LangChainRAGEngine:
                 })
             sources = sources[:top_k]
             timing["retrieval_ms"] = round((time.time() - retrieval_start) * 1000, 2)
+
+            # 2.5 ReRanker 精排（可选）：对检索结果重新打分排序，提升精准度
+            rerank_start = time.time()
+            if self.use_reranker and sources:
+                try:
+                    if self._reranker is None:
+                        from src.core.reranker import Reranker
+                        self._reranker = Reranker()
+                    reranked = self._reranker.rerank(
+                        question,
+                        [{"content": s["content"], "metadata": s["metadata"]} for s in sources],
+                        top_k=len(sources),
+                    )
+                    # 用重排后的分数更新 sources（保留 metadata）
+                    rerank_scores = {id(r.content): r.score for r in reranked}
+                    sources = [s for s in sources if id(s["content"]) in rerank_scores]
+                    for s in sources:
+                        s["score"] = rerank_scores.get(id(s["content"]), s["score"])
+                except Exception as e:
+                    logger.warning("ReRanker失败，跳过: %s", e)
+            timing["rerank_ms"] = round((time.time() - rerank_start) * 1000, 2)
 
             # 3. 生成回答（用与 sources 一致的文档，绕过 chain 内部重复检索）
             generation_start = time.time()
