@@ -206,7 +206,7 @@ async def query(
 
     sources = [
         Source(
-            file=s["metadata"].get("source", "未知"),
+            file=s["metadata"].get("source_file", "") or s["metadata"].get("source", "未知"),
             section=s["metadata"].get("section", ""),
             content_type=s["metadata"].get("content_type", "text"),
             chunk=s["content"],
@@ -221,8 +221,8 @@ async def query(
         req.kb_id or "default",
         details=json.dumps({
             "question": req.question,
-            "intent": response.intent,
-            "is_followup": response.is_followup,
+            "intent": getattr(response, "intent", ""),
+            "is_followup": getattr(response, "is_followup", False),
         }, ensure_ascii=False),
         ip_address=_get_client_ip(request) if request else "",
     )

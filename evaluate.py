@@ -81,24 +81,43 @@ def check_retrieval_hit(sources: list[dict], source_files: list[str]) -> bool:
     """检查检索结果中是否包含预期来源文件"""
     if not source_files:
         return True  # 无来源要求时默认命中
-    retrieved_texts = " ".join(
-        s.get("content", "") for s in sources
-    ).lower()
-    return any(sf.lower() in retrieved_texts for sf in source_files)
+    import re
+
+    def norm(name: str) -> str:
+        """规范化文件名：去路径、去扩展名、统一大小写"""
+        name = name.replace("\\", "/").split("/")[-1]
+        return re.sub(r"\.(pdf|docx|doc|md|txt|png|jpg)$", "", name).lower()
+
+    # 从 metadata 中提取来源文件名
+    retrieved_files = []
+    for s in sources:
+        meta = s.get("metadata", {})
+        f = meta.get("source_file", "") or meta.get("source", "")
+        if f:
+            retrieved_files.append(norm(str(f)))
+    retrieved_texts = " ".join(retrieved_files)
+    return any(norm(sf) in retrieved_texts for sf in source_files)
 
 
 def check_citation(answer: str) -> bool:
-    """检查回答是否包含引用标注 [1] [2] 等"""
+    """检查回答是否包含引用标注 [来源X]"""
     import re
-    return bool(re.search(r"\[\d+\]", answer))
+    return bool(re.search(r"\[来源\d+\]", answer))
 
 
 # ---------------------------------------------------------------------------
 # 单条评测
 # ---------------------------------------------------------------------------
 
-def run_single_test(case: dict, engine, embedder) -> dict:
-    """对单个测试用例执行评测，返回评测结果字典"""
+def run_single_test(case: dict, engine, embedder, use_four_dim: bool = True) -> dict:
+    """对单个测试用例执行评测，返回评测结果字典
+
+    Args:
+        case: 测试用例
+        engine: RAG引擎
+        embedder: 语义相似度模型
+        use_four_dim: 是否启用四维度LLM评测（False时只做关键词评分，更快）
+    """
     case_id = case["id"]
     question = case["question"]
     expected_keywords = case.get("expected_keywords", [])
@@ -144,6 +163,18 @@ def run_single_test(case: dict, engine, embedder) -> dict:
         else:
             accuracy = kw_eval["total_score"]
 
+        # M10: 四维度 LLM-as-Judge 评测（非边界问题，可选）
+        four_dims = {}
+        if use_four_dim and not is_out_of_scope and answer and len(answer) > 20:
+            try:
+                from src.core.eval_metrics import evaluate_all_dimensions
+                four_dims = evaluate_all_dimensions(
+                    question, answer, sources, expected_answer
+                )
+            except Exception as e:
+                logger.warning("四维评测失败 %s: %s", case_id, e)
+                four_dims = {}
+
         return {
             "case_id": case_id,
             "question": question,
@@ -158,6 +189,11 @@ def run_single_test(case: dict, engine, embedder) -> dict:
             "citation_correct": citation_ok,
             "accuracy": round(accuracy, 4),
             "source_files_count": len(source_files),
+            "relevance": four_dims.get("relevance"),
+            "faithfulness": four_dims.get("faithfulness"),
+            "helpfulness": four_dims.get("helpfulness"),
+            "correctness": four_dims.get("correctness"),
+            "four_dim_total": four_dims.get("total_score"),
         }
 
     except Exception as e:
@@ -186,8 +222,16 @@ def run_evaluation(
     test_cases: list[dict] | None = None,
     version: str = "",
     engine=None,
+    use_four_dim: bool = True,
 ) -> dict:
-    """运行完整评测，返回汇总结果"""
+    """运行完整评测，返回汇总结果
+
+    Args:
+        test_cases: 评测用例列表
+        version: 版本标识
+        engine: RAG引擎（默认按config选择）
+        use_four_dim: 是否启用四维评测（False时更快，只做关键词评分）
+    """
     if test_cases is None:
         test_cases = load_test_cases()
 
@@ -201,11 +245,28 @@ def run_evaluation(
 
     try:
         from src.core.embedder import Embedder
+        from src.config import RAG_ENGINE
 
         if engine is None:
-            from src.core.rag_engine import RAGEngine
-            engine = RAGEngine()
-        embedder = Embedder()
+            # 使用与实际运行相同的引擎
+            if RAG_ENGINE == "langchain":
+                from src.core.langchain_rag import LangChainRAGEngine
+                engine = LangChainRAGEngine()
+            else:
+                from src.core.rag_engine import RAGEngine
+                engine = RAGEngine()
+
+        # 语义相似度对比用 Embedder。
+        # 注意：LangChain 引擎内部已加载 bge-m3，若再单独加载 Embedder 会导致
+        # 同一模型在进程内加载两次，Windows 下触发段错误。因此复用引擎的 embedding。
+        if RAG_ENGINE == "langchain" and hasattr(engine, "embeddings"):
+            # LangChain 引擎的 embeddings 是 HuggingFaceEmbeddings，封装一层兼容 embed()
+            class _LangChainEmbedder:
+                def embed(self, texts):
+                    return engine.embeddings.embed_documents(list(texts))
+            embedder = _LangChainEmbedder()
+        else:
+            embedder = Embedder()
     except Exception as e:
         print(f"无法初始化引擎: {e}")
         return {"error": str(e)}
@@ -213,7 +274,7 @@ def run_evaluation(
     results = []
     for case in test_cases:
         print(f"  [{case['id']}] {case['question'][:40]}...", end=" ")
-        evaluation = run_single_test(case, engine, embedder)
+        evaluation = run_single_test(case, engine, embedder, use_four_dim=use_four_dim)
         results.append(evaluation)
         print(f"score={evaluation['accuracy']:.2f}  sim={evaluation['semantic_similarity']:.3f}  "
               f"retrieval={'Y' if evaluation['retrieval_hit'] else 'N'}  "
@@ -265,6 +326,14 @@ def compute_summary(results: list[dict], version: str) -> dict:
     avg_similarity = sum(r["semantic_similarity"] for r in success_results) / success_count
     avg_latency = sum(r["elapsed_ms"] for r in success_results) / success_count
 
+    # M10: 四维度平均值（仅统计有值的用例）
+    dim_keys = ["relevance", "faithfulness", "helpfulness", "correctness", "four_dim_total"]
+    avg_dims: dict[str, float] = {}
+    for key in dim_keys:
+        vals = [r[key] for r in success_results if r.get(key) is not None]
+        if vals:
+            avg_dims[key] = round(sum(vals) / len(vals), 4)
+
     # 按类别统计
     category_stats: dict[str, list[float]] = {}
     for r in success_results:
@@ -285,6 +354,7 @@ def compute_summary(results: list[dict], version: str) -> dict:
         "avg_semantic_similarity": round(avg_similarity, 4),
         "avg_latency_ms": round(avg_latency, 2),
         "category_accuracy": category_accuracy,
+        "avg_dimensions": avg_dims,
     }
 
 
@@ -322,6 +392,27 @@ def write_report(summary: dict) -> str:
         f"| 平均延迟 | {summary.get('avg_latency_ms', 0):.0f}ms |",
         "",
     ]
+
+    # M10: 四维度指标
+    avg_dims = summary.get("avg_dimensions", {})
+    if avg_dims:
+        dim_labels = {
+            "relevance": "文档相关度",
+            "faithfulness": "回答忠实度",
+            "helpfulness": "回答帮助度",
+            "correctness": "回答正确度",
+            "four_dim_total": "四维加权总分",
+        }
+        lines += [
+            "## 四维度评测（LLM-as-Judge）",
+            "",
+            "| 维度 | 分数 |",
+            "|------|------|",
+        ]
+        for key, label in dim_labels.items():
+            if key in avg_dims:
+                lines.append(f"| {label} | {avg_dims[key]:.2f} |")
+        lines.append("")
 
     # 分类准确率
     cat_acc = summary.get("category_accuracy", {})
@@ -363,17 +454,18 @@ def write_report(summary: dict) -> str:
     lines += [
         "## 详细结果",
         "",
-        "| ID | 问题 | 准确率 | 语义相似度 | 检索 | 引用 | 耗时 |",
-        "|-----|------|--------|-----------|------|------|------|",
+        "| ID | 问题 | 准确率 | 四维总分 | 检索 | 引用 | 耗时 |",
+        "|-----|------|--------|---------|------|------|------|",
     ]
     for r in results:
         q = r.get("question", "")[:25]
         acc = r.get("accuracy", 0)
-        sim = r.get("semantic_similarity", 0)
+        four_dim = r.get("four_dim_total", "")
+        four_dim_str = f"{four_dim:.2f}" if four_dim is not None else "-"
         hit = "Y" if r.get("retrieval_hit") else "N"
         cite = "Y" if r.get("citation_correct") else "N"
         ms = r.get("elapsed_ms", 0)
-        lines.append(f"| {r.get('case_id', '')} | {q} | {acc:.2f} | {sim:.3f} | {hit} | {cite} | {ms}ms |")
+        lines.append(f"| {r.get('case_id', '')} | {q} | {acc:.2f} | {four_dim_str} | {hit} | {cite} | {ms}ms |")
     lines.append("")
 
     content = "\n".join(lines)

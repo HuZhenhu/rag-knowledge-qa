@@ -47,16 +47,20 @@ class LangChainRAGEngine:
         self,
         use_hybrid: bool = USE_HYBRID_RETRIEVAL,
         top_k: int = RETRIEVAL_TOP_K,
+        relevance_threshold: float | None = None,
+        temperature: float | None = None,
     ):
         self.top_k = top_k
         self.use_hybrid = use_hybrid
+        self.relevance_threshold = relevance_threshold if relevance_threshold is not None else RELEVANCE_THRESHOLD
+        self.temperature = temperature if temperature is not None else 0.1
 
         # 初始化LLM
         self.llm = ChatOpenAI(
             model=DEEPSEEK_MODEL,
             api_key=DEEPSEEK_API_KEY,
             base_url=DEEPSEEK_BASE_URL,
-            temperature=0.3,
+            temperature=self.temperature,
             max_tokens=2048,
         )
 
@@ -139,7 +143,8 @@ class LangChainRAGEngine:
         def format_docs(docs):
             formatted = []
             for i, doc in enumerate(docs):
-                source = doc.metadata.get("source", "未知来源")
+                meta = doc.metadata or {}
+                source = meta.get("source_file", "") or meta.get("source", "未知来源")
                 formatted.append(f"[来源{i+1}: {source}]\n{doc.page_content}")
             return "\n\n".join(formatted)
 
@@ -175,30 +180,50 @@ class LangChainRAGEngine:
         timing = {}
 
         try:
-            # 1. 检索
+            # 1. 检索（拿真实相似度分数）
             retrieval_start = time.time()
-            retriever = self._ensemble_retriever if self.use_hybrid and self._ensemble_retriever else self.vector_retriever
+            top_k = top_k or self.top_k
 
-            # 获取相关文档
-            docs = retriever.invoke(question)
-            timing["retrieval_ms"] = round((time.time() - retrieval_start) * 1000, 2)
+            # 用 vectorstore 原生相似度搜索，拿真实分数
+            try:
+                raw = self.vectorstore.similarity_search_with_score(question, k=top_k * 2)
+                scored_docs = [(doc, 1.0 - score) for doc, score in raw]
+            except Exception:
+                retriever = self._ensemble_retriever if self.use_hybrid and self._ensemble_retriever else self.vector_retriever
+                docs = retriever.invoke(question)[:top_k]
+                scored_docs = [(doc, 1.0 - (i * 0.1)) for i, doc in enumerate(docs)]
 
-            # 2. 构建sources
+            # 2. 构建sources（真实score + 相关性过滤）
             sources = []
-            for i, doc in enumerate(docs):
+            for doc, score in scored_docs:
+                if score < self.relevance_threshold:
+                    continue  # 相关度低于阈值，丢弃
+                meta = dict(doc.metadata)
+                source_file = meta.get("source_file", "") or meta.get("source", "未知")
+                meta["source_file"] = source_file
                 sources.append({
                     "content": doc.page_content,
-                    "metadata": doc.metadata,
-                    "score": 1.0 - (i * 0.1),  # 简单评分：按排名递减
+                    "metadata": meta,
+                    "score": round(float(score), 4),
                 })
+            sources = sources[:top_k]
+            timing["retrieval_ms"] = round((time.time() - retrieval_start) * 1000, 2)
 
-            # 3. 生成回答
+            # 3. 生成回答（用与 sources 一致的文档，绕过 chain 内部重复检索）
             generation_start = time.time()
             if not sources:
                 answer = "知识库中未找到相关信息"
                 usage = {}
             else:
-                answer = self.chain.invoke(question)
+                context = "\n\n".join(
+                    f"[来源{i+1}: {s['metadata'].get('source_file','未知来源')}]\n{s['content']}"
+                    for i, s in enumerate(sources)
+                )
+                chain_out = (
+                    {"context": lambda _: context, "question": RunnablePassthrough()}
+                    | self.prompt | self.llm | StrOutputParser()
+                )
+                answer = chain_out.invoke(question)
                 usage = {}  # LangChain不直接暴露token使用量
             timing["generation_ms"] = round((time.time() - generation_start) * 1000, 2)
 
