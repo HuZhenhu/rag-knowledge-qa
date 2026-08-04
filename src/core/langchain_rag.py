@@ -193,11 +193,17 @@ class LangChainRAGEngine:
                 docs = retriever.invoke(question)[:top_k]
                 scored_docs = [(doc, 1.0 - (i * 0.1)) for i, doc in enumerate(docs)]
 
-            # 2. 构建sources（真实score + 相关性过滤）
+            # 2. 构建sources（真实score + 相关性过滤 + 去重）
             sources = []
+            seen_content = set()
             for doc, score in scored_docs:
                 if score < self.relevance_threshold:
                     continue  # 相关度低于阈值，丢弃
+                # 去重：内容hash相同则跳过
+                content_hash = hash(doc.page_content)
+                if content_hash in seen_content:
+                    continue
+                seen_content.add(content_hash)
                 meta = dict(doc.metadata)
                 source_file = meta.get("source_file", "") or meta.get("source", "未知")
                 meta["source_file"] = source_file
