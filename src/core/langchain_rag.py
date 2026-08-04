@@ -49,11 +49,13 @@ class LangChainRAGEngine:
         top_k: int = RETRIEVAL_TOP_K,
         relevance_threshold: float | None = None,
         temperature: float | None = None,
+        use_query_expansion: bool = False,
     ):
         self.top_k = top_k
         self.use_hybrid = use_hybrid
         self.relevance_threshold = relevance_threshold if relevance_threshold is not None else RELEVANCE_THRESHOLD
-        self.temperature = temperature if temperature is not None else 0.1
+        self.temperature = temperature if temperature is not None else 0.0
+        self.use_query_expansion = use_query_expansion
 
         # 初始化LLM
         self.llm = ChatOpenAI(
@@ -184,26 +186,43 @@ class LangChainRAGEngine:
             retrieval_start = time.time()
             top_k = top_k or self.top_k
 
-            # 用 vectorstore 原生相似度搜索，拿真实分数
-            try:
-                raw = self.vectorstore.similarity_search_with_score(question, k=top_k * 2)
-                scored_docs = [(doc, 1.0 - score) for doc, score in raw]
-            except Exception:
-                retriever = self._ensemble_retriever if self.use_hybrid and self._ensemble_retriever else self.vector_retriever
-                docs = retriever.invoke(question)[:top_k]
-                scored_docs = [(doc, 1.0 - (i * 0.1)) for i, doc in enumerate(docs)]
+            # 查询扩展：把问题拆成多个子查询，分别检索合并（提升召回）
+            queries = [question]
+            if self.use_query_expansion:
+                try:
+                    from src.core.query_understander import QueryUnderstander
+                    expansion = QueryUnderstander().expand_query(question)
+                    if expansion.expanded_queries:
+                        queries = expansion.expanded_queries[:3]
+                except Exception:
+                    pass  # 扩展失败则用原问题
 
-            # 2. 构建sources（真实score + 相关性过滤 + 去重）
-            sources = []
+            # 多子查询检索
+            all_scored = []
             seen_content = set()
+            for q in queries:
+                try:
+                    raw = self.vectorstore.similarity_search_with_score(q, k=top_k * 2)
+                    for doc, dist in raw:
+                        score = 1.0 - dist
+                        # 去重：内容hash相同则跳过
+                        content_hash = hash(doc.page_content)
+                        if content_hash in seen_content:
+                            continue
+                        seen_content.add(content_hash)
+                        all_scored.append((doc, score))
+                except Exception:
+                    continue
+
+            # 按分数排序
+            all_scored.sort(key=lambda x: x[1], reverse=True)
+            scored_docs = all_scored[:top_k * 2]
+
+            # 2. 构建sources（真实score + 相关性过滤）
+            sources = []
             for doc, score in scored_docs:
                 if score < self.relevance_threshold:
                     continue  # 相关度低于阈值，丢弃
-                # 去重：内容hash相同则跳过
-                content_hash = hash(doc.page_content)
-                if content_hash in seen_content:
-                    continue
-                seen_content.add(content_hash)
                 meta = dict(doc.metadata)
                 source_file = meta.get("source_file", "") or meta.get("source", "未知")
                 meta["source_file"] = source_file
