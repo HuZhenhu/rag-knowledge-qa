@@ -1,13 +1,13 @@
-"""四维度 LLM-as-Judge 评测指标
+"""RAGAS 标准评测指标 — LLM-as-Judge
 
-基于 RAGAS 评估框架，从四个维度评估 RAG 系统回答质量：
+基于 RAGAS 评估框架（arXiv:2309.15217），从检索和生成两个维度评估 RAG 系统：
 
-1. 文档相关度 (Context Relevance)：检索到的文档与问题的相关程度
-2. 回答忠实度 (Faithfulness)：回答是否忠实于检索结果（有无幻觉）
-3. 回答帮助度 (Answer Helpfulness)：回答是否解决了用户问题
-4. 回答正确度 (Answer Correctness)：回答与标准答案的事实一致性
+1. 忠实度 (Faithfulness)：回答是否完全基于检索上下文（无幻觉）
+2. 答案相关性 (Answer Relevancy)：回答是否切题，能否从回答反推回原问题
+3. 上下文精准度 (Context Precision)：检索结果中相关 chunk 的占比（测噪声）
+4. 上下文召回率 (Context Recall)：答案所需信息是否被完整检索到（测遗漏）
 
-每个维度用 LLM 作为裁判评分（0-1），最终按领域权重加权求总分。
+每个指标用 LLM 作为裁判评分（0-1）。
 """
 import json
 import logging
@@ -51,60 +51,43 @@ class LLMJudge:
         """从 LLM 返回文本中提取 0-1 分数"""
         if not text:
             return 0.5  # 调用失败给中性分
-        # 匹配 0~1 的数字（含 0.5、1、0.85 等）
         m = re.search(r'(\d+(?:\.\d+)?)', text)
         if not m:
             return 0.5
         try:
             score = float(m.group(1))
-            # 如果是 1-5 分制，归一化到 0-1
             if score > 1:
-                score = score / 5.0
+                score = score / 5.0  # 若是1-5分制，归一化
             return max(0.0, min(1.0, score))
         except ValueError:
             return 0.5
 
+    def _extract_binary_list(self, text: str) -> list[bool]:
+        """从 LLM 返回中提取支持/不支持列表"""
+        results = []
+        for line in text.split("\n"):
+            line = line.strip()
+            if not line:
+                continue
+            results.append("支持" in line and "不" not in line[:5])
+        return results
+
 
 # ---------------------------------------------------------------------------
-# 四个维度的评测函数
+# RAGAS 指标1：忠实度 (Faithfulness)
 # ---------------------------------------------------------------------------
-
-def evaluate_context_relevance(question: str, sources: list[dict], judge: LLMJudge) -> float:
-    """维度1：文档相关度 — 检索结果与问题的相关性
-
-    把检索到的文档发给 LLM，让它评估其中有多少内容真正回答了问题。
-    """
-    if not sources:
-        return 0.0  # 没有检索结果，相关度为 0
-
-    context_text = "\n---\n".join(s.get("content", "")[:500] for s in sources[:5])
-    system = """你是一个信息检索评估专家。评估给定的上下文对回答用户问题的相关程度。
-只输出一个 0-1 之间的小数分数：
-- 1.0 表示上下文完全回答了问题
-- 0.5 表示上下文部分相关
-- 0.0 表示上下文与问题完全无关"""
-
-    user = f"""用户问题：{question}
-
-检索到的上下文：
-{context_text}
-
-请评估这些上下文对回答该问题的相关程度，只输出分数。"""
-
-    return judge._extract_score(judge._chat(system, user))
-
 
 def evaluate_faithfulness(question: str, answer: str, sources: list[dict], judge: LLMJudge) -> float:
-    """维度2：回答忠实度 — 回答是否基于检索结果（无幻觉）
+    """忠实度 — 回答是否完全基于检索上下文（无幻觉）
 
-    把回答拆解为事实性论断，逐条判断是否被上下文支持。
+    RAGAS 方法：将回答拆解为独立陈述 → 逐一判断每个陈述是否可由上下文支持
     """
-    if not sources:
+    if not sources or not answer:
         return 0.0
 
-    context_text = "\n---\n".join(s.get("content", "")[:500] for s in sources[:5])
+    context_text = "\n---\n".join(s.get("content", "")[:600] for s in sources[:5])
 
-    # 第一步：拆解回答为论断
+    # 第一步：拆解回答为原子论断
     system_claim = """你是一个事实抽取专家。把用户的回答拆解为独立的事实性论断。
 每行一条论断，只输出论断本身，不要编号和解释。"""
     claims = judge._chat(system_claim, f"回答：{answer}", max_tokens=300)
@@ -133,57 +116,134 @@ def evaluate_faithfulness(question: str, answer: str, sources: list[dict], judge
     return supported / len(claim_list)
 
 
-def evaluate_answer_helpfulness(question: str, answer: str, judge: LLMJudge) -> float:
-    """维度3：回答帮助度 — 回答是否解决了用户问题
+# ---------------------------------------------------------------------------
+# RAGAS 指标2：答案相关性 (Answer Relevancy)
+# ---------------------------------------------------------------------------
 
-    让 LLM 评估回答的具体性、完整性和冗余度。
+def evaluate_answer_relevancy(question: str, answer: str, judge: LLMJudge) -> float:
+    """答案相关性 — 回答是否切题
+
+    RAGAS 方法：LLM 从回答逆向推导出多个问题变体 → 计算生成问题与原问题的
+    embedding 平均余弦相似度。分数越高说明回答越紧扣问题。
     """
     if not answer:
         return 0.0
 
-    system = """你是一个问答质量评估专家。评估回答对用户问题的帮助程度。
-从以下维度打分：
-- 是否直接回答了问题（有没有答非所问）
-- 是否提供了具体、可操作的信息
-- 是否有遗漏关键点
-- 是否有冗余废话
+    # 第一步：从回答反推可能的问题
+    system_gen = """你是一个问题生成专家。根据给定的回答，逆向推导出它可能回答的3个问题。
+每个问题一行，只输出问题本身。"""
+    gen_questions = judge._chat(system_gen, f"回答：{answer}", max_tokens=200)
+    if not gen_questions.strip():
+        return 0.5
 
-输出 0-1 之间的小数分数（可带一位小数），只输出分数。"""
-    user = f"""用户问题：{question}
+    questions = [q.strip() for q in gen_questions.split("\n") if q.strip()][:3]
+    if not questions:
+        return 0.5
 
-系统回答：{answer}
+    # 第二步：计算原问题与生成问题的语义相似度
+    try:
+        from src.core.embedder import Embedder
+        embedder = Embedder()
+        all_texts = [question] + questions
+        vecs = embedder.embed(all_texts)
+        if len(vecs) < 2:
+            return 0.5
 
-请评估这个回答对用户问题的帮助程度，只输出分数。"""
-    return judge._extract_score(judge._chat(system, user))
+        import numpy as np
+        q_vec = np.array(vecs[0])
+        similarities = []
+        for g_vec in vecs[1:]:
+            gv = np.array(g_vec)
+            if np.linalg.norm(q_vec) == 0 or np.linalg.norm(gv) == 0:
+                similarities.append(0.0)
+            else:
+                similarities.append(float(np.dot(q_vec, gv) / (np.linalg.norm(q_vec) * np.linalg.norm(gv))))
 
-
-def evaluate_answer_correctness(question: str, answer: str, expected_answer: str, judge: LLMJudge) -> float:
-    """维度4：回答正确度 — 回答与标准答案的事实一致性
-
-    让 LLM 对比系统回答和标准答案，评估事实一致性和完整性。
-    """
-    if not answer or not expected_answer:
-        return 0.0
-
-    system = """你是一个答案评估专家。对比"系统回答"和"标准答案"，评估系统回答的事实正确性。
-从以下维度打分：
-- 事实一致性：系统回答中的事实是否与标准答案一致
-- 完整性：系统回答是否覆盖了标准答案的关键信息
-- 无误性：系统回答是否有错误或编造的内容
-
-输出 0-1 之间的小数分数，只输出分数。"""
-    user = f"""用户问题：{question}
-
-标准答案：{expected_answer}
-
-系统回答：{answer}
-
-请评估系统回答的事实正确性，只输出分数。"""
-    return judge._extract_score(judge._chat(system, user))
+        return round(sum(similarities) / len(similarities), 4) if similarities else 0.5
+    except Exception as e:
+        logger.warning("答案相关性计算失败: %s", e)
+        return 0.5
 
 
 # ---------------------------------------------------------------------------
-# 综合评测
+# RAGAS 指标3：上下文精准度 (Context Precision)
+# ---------------------------------------------------------------------------
+
+def evaluate_context_precision(question: str, sources: list[dict], judge: LLMJudge) -> float:
+    """上下文精准度 — 检索结果中相关 chunk 的占比
+
+    RAGAS 方法：让 LLM 判断每个检索到的 chunk 是否与问题相关，
+    相关 chunk 数 / 总 chunk 数。低精准度 = 检索结果噪声多。
+    """
+    if not sources:
+        return 0.0
+
+    relevant = 0
+    for s in sources[:5]:
+        chunk_text = s.get("content", "")[:400]
+        if not chunk_text:
+            continue
+        system = """你是一个信息检索评估专家。判断给定的文档片段是否与用户问题相关。
+只回答"相关"或"不相关"。"""
+        user = f"""用户问题：{question}
+
+文档片段：
+{chunk_text}
+
+该片段与问题相关吗？"""
+        verdict = judge._chat(system, user, max_tokens=10)
+        if "相关" in verdict and "不" not in verdict[:5]:
+            relevant += 1
+
+    return relevant / len(sources) if sources else 0.0
+
+
+# ---------------------------------------------------------------------------
+# RAGAS 指标4：上下文召回率 (Context Recall)
+# ---------------------------------------------------------------------------
+
+def evaluate_context_recall(question: str, sources: list[dict], expected_answer: str, judge: LLMJudge) -> float:
+    """上下文召回率 — 答案所需信息是否被完整检索到
+
+    RAGAS 方法：将标准答案拆解为陈述 → 判断每个陈述是否能由检索上下文支持。
+    被支持的陈述数 / 总陈述数。低召回率 = 检索遗漏关键信息。
+    """
+    if not sources or not expected_answer:
+        return 0.0
+
+    context_text = "\n---\n".join(s.get("content", "")[:600] for s in sources[:5])
+
+    # 第一步：拆解标准答案为陈述
+    system_claim = """你是一个事实抽取专家。把标准答案拆解为独立的事实性论断。
+每行一条论断，只输出论断本身。"""
+    claims = judge._chat(system_claim, f"标准答案：{expected_answer}", max_tokens=300)
+    if not claims.strip():
+        return 0.5
+
+    claim_list = [c.strip() for c in claims.split("\n") if c.strip() and len(c.strip()) > 3]
+    if not claim_list:
+        return 0.5
+
+    # 第二步：判断每个陈述是否由检索上下文支持
+    supported = 0
+    for claim in claim_list[:8]:  # 最多验证8条
+        system_verify = """你是事实核查专家。判断以下论断是否能从给定的上下文中得到支持。
+只回答"支持"或"不支持"。"""
+        user_verify = f"""上下文：
+{context_text[:800]}
+
+论断：{claim}
+
+该论断是否被上下文支持？"""
+        verdict = judge._chat(system_verify, user_verify, max_tokens=10)
+        if "支持" in verdict and "不" not in verdict[:5]:
+            supported += 1
+
+    return supported / len(claim_list)
+
+
+# ---------------------------------------------------------------------------
+# RAGAS 综合评测
 # ---------------------------------------------------------------------------
 
 def evaluate_all_dimensions(
@@ -193,45 +253,43 @@ def evaluate_all_dimensions(
     expected_answer: str = "",
     weights: dict | None = None,
 ) -> dict:
-    """对一次回答进行四维度评测
+    """对一次回答进行 RAGAS 四指标评测
 
     Args:
         question: 用户问题
         answer: 系统生成的回答
         sources: 检索到的来源列表
-        expected_answer: 标准答案（用于正确度评测）
-        weights: 各维度权重 {"relevance", "faithfulness", "helpfulness", "correctness"}
+        expected_answer: 标准答案（用于上下文召回率）
+        weights: 各指标权重 {"faithfulness", "answer_relevancy", "context_precision", "context_recall"}
 
     Returns:
-        dict: {"relevance", "faithfulness", "helpfulness", "correctness", "total_score"}
+        dict: {"faithfulness", "answer_relevancy", "context_precision", "context_recall", "total_score"}
     """
     judge = LLMJudge()
 
-    # 默认权重（各维度均等，领域权重由外部覆盖）
     w = weights or {
-        "relevance": 0.25,
         "faithfulness": 0.25,
-        "helpfulness": 0.25,
-        "correctness": 0.25,
+        "answer_relevancy": 0.25,
+        "context_precision": 0.25,
+        "context_recall": 0.25,
     }
 
-    relevance = evaluate_context_relevance(question, sources, judge)
     faithfulness = evaluate_faithfulness(question, answer, sources, judge)
-    helpfulness = evaluate_answer_helpfulness(question, answer, judge)
-    correctness = evaluate_answer_correctness(question, answer, expected_answer, judge)
+    answer_relevancy = evaluate_answer_relevancy(question, answer, judge)
+    context_precision = evaluate_context_precision(question, sources, judge)
+    context_recall = evaluate_context_recall(question, sources, expected_answer, judge)
 
-    # 四维加权总分
     total = (
-        w.get("relevance", 0) * relevance
-        + w.get("faithfulness", 0) * faithfulness
-        + w.get("helpfulness", 0) * helpfulness
-        + w.get("correctness", 0) * correctness
+        w.get("faithfulness", 0) * faithfulness
+        + w.get("answer_relevancy", 0) * answer_relevancy
+        + w.get("context_precision", 0) * context_precision
+        + w.get("context_recall", 0) * context_recall
     )
 
     return {
-        "relevance": round(relevance, 4),
         "faithfulness": round(faithfulness, 4),
-        "helpfulness": round(helpfulness, 4),
-        "correctness": round(correctness, 4),
+        "answer_relevancy": round(answer_relevancy, 4),
+        "context_precision": round(context_precision, 4),
+        "context_recall": round(context_recall, 4),
         "total_score": round(total, 4),
     }

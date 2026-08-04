@@ -189,10 +189,10 @@ def run_single_test(case: dict, engine, embedder, use_four_dim: bool = True) -> 
             "citation_correct": citation_ok,
             "accuracy": round(accuracy, 4),
             "source_files_count": len(source_files),
-            "relevance": four_dims.get("relevance"),
             "faithfulness": four_dims.get("faithfulness"),
-            "helpfulness": four_dims.get("helpfulness"),
-            "correctness": four_dims.get("correctness"),
+            "answer_relevancy": four_dims.get("answer_relevancy"),
+            "context_precision": four_dims.get("context_precision"),
+            "context_recall": four_dims.get("context_recall"),
             "four_dim_total": four_dims.get("total_score"),
         }
 
@@ -327,7 +327,7 @@ def compute_summary(results: list[dict], version: str) -> dict:
     avg_latency = sum(r["elapsed_ms"] for r in success_results) / success_count
 
     # M10: 四维度平均值（仅统计有值的用例）
-    dim_keys = ["relevance", "faithfulness", "helpfulness", "correctness", "four_dim_total"]
+    dim_keys = ["faithfulness", "answer_relevancy", "context_precision", "context_recall", "four_dim_total"]
     avg_dims: dict[str, float] = {}
     for key in dim_keys:
         vals = [r[key] for r in success_results if r.get(key) is not None]
@@ -397,11 +397,11 @@ def write_report(summary: dict) -> str:
     avg_dims = summary.get("avg_dimensions", {})
     if avg_dims:
         dim_labels = {
-            "relevance": "文档相关度",
-            "faithfulness": "回答忠实度",
-            "helpfulness": "回答帮助度",
-            "correctness": "回答正确度",
-            "four_dim_total": "四维加权总分",
+            "faithfulness": "忠实度",
+            "answer_relevancy": "答案相关性",
+            "context_precision": "上下文精准度",
+            "context_recall": "上下文召回率",
+            "four_dim_total": "RAGAS总分",
         }
         lines += [
             "## 四维度评测（LLM-as-Judge）",
