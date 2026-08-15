@@ -125,3 +125,20 @@ ALERT_ERROR_RATE_THRESHOLD = float(os.getenv("ALERT_ERROR_RATE_THRESHOLD", "0.05
 ALERT_LATENCY_THRESHOLD_MS = int(os.getenv("ALERT_LATENCY_THRESHOLD_MS", "3000"))  # 3000ms
 ALERT_CHECK_WINDOW_SECONDS = int(os.getenv("ALERT_CHECK_WINDOW_SECONDS", "60"))  # 1分钟
 ALERT_LATENCY_WINDOW_SECONDS = int(os.getenv("ALERT_LATENCY_WINDOW_SECONDS", "300"))  # 5分钟
+# ===== FAISS 后端配置（VECTOR_STORE_BACKEND=faiss 时生效）=====
+FAISS_INDEX_DIR = Path(os.getenv("FAISS_INDEX_DIR", str(BASE_DIR / "faiss_index")))
+FAISS_INDEX_TYPE = os.getenv("FAISS_INDEX_TYPE", "hnsw-sq8")  # hnsw-sq8（SQ8量化）/ flat（精确）
+FAISS_HNSW_M = int(os.getenv("FAISS_HNSW_M", "16"))
+FAISS_HNSW_EF_CONSTRUCTION = int(os.getenv("FAISS_HNSW_EF_CONSTRUCTION", "100"))
+FAISS_HNSW_EF_SEARCH = int(os.getenv("FAISS_HNSW_EF_SEARCH", "64"))
+
+# ===== Milvus 后端配置（VECTOR_STORE_BACKEND=milvus 时生效）=====
+# 本地文件用 milvus-lite：MILVUS_URI=./milvus_lite.db；远程：MILVUS_URI=http://localhost:19530
+MILVUS_URI = os.getenv("MILVUS_URI", str(BASE_DIR / "milvus_lite.db"))
+MILVUS_INDEX_TYPE = os.getenv("MILVUS_INDEX_TYPE", "HNSW")  # HNSW / IVF_FLAT
+MILVUS_METRIC_TYPE = os.getenv("MILVUS_METRIC_TYPE", "COSINE")
+MILVUS_INDEX_NLIST = int(os.getenv("MILVUS_INDEX_NLIST", "128"))
+MILVUS_INDEX_NPROBE = int(os.getenv("MILVUS_INDEX_NPROBE", "10"))
+MILVUS_QUANTIZER = os.getenv("MILVUS_QUANTIZER", "")  # 空 / SCALAR（SQ8风格）/ QUANTIZE_BIT（2.4+）
+
+

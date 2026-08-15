@@ -164,10 +164,16 @@ def get_vector_store_backend() -> VectorStoreBackend:
     backend_name = VECTOR_STORE_BACKEND.lower()
     if backend_name == "chroma":
         _backend_instance = ChromaBackend()
+    elif backend_name == "faiss":
+        from src.core.faiss_backend import FaissBackend
+        _backend_instance = FaissBackend()
+    elif backend_name == "milvus":
+        from src.core.milvus_backend import MilvusBackend
+        _backend_instance = MilvusBackend()
     else:
         raise ValueError(
             f"不支持的向量库后端: {backend_name!r}。"
-            f"当前仅支持: chroma。"
+            f"可选: chroma / faiss / milvus。"
             f"请设置 VECTOR_STORE_BACKEND 环境变量。"
         )
     logger.info("向量库后端已初始化: %s", backend_name)
@@ -287,11 +293,7 @@ class VectorStore:
               "page_number": ..., "content_type": ...}, ...]
         """
         col_name = self._active_collection()
-        col = self._backend._get_collection(col_name)
-        result = col.get(
-            where={"source_file": source_filename},
-            include=["documents", "metadatas"],
-        )
+        result = self._backend.get_all(collection_name=col_name)
 
         chunks: list[dict] = []
         if not result or not result.get("ids"):
@@ -299,6 +301,9 @@ class VectorStore:
 
         for i, chunk_id in enumerate(result["ids"]):
             metadata = result["metadatas"][i] if result.get("metadatas") else {}
+            metadata = metadata or {}
+            if metadata.get("source_file") != source_filename:
+                continue
             chunks.append({
                 "chunk_id": chunk_id,
                 "content": result["documents"][i] if result.get("documents") else "",
