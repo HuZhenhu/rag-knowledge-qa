@@ -716,3 +716,43 @@ RAG_ENGINE=agentic python evaluate.py --test-cases evaluation/generated_cases_25
 ### Git commit
 
 `feat(agentic): M10 Agentic RAG 升级 — LangGraph 多Agent引擎 + 前端可视化 + 评测专项维度 + 文档`
+
+---
+
+## 版本控制规范
+
+### 阶段提交约定
+
+- 每完成一个阶段（里程碑 / M 模块 / 缺陷修复 / 文档改动）即 git 提交，并推送远程 `origin`（GitHub）
+- 每个 commit 语义单一、可独立回滚，禁止攒多个改动一起提交
+
+### commit message 约定
+
+采用 `feat(scope)` / `fix(scope)` / `docs` / `chore` 前缀 + 中文描述：
+
+| 前缀 | 适用场景 | 示例 |
+|---|---|---|
+| `feat(scope)` | 新功能 | `feat(agentic): M10 Agentic RAG 升级` |
+| `fix(scope)` | 缺陷修复 | `fix(retrieval): 修复混合检索权重` |
+| `docs` | 文档改动 | `docs: 版本控制规范` |
+| `chore` | 构建 / 配置 / 杂项 | `chore: 更新 .gitignore` |
+
+### .gitignore 即时更新
+
+- 新增的测试残留 / 临时产物（如 `.playwright-cli/`、`csdn_rag.html`、`milvus_*.html` 等）即时写入 `.gitignore`
+- 每次提交前执行 `git status` 检查，确保工作区无未跟踪的临时文件
+
+### 里程碑示例：2026-08-24 六 commit 拆分提交
+
+将未提交改动按语义拆分为 6 个 commit 并推送 `origin` 成功：
+
+| commit | 语义归类 | 文件数 |
+|---|---|---|
+| `1ce1bc2` | feat(agentic)：Agentic 引擎 | 25 |
+| `52ac712` | feat(retrieval)：检索优化 | 3 |
+| `1cb4350` | feat(frontend)：前端可视化 | 10 |
+| `0781aae` | feat(eval)：评测 | 23 |
+| `838c527` | docs：文档 | 7 |
+| `bb53a84` | chore：更新 .gitignore | 1 |
+
+拆分提交后工作区干净，无未提交改动，`origin/master` 与本地一致。
