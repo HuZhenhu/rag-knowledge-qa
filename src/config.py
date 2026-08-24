@@ -165,4 +165,10 @@ ACL_ADMIN_ROLES = tuple(
     r.strip() for r in os.getenv("ACL_ADMIN_ROLES", "admin").split(",") if r.strip()
 )  # 命中这些角色的用户免 ACL 过滤（默认 admin）
 
+# P0-2 PII 脱敏（默认关，避免过度脱敏影响检索语义）
+# 开启后新入库文档在写入向量库前对文本脱敏，日志输出做掩码；存量数据需重建索引才生效。
+USE_PII_REDACTION = os.getenv("USE_PII_REDACTION", "false").lower() == "true"
+PII_REDACT_MODE = os.getenv("PII_REDACT_MODE", "mask")  # mask 掩码 / remove 删除 / replace 占位
+PII_PLACEHOLDER = os.getenv("PII_PLACEHOLDER", "[PII]")
+
 

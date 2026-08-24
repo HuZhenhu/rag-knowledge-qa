@@ -37,9 +37,13 @@ from src.config import (
     CHILD_TOKEN_SIZE,
     PARENT_TOKEN_SIZE,
     ACL_ENFORCE,
+    USE_PII_REDACTION,
+    PII_REDACT_MODE,
+    PII_PLACEHOLDER,
 )
 from src.core.tracer import Trace
 from src.core.acl import enrich_acl_metadata, assert_sources_allowed, allowed_doc_ids_from_filter
+from src.core.pii_redactor import redact_texts, mask_text
 
 logger = logging.getLogger(__name__)
 
@@ -379,7 +383,7 @@ class LangChainRAGEngine:
                     corrected = self._get_query_understander().correct_query(question)
                     if corrected and corrected.strip() and corrected.strip() != question:
                         effective_q = corrected.strip()
-                        logger.info("查询纠错: %s -> %s", question, effective_q)
+                        logger.info("查询纠错: %s -> %s", mask_text(question), mask_text(effective_q))
                 except Exception as e:
                     logger.warning("查询纠错失败: %s", e)
 
@@ -533,6 +537,10 @@ class LangChainRAGEngine:
             texts: 文档文本列表
             metadatas: 元数据列表（可选）
         """
+        # P0-2 PII 脱敏（入库前，开关默认关）
+        if USE_PII_REDACTION:
+            texts = redact_texts(texts, mode=PII_REDACT_MODE, placeholder=PII_PLACEHOLDER)
+            logger.info("PII脱敏已启用：%d 个文档入库前脱敏", len(texts))
         # P0-1 chunk 级 ACL 元数据注入（doc_id 等，供检索前过滤/断言）
         if metadatas:
             metadatas = [enrich_acl_metadata(m) for m in metadatas]
@@ -574,6 +582,10 @@ class LangChainRAGEngine:
 
     def _add_documents_parent_child(self, texts: list[str], metadatas: list[dict] | None = None):
         """父子切片入库：child 进向量库，parent 全文存于 child 的 metadata"""
+        # P0-2 PII 脱敏（入库前，开关默认关）
+        if USE_PII_REDACTION:
+            texts = redact_texts(texts, mode=PII_REDACT_MODE, placeholder=PII_PLACEHOLDER)
+            logger.info("PII脱敏已启用：%d 个文档父子切片前脱敏", len(texts))
         # P0-1 chunk 级 ACL 元数据注入
         if metadatas:
             metadatas = [enrich_acl_metadata(m) for m in metadatas]
