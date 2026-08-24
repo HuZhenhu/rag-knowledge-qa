@@ -1,0 +1,43 @@
+name: Eval Regression
+
+# P1-5 CI 回归：PR / 主干推送时复用评测脚本跑黄金集（harder 46 条），
+# 精度指标低于 golden 基线即阻断合并/提交。
+on:
+  pull_request:
+    branches: [master, main]
+  push:
+    branches: [master, main]
+
+jobs:
+  eval-regression:
+    name: Golden eval regression (harder)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build vector index
+        run: python build_index.py --full
+
+      - name: Run golden eval
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: python evaluation/eval_baseline.py --engine optimized --cases evaluation/test_cases_harder.json --limit 0 --resolve-parent
+
+      - name: Check regression vs golden baseline
+        run: |
+          latest=$(ls evaluation/baseline_*.json | sort | tail -n 1)
+          echo "Comparing against: $latest"
+          python evaluation/check_regression.py --current "$latest" --golden evaluation/golden_baseline.json --metric-tol 0.02

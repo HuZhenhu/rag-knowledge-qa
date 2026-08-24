@@ -1,0 +1,11 @@
+{
+  "meta": "P0 完成期 harder 全量(46条) optimized 引擎聚合基线，作为 P1 起 CI 回归阻断参考",
+  "n": 46,
+  "engine": "optimized",
+  "context_recall": 1.0,
+  "context_precision": 0.9796,
+  "hit_at_k": 1.0,
+  "chunk_hit_at_k": 0.2609,
+  "mrr": 0.2174,
+  "avg_time_s": 32.61
+}
