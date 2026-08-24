@@ -11,3 +11,10 @@ _debug_chunks.txt
 *.log
 .pytest_cache/
 .ruff_cache/
+
+# 测试残留与临时产物（勿入库）
+.playwright-cli/
+csdn_rag.html
+csdn_rag.txt
+milvus_*.html
+zhihu_eval.html
