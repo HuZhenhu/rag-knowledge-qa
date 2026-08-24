@@ -39,6 +39,21 @@ class QueryUnderstander:
                 base_url=DEEPSEEK_BASE_URL
             )
 
+    @staticmethod
+    def _content_to_text(content) -> str:
+        """兼容 OpenAI 兼容接口可能返回的 content 数组（如 [{"type":"text","text":"..."}]）。"""
+        if isinstance(content, str):
+            return content
+        if isinstance(content, list):
+            parts = []
+            for item in content:
+                if isinstance(item, dict):
+                    parts.append(item.get("text", ""))
+                elif isinstance(item, str):
+                    parts.append(item)
+            return "".join(parts)
+        return str(content) if content is not None else ""
+
     def expand_query(self, query: str) -> QueryExpansion:
         """查询扩展：把问题拆成多个子查询"""
         self._init_client()
@@ -70,7 +85,7 @@ class QueryUnderstander:
                 max_tokens=500
             )
 
-            result_text = response.choices[0].message.content
+            result_text = self._content_to_text(response.choices[0].message.content)
 
             json_match = re.search(r'\{.*\}', result_text, re.DOTALL)
             if json_match:
@@ -123,7 +138,7 @@ class QueryUnderstander:
                 temperature=0.1,
                 max_tokens=200
             )
-            corrected = response.choices[0].message.content.strip()
+            corrected = self._content_to_text(response.choices[0].message.content).strip()
             if corrected and corrected != query:
                 logger.info("查询纠错: '%s' → '%s'", query, corrected)
             return corrected if corrected else query
@@ -154,7 +169,10 @@ class QueryUnderstander:
                 temperature=LLM_TEMPERATURE,
                 max_tokens=300
             )
-            return response.choices[0].message.content
+            content = self._content_to_text(response.choices[0].message.content)
+            if content and content.strip():
+                return content
+            return query
 
         except Exception as e:
             logger.warning("HyDE生成失败: %s，返回原始查询", e)
