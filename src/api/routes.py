@@ -245,6 +245,7 @@ async def query(
         sources=sources,
         usage=response.usage,
         timing=response.timing,
+        confidence=getattr(response, "confidence", None),
     )
 
 

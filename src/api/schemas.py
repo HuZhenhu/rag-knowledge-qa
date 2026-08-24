@@ -19,6 +19,7 @@ class QueryResponse(BaseModel):
     sources: list[Source] = Field(default_factory=list, description="引用来源")
     usage: dict = Field(default_factory=dict, description="Token用量")
     timing: dict = Field(default_factory=dict, description="耗时统计")
+    confidence: float | None = Field(None, description="置信度分数（P1-6，启用时输出）")
 
 
 class HealthResponse(BaseModel):
