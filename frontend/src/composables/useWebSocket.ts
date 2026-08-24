@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import type { Source, Timing } from '../types'
+import type { Source, Timing, AgentTraceEvent } from '../types'
 
 /**
  * WebSocket消息处理器
@@ -13,6 +13,12 @@ export function useWebSocket(baseUrl: string) {
   let onSources: ((messageId: string, sources: Source[]) => void) | null = null
   let onDone: ((messageId: string, timing: Timing) => void) | null = null
   let onError: ((message: string) => void) | null = null
+  // Agent 推理过程事件回调（Agentic RAG 前端可视化，M5，设计文档 §4.1）
+  let onAgentPlan: ((messageId: string, event: AgentTraceEvent) => void) | null = null
+  let onAgentToolCall: ((messageId: string, event: AgentTraceEvent) => void) | null = null
+  let onAgentEvidence: ((messageId: string, event: AgentTraceEvent) => void) | null = null
+  let onAgentReflect: ((messageId: string, event: AgentTraceEvent) => void) | null = null
+  let onAgentFinal: ((messageId: string, event: AgentTraceEvent) => void) | null = null
 
   /**
    * 连接到WebSocket服务器
@@ -56,6 +62,23 @@ export function useWebSocket(baseUrl: string) {
       case 'error':
         onError?.call(null, data.message)
         break
+      // Agent 推理过程事件（Agentic RAG 前端可视化，M5，设计文档 §4.1）
+      // 普通引擎（langchain/original）不产生该类事件，不会触发以下分支
+      case 'agent_plan':
+        onAgentPlan?.call(null, data.message_id, data.data)
+        break
+      case 'agent_tool_call':
+        onAgentToolCall?.call(null, data.message_id, data.data)
+        break
+      case 'agent_evidence':
+        onAgentEvidence?.call(null, data.message_id, data.data)
+        break
+      case 'agent_reflect':
+        onAgentReflect?.call(null, data.message_id, data.data)
+        break
+      case 'agent_final':
+        onAgentFinal?.call(null, data.message_id, data.data)
+        break
     }
   }
 
@@ -94,6 +117,16 @@ export function useWebSocket(baseUrl: string) {
     get onDone() { return onDone },
     set onDone(fn) { onDone = fn },
     get onError() { return onError },
-    set onError(fn) { onError = fn }
+    set onError(fn) { onError = fn },
+    get onAgentPlan() { return onAgentPlan },
+    set onAgentPlan(fn) { onAgentPlan = fn },
+    get onAgentToolCall() { return onAgentToolCall },
+    set onAgentToolCall(fn) { onAgentToolCall = fn },
+    get onAgentEvidence() { return onAgentEvidence },
+    set onAgentEvidence(fn) { onAgentEvidence = fn },
+    get onAgentReflect() { return onAgentReflect },
+    set onAgentReflect(fn) { onAgentReflect = fn },
+    get onAgentFinal() { return onAgentFinal },
+    set onAgentFinal(fn) { onAgentFinal = fn }
   }
 }

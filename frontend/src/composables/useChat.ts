@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import type { Message, Timing } from '../types'
+import type { Message, Timing, AgentTraceEvent } from '../types'
 
 /**
  * 生成唯一ID
@@ -72,16 +72,20 @@ export function useChat() {
 
   /**
    * 设置消息完成
+   * @param agentTrace Agent 推理过程事件（Agentic RAG 前端可视化，M5）
+   *                   仅 agentic 引擎下产生；普通引擎不传，消息保持无该字段
    */
   function setMessageDone(
     messageId: string,
     sources?: Message['sources'],
-    timing?: Timing
+    timing?: Timing,
+    agentTrace?: AgentTraceEvent[]
   ): void {
     const msg = messages.value.find(m => m.id === messageId)
     if (msg) {
       if (sources) msg.sources = sources
       if (timing) msg.timing = timing
+      if (agentTrace && agentTrace.length > 0) msg.agent_trace = agentTrace
     }
     isLoading.value = false
   }

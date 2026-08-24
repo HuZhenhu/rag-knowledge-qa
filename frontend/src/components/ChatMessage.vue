@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Message } from '../types'
+import AgentTraceTimeline from './AgentTraceTimeline.vue'
 
 const props = defineProps<{
   message: Message
@@ -51,6 +52,13 @@ function formatContent(content: string): string {
           <div class="source-score">相关度: {{ (source.score * 100).toFixed(0) }}%</div>
         </div>
       </div>
+
+      <!-- Agent 推理过程时间线（Agentic RAG 前端可视化，M5）
+           仅 agentic 引擎消息带 agent_trace；普通引擎消息无该字段，不渲染 -->
+      <AgentTraceTimeline
+        v-if="message.role === 'assistant' && message.agent_trace && message.agent_trace.length > 0"
+        :trace="message.agent_trace"
+      />
     </div>
   </div>
 </template>

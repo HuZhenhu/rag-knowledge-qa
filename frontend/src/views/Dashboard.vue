@@ -50,15 +50,6 @@ onMounted(async () => {
     loading.value = false
   }
 })
-
-function getStatusType(status: string) {
-  const map: Record<string, string> = {
-    indexed: 'success',
-    pending: 'warning',
-    error: 'danger',
-  }
-  return map[status] || 'info'
-}
 </script>
 
 <template>

@@ -5,7 +5,7 @@ import { useWebSocket } from '../composables/useWebSocket'
 import { useDataMonitor } from '../composables/useDataMonitor'
 import ChatMessage from '../components/ChatMessage.vue'
 import ChatInput from '../components/ChatInput.vue'
-import type { Message } from '../types'
+import type { Message, AgentTraceEvent } from '../types'
 
 const { messages, isLoading, error, sessionId, sendMessage, addAssistantMessage, handleToken, setMessageDone, setError, clearMessages } = useChat()
 
@@ -100,6 +100,17 @@ monitor.onIndexError = (filename, _errorMsg) => {
 
 const pendingSources = ref<Record<string, any[]>>({})
 
+// Agent 推理过程事件缓冲（Agentic RAG 前端可视化，M5，设计文档 §4.2）
+// 各 agent 事件先按 message_id 收集，done 时一并写入消息的 agent_trace
+const pendingAgentTraces = ref<Record<string, AgentTraceEvent[]>>({})
+
+function appendAgentTrace(messageId: string, event: AgentTraceEvent): void {
+  if (!pendingAgentTraces.value[messageId]) {
+    pendingAgentTraces.value[messageId] = []
+  }
+  pendingAgentTraces.value[messageId].push(event)
+}
+
 ws.onToken = (messageId: string, token: string) => {
   handleToken(messageId, token)
 }
@@ -110,13 +121,22 @@ ws.onSources = (messageId: string, sources: any[]) => {
 
 ws.onDone = (messageId: string, timing: any) => {
   const sources = pendingSources.value[messageId]
-  setMessageDone(messageId, sources, timing)
+  const trace = pendingAgentTraces.value[messageId] || []
+  setMessageDone(messageId, sources, timing, trace)
   delete pendingSources.value[messageId]
+  delete pendingAgentTraces.value[messageId]
 }
 
 ws.onError = (msg: string) => {
   setError(msg)
 }
+
+// Agent 推理过程事件（仅 agentic 引擎产生；普通引擎不产生，此处回调不触发）
+ws.onAgentPlan = (messageId: string, event: AgentTraceEvent) => appendAgentTrace(messageId, event)
+ws.onAgentToolCall = (messageId: string, event: AgentTraceEvent) => appendAgentTrace(messageId, event)
+ws.onAgentEvidence = (messageId: string, event: AgentTraceEvent) => appendAgentTrace(messageId, event)
+ws.onAgentReflect = (messageId: string, event: AgentTraceEvent) => appendAgentTrace(messageId, event)
+ws.onAgentFinal = (messageId: string, event: AgentTraceEvent) => appendAgentTrace(messageId, event)
 
 const chatContainer = ref<HTMLElement>()
 
