@@ -1,6 +1,12 @@
 """LangChain版RAG引擎 — 使用LangChain组件重构RAG链路
 检索质量优化：默认引擎接通 混合检索(BM25+向量+RRF) + 查询增强(纠错/扩展/HyDE双路) + 重排(Top-50→Top-5)
+P1-3: 精确缓存(QueryCache) + 语义缓存(SemanticCache) 接入默认引擎，key 含 ACL 指纹
+P1-4: 多路检索并行化(ThreadPoolExecutor) + 简单事实问题条件化跳过 HyDE
+P1-6: 置信度硬门控/低置信拒答（默认关）
 """
+import concurrent.futures
+import hashlib
+import json
 import logging
 import time
 from dataclasses import dataclass, field
@@ -40,10 +46,19 @@ from src.config import (
     USE_PII_REDACTION,
     PII_REDACT_MODE,
     PII_PLACEHOLDER,
+    QUERY_CACHE_ENABLED,
+    SEMANTIC_CACHE_ENABLED,
+    SEMANTIC_CACHE_THRESHOLD,
+    PARALLEL_RETRIEVAL_WORKERS,
+    HYDE_SKIP_SIMPLE,
+    ENABLE_CONFIDENCE_REFUSE,
+    CONFIDENCE_REFUSE_THRESHOLD,
 )
 from src.core.tracer import Trace
 from src.core.acl import enrich_acl_metadata, assert_sources_allowed, allowed_doc_ids_from_filter
 from src.core.pii_redactor import redact_texts, mask_text
+from src.core.query_cache import get_query_cache
+from src.core.semantic_cache import get_semantic_cache
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +71,7 @@ class LangChainRAGResponse:
     usage: dict = field(default_factory=dict)
     timing: dict = field(default_factory=dict)
     trace_id: str = ""
+    confidence: float | None = None  # P1-6: 置信度（启用门控时透出）
 
 
 class LangChainRAGEngine:
@@ -80,6 +96,10 @@ class LangChainRAGEngine:
         candidate_k: int = RETRIEVAL_CANDIDATE_K,
         use_parent_child: bool = USE_PARENT_CHILD,
         acl_enforce: bool = ACL_ENFORCE,
+        parallel_workers: int = PARALLEL_RETRIEVAL_WORKERS,
+        hyde_skip_simple: bool = HYDE_SKIP_SIMPLE,
+        use_confidence_refuse: bool = ENABLE_CONFIDENCE_REFUSE,
+        confidence_refuse_threshold: float = CONFIDENCE_REFUSE_THRESHOLD,
     ):
         self.top_k = top_k
         self.use_hybrid = use_hybrid
@@ -92,6 +112,17 @@ class LangChainRAGEngine:
         self.candidate_k = candidate_k
         self.use_parent_child = use_parent_child
         self.acl_enforce = acl_enforce  # P0-1: 检索链路 ACL 开关（默认关）
+        # P1-4: 多路检索并行线程数 / 简单事实问题跳过 HyDE
+        self.parallel_workers = max(1, int(parallel_workers))
+        self.hyde_skip_simple = hyde_skip_simple
+        # P1-6: 置信度门控开关与阈值（默认关，灰度开启）
+        self.use_confidence_refuse = use_confidence_refuse
+        self.confidence_refuse_threshold = float(confidence_refuse_threshold)
+        self._last_confidence: float | None = None
+        self._last_rerank_ms = 0.0
+        # P1-3: 缓存（进程内单例，索引失效钩子可清同一实例）
+        self.query_cache = get_query_cache()
+        self.semantic_cache = get_semantic_cache()
         self._reranker = None
         self._query_understander = None
         self._bm25_metadatas = None  # BM25 索引对应的 chunk 元数据（ACL 过滤用）
@@ -163,6 +194,51 @@ class LangChainRAGEngine:
             from src.core.query_understander import QueryUnderstander
             self._query_understander = QueryUnderstander()
         return self._query_understander
+
+    @staticmethod
+    def _acl_fingerprint(acl_filter: dict | None) -> str:
+        """P1-3: 将 acl_filter 序列化为稳定指纹（md5），None 返回 'none'"""
+        if not acl_filter:
+            return "none"
+        try:
+            raw = json.dumps(acl_filter, sort_keys=True, ensure_ascii=False)
+            return hashlib.md5(raw.encode("utf-8")).hexdigest()
+        except Exception:
+            return "unknown"
+
+    def _should_skip_hyde(self, question: str) -> bool:
+        """P1-4: 简单事实问题跳过 HyDE（条件化降级，HYDE_SKIP_SIMPLE 开关）
+
+        启发式：问题较短且不含多跳/对比/推理标记时视为简单事实问题，
+        跳过 HyDE 多路 LLM 调用以降延迟；模糊用例不跳过以保召回。
+        """
+        if not self.hyde_skip_simple:
+            return False
+        q = question.strip()
+        if len(q) > 40:
+            return False
+        multi_hop_markers = (
+            "以及", "并且", "以及", "对比", "区别", "为什么", "如何", "哪些",
+            "几个", "分别", "流程", "步骤", "总结", "分析", "相比", "介绍",
+            "和", "与", "及", "、", "，", "？", "?", "比较", "关系",
+        )
+        return not any(m in q for m in multi_hop_markers)
+
+    def _compute_confidence(self, sources: list[dict]) -> float:
+        """P1-6: 取 Top-1 归一化分数作为置信度（0~1）
+
+        - 启用重排：bge-reranker sigmoid 分数本身 0~1，直接取 Top-1；
+        - 未启用重排：RRF 分数量纲极小，用理论最大单路得分(1/(RRF_K+1))归一化，封顶 1.0。
+        """
+        if not sources:
+            return 0.0
+        top1 = float(sources[0].get("score", 0.0) or 0.0)
+        if self.use_reranker and self._reranker is not None:
+            return round(max(0.0, min(1.0, top1)), 4)
+        denom = 1.0 / (RRF_K + 1)
+        if denom <= 0:
+            return 0.0
+        return round(max(0.0, min(1.0, top1 / denom)), 4)
 
     def _build_chain(self):
         """构建RAG Chain"""
@@ -243,6 +319,8 @@ class LangChainRAGEngine:
         所有路的结果合并到一个 pool，取最高分去重；返回 Top-candidate_k。
         HyDE 路分数用 RRF 量纲(1/(RRF_K+rank))，与 query 路 RRF 分数同量纲可比较。
         P0-1: acl_filter 透传给每条检索路。
+        P1-4: 各子查询检索路与 HyDE 路经 ThreadPoolExecutor 并行执行（PARALLEL_RETRIEVAL_WORKERS）；
+              简单事实问题（_should_skip_hyde）条件化跳过 HyDE 多路 LLM 调用。
         """
         k = candidate_k or self.candidate_k
         queries = [question]
@@ -255,17 +333,16 @@ class LangChainRAGEngine:
                 logger.warning("查询扩展失败: %s", e)
 
         pool: dict[str, tuple[object, float]] = {}
-        for q in queries:
+
+        def _retrieve_one(q: str) -> list[tuple[object, float]]:
             try:
-                for doc, score in self._hybrid_retrieve(q, k, acl_filter=acl_filter):
-                    key = doc.page_content[:200]
-                    if key not in pool or score > pool[key][1]:
-                        pool[key] = (doc, score)
+                return list(self._hybrid_retrieve(q, k, acl_filter=acl_filter))
             except Exception as e:
                 logger.warning("子查询检索失败(%s): %s", q[:30], e)
+                return []
 
-        # HyDE 双路：原始 query 路已在上面；这里补 HyDE 向量路，命中后取更高分
-        if self.use_hyde:
+        def _hyde_retrieve() -> list[tuple[object, float]]:
+            out: list[tuple[object, float]] = []
             try:
                 hyde_text = self._get_query_understander().generate_hyde(question)
                 hyde_emb = self.embeddings.embed_query(hyde_text)
@@ -273,12 +350,29 @@ class LangChainRAGEngine:
                     hyde_emb, k=k, filter=acl_filter,
                 )
                 for rank, (doc, _dist) in enumerate(hyde_raw):
-                    key = doc.page_content[:200]
-                    hyde_score = 1.0 / (RRF_K + rank + 1)
-                    if key not in pool or hyde_score > pool[key][1]:
-                        pool[key] = (doc, hyde_score)
+                    out.append((doc, 1.0 / (RRF_K + rank + 1)))
             except Exception as e:
                 logger.warning("HyDE检索失败: %s", e)
+            return out
+
+        tasks = [lambda q=q: _retrieve_one(q) for q in queries]
+        if self.use_hyde and not self._should_skip_hyde(question):
+            tasks.append(_hyde_retrieve)
+
+        def _merge(docs: list[tuple[object, float]]) -> None:
+            for doc, score in docs:
+                key = doc.page_content[:200]
+                if key not in pool or score > pool[key][1]:
+                    pool[key] = (doc, score)
+
+        if self.parallel_workers > 1 and len(tasks) > 1:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=self.parallel_workers) as ex:
+                futures = [ex.submit(t) for t in tasks]
+                for fut in concurrent.futures.as_completed(futures):
+                    _merge(fut.result())
+        else:
+            for t in tasks:
+                _merge(t())
 
         ranked = sorted(pool.values(), key=lambda x: x[1], reverse=True)
         return ranked[:k]
@@ -330,6 +424,8 @@ class LangChainRAGEngine:
                 sources = sources[:top_k]
         else:
             sources = sources[:top_k]
+        # P1-6: 记录本次 Top-1 归一化置信度（_compute_confidence 基于最终排序分数）
+        self._last_confidence = self._compute_confidence(sources)
         return sources
 
     def _resolve_parent(self, sources: list[dict]) -> list[dict]:
@@ -376,6 +472,26 @@ class LangChainRAGEngine:
         timing = {}
 
         try:
+            top_k = top_k or self.top_k
+            acl_fp = self._acl_fingerprint(acl_filter)
+
+            # P1-3 精确缓存命中（原始 question + top_k + acl_fp，跨权限隔离）
+            if self.query_cache is not None:
+                cached = self.query_cache.get(question, top_k, acl_fp)
+                if cached is not None:
+                    logger.info("查询精确缓存命中: %s", mask_text(question[:40]))
+                    hit_timing = dict(cached.get("timing") or {})
+                    hit_timing["cache_hit"] = True
+                    hit_timing["total_ms"] = 1
+                    return LangChainRAGResponse(
+                        answer=cached.get("answer", ""),
+                        sources=cached.get("sources", []),
+                        usage=cached.get("usage", {}),
+                        timing=hit_timing,
+                        confidence=cached.get("confidence"),
+                        trace_id=cached.get("trace_id", ""),
+                    )
+
             # 0. 查询纠错（P1-1）
             effective_q = question
             if self.use_query_correction:
@@ -387,13 +503,24 @@ class LangChainRAGEngine:
                 except Exception as e:
                     logger.warning("查询纠错失败: %s", e)
 
+            # P1-3 语义缓存命中（纠错后 query + acl_fp，余弦相似度召回）
+            if self.semantic_cache is not None:
+                hit = self.semantic_cache.get(effective_q, acl_fp, self.embeddings.embed_query)
+                if hit is not None:
+                    answer, srcs, sim = hit
+                    logger.info("语义缓存命中: %s (sim=%.3f)", mask_text(effective_q[:40]), sim)
+                    return LangChainRAGResponse(
+                        answer=answer, sources=srcs, usage={},
+                        timing={"cache_hit": True, "semantic": True, "total_ms": 1},
+                        confidence=round(float(sim), 4),
+                    )
+
             # 1. 混合检索（大召回 Top-candidate_k；P0-1: 透传 acl_filter 检索前过滤）
             retrieval_start = time.time()
-            top_k = top_k or self.top_k
             scored_docs = self._retrieve_multi(effective_q, self.candidate_k, acl_filter=acl_filter)
             timing["retrieval_ms"] = round((time.time() - retrieval_start) * 1000, 2)
 
-            # 2. 构建 sources + 重排精排 → Top-K
+            # 2. 构建 sources + 重排精排 → Top-K（内部记录 _last_confidence，P1-6）
             sources = self._build_sources(effective_q, scored_docs, top_k)
             timing["rerank_ms"] = round(getattr(self, "_last_rerank_ms", 0), 2)
 
@@ -408,9 +535,17 @@ class LangChainRAGEngine:
                     if removed:
                         logger.warning("ACL运行时断言：剔除 %d 条越权来源", removed)
 
+            confidence = self._last_confidence if self._last_confidence is not None else 0.0
+
+            # 2.7 P1-6 置信度硬门控：低置信且有来源时拒答（默认关，灰度开启）
+            refuse = False
+            if self.use_confidence_refuse and sources and confidence < self.confidence_refuse_threshold:
+                refuse = True
+                logger.info("置信度门控触发: confidence=%.4f < %.2f，拒答", confidence, self.confidence_refuse_threshold)
+
             # 3. 生成回答（用与 sources 一致的文档，绕过 chain 内部重复检索）
             generation_start = time.time()
-            if not sources:
+            if not sources or refuse:
                 answer = "知识库中未找到相关信息"
                 usage = {}
             else:
@@ -429,11 +564,21 @@ class LangChainRAGEngine:
             total_time = (time.time() - start_time) * 1000
             timing["total_ms"] = round(total_time, 2)
 
+            # P1-3 未命中 → 写缓存（key 含 acl_fp；语义缓存仅写有真实答案的条目）
+            if self.query_cache is not None:
+                self.query_cache.set(question, top_k, {
+                    "answer": answer, "sources": sources, "usage": usage,
+                    "timing": timing, "confidence": confidence, "trace_id": "",
+                }, acl_fp)
+            if self.semantic_cache is not None and answer and answer != "知识库中未找到相关信息":
+                self.semantic_cache.set(effective_q, answer, sources, acl_fp, self.embeddings.embed_query)
+
             return LangChainRAGResponse(
                 answer=answer,
                 sources=sources,
                 usage=usage,
                 timing=timing,
+                confidence=confidence,
             )
 
         except Exception as e:
@@ -461,6 +606,19 @@ class LangChainRAGEngine:
         timing = {}
 
         try:
+            top_k = top_k or self.top_k
+            acl_fp = self._acl_fingerprint(acl_filter)
+
+            # P1-3 精确缓存命中（原始 question + top_k + acl_fp，跨权限隔离）
+            if self.query_cache is not None:
+                cached = self.query_cache.get(question, top_k, acl_fp)
+                if cached is not None:
+                    hit_timing = dict(cached.get("timing") or {})
+                    hit_timing["cache_hit"] = True
+                    hit_timing["total_ms"] = 1
+                    yield cached.get("answer", ""), True, cached.get("sources", []), hit_timing
+                    return
+
             # 0. 查询纠错
             effective_q = question
             if self.use_query_correction:
@@ -470,6 +628,15 @@ class LangChainRAGEngine:
                         effective_q = corrected.strip()
                 except Exception:
                     pass
+
+            # P1-3 语义缓存命中（纠错后 query + acl_fp，余弦相似度召回）
+            if self.semantic_cache is not None:
+                hit = self.semantic_cache.get(effective_q, acl_fp, self.embeddings.embed_query)
+                if hit is not None:
+                    answer, srcs, sim = hit
+                    logger.info("语义缓存命中(stream): %s (sim=%.3f)", mask_text(effective_q[:40]), sim)
+                    yield answer, True, srcs, {"cache_hit": True, "semantic": True, "total_ms": 1}
+                    return
 
             # 1. 混合检索
             trace.start_span("retrieval")
@@ -494,12 +661,20 @@ class LangChainRAGEngine:
                     if removed:
                         logger.warning("ACL运行时断言：剔除 %d 条越权来源", removed)
 
+            confidence = self._last_confidence if self._last_confidence is not None else 0.0
+
+            # 2.7 P1-6 置信度硬门控（默认关，灰度开启）
+            refuse = False
+            if self.use_confidence_refuse and sources and confidence < self.confidence_refuse_threshold:
+                refuse = True
+                logger.info("置信度门控触发(stream): confidence=%.4f < %.2f，拒答", confidence, self.confidence_refuse_threshold)
+
             # 3. 流式生成（注入 context，避免 chain 内部重复检索）
             trace.start_span("generation")
             generation_start = time.time()
-            if not sources:
+            if not sources or refuse:
                 yield "知识库中未找到相关信息", True, sources, timing
-                trace.end_span({"status": "no_sources"})
+                trace.end_span({"status": "refused" if refuse else "no_sources"})
                 return
 
             context = "\n\n".join(
@@ -520,6 +695,15 @@ class LangChainRAGEngine:
             timing["generation_ms"] = round((time.time() - generation_start) * 1000, 2)
             timing["total_ms"] = round((time.time() - start_time) * 1000, 2)
             trace.end_span({"answer_length": len(full_answer)})
+
+            # P1-3 未命中 → 写缓存（key 含 acl_fp；语义缓存仅写有真实答案的条目）
+            if self.query_cache is not None:
+                self.query_cache.set(question, top_k, {
+                    "answer": full_answer, "sources": sources, "usage": {},
+                    "timing": timing, "confidence": confidence, "trace_id": "",
+                }, acl_fp)
+            if self.semantic_cache is not None and full_answer and full_answer != "知识库中未找到相关信息":
+                self.semantic_cache.set(effective_q, full_answer, sources, acl_fp, self.embeddings.embed_query)
 
             yield "", True, sources, timing
 
