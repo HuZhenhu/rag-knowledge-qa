@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG系统功能选型分析</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 50px;
+        }
+        .section-title {
+            font-size: 1.8em;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        .feature-title {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .comparison-table tr:hover {
+            background: #e9ecef;
+        }
+        .recommendation {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+        }
+        .recommendation h3 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+        }
+        .recommendation ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .recommendation li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        .recommendation li:before {
+            content: "\2713";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .warning h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .pros, .cons {
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .pros {
+            background: #d4edda;
+            border: 1px solid #28a745;
+        }
+        .cons {
+            background: #f8d7da;
+            border: 1px solid #dc3545;
+        }
+        .pros h4, .cons h4 {
+            margin-bottom: 10px;
+        }
+        .pros h4 {
+            color: #155724;
+        }
+        .cons h4 {
+            color: #721c24;
+        }
+        .implementation {
+            background: #e7f3ff;
+            border: 1px solid #0066cc;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .implementation h4 {
+            color: #004085;
+            margin-bottom: 15px;
+        }
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre;
+        }
+        .code-block .comment {
+            color: #68d391;
+        }
+        .code-block .keyword {
+            color: #63b3ed;
+        }
+        .code-block .string {
+            color: #f6ad55;
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .tag-recommend {
+            background: #28a745;
+            color: white;
+        }
+        .tag-alternative {
+            background: #6c757d;
+            color: white;
+        }
+        .tag-complex {
+            background: #dc3545;
+            color: white;
+        }
+        .architecture {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid #dee2e6;
+        }
+        .architecture h4 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        .flow-diagram {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85em;
+            line-height: 1.4;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        footer {
+            background: #2d3748;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        footer p {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>RAG系统功能选型分析</h1>
+            <p>跨文档查询合并 & 增量更新策略</p>
+        </header>
+
+        <div class="content">
+            <!-- 第一部分：跨文档查询合并 -->
+            <div class="section">
+                <h2 class="section-title">一、跨文档查询合并方案</h2>
+
+                <div class="feature-title">
+                    场景：用户问"张三的基本信息和爱好是什么？"<br>
+                    信息分散在多个文档中，需要综合多个来源回答
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>方案</th>
+                            <th>原理</th>
+                            <th>延迟</th>
+                            <th>成本</th>
+                            <th>效果</th>
+                            <th>复杂度</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="tag tag-recommend">推荐</span> 多子查询拆分</td>
+                            <td>LLM拆成多个子查询，分别检索后合并</td>
+                            <td>低</td>
+                            <td>低</td>
+                            <td>好</td>
+                            <td>低</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-recommend">推荐</span> HyDE</td>
+                            <td>LLM生成假设回答，用假答案去检索</td>
+                            <td>中</td>
+                            <td>中</td>
+                            <td>很好</td>
+                            <td>低</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-alternative">备选</span> 查询重写</td>
+                            <td>LLM改写用户问题为更适合检索的形式</td>
+                            <td>低</td>
+                            <td>低</td>
+                            <td>中</td>
+                            <td>低</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-alternative">备选</span> 多跳检索</td>
+                            <td>迭代式检索，每次结果作为下次上下文</td>
+                            <td>高</td>
+                            <td>高</td>
+                            <td>很好</td>
+                            <td>高</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-complex">复杂</span> GraphRAG</td>
+                            <td>构建知识图谱，用图查询补充向量检索</td>
+                            <td>高</td>
+                            <td>很高</td>
+                            <td>很好</td>
+                            <td>很高</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="recommendation">
+                    <h3>推荐方案：多子查询拆分 + HyDE + 混合检索 + ReRanker</h3>
+                    <ul>
+                        <li>多子查询拆分：覆盖问题的多个维度</li>
+                        <li>HyDE：跨越"语义鸿沟"，提高检索命中率</li>
+                        <li>混合检索（向量+BM25）：语义+关键词双保险</li>
+                        <li>ReRanker：精排，过滤噪声</li>
+                        <li>增强prompt：明确告诉LLM要综合多个来源</li>
+                    </ul>
+                </div>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>为什么推荐这套方案</h4>
+                        <ul>
+                            <li>实现简单，你已经有了大部分模块</li>
+                            <li>延迟低，用户体验好</li>
+                            <li>成本低，只多几次LLM调用</li>
+                            <li>效果好，覆盖90%以上的场景</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>为什么不推荐GraphRAG</h4>
+                        <ul>
+                            <li>你的文档是技术知识，不是人物关系图</li>
+                            <li>构建成本高，24个文档要花不少时间</li>
+                            <li>维护成本高，每次新增/修改文档都要更新图谱</li>
+                            <li>延迟高，用户体验差</li>
+                            <li>过度设计，杀鸡用牛刀</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="implementation">
+                    <h4>实现方式：增强prompt</h4>
+                    <div class="code-block"><span class="comment"># 在 generator.py 的 prompt 中加入</span>
+
+你是知识库问答助手。请综合以下多个来源的信息回答。
+
+<span class="keyword">规则：</span>
+1. 如果信息来自多个来源，综合整理，不要遗漏
+2. 如果不同来源有矛盾，都列出并说明来源
+3. 每个论断标注来源
+
+<span class="keyword">参考资料：</span>
+[来源1] 03-RAG检索增强生成.md（什么是RAG）：RAG的全称是...
+[来源2] 04-LangChain基础.md（检索链路）：LangChain支持...
+[来源3] 05-Dify平台.md（Dify是一个开源平台...</div>
+                </div>
+
+                <div class="architecture">
+                    <h4>整体架构</h4>
+                    <div class="flow-diagram">用户提问
+    |
+[1] 查询扩展：LLM拆成3-5个子查询
+    |
+[2] HyDE：生成假设回答（可选）
+    |
+[3] 混合检索：向量检索 + BM25检索
+    |
+[4] RRF融合：合并两路结果
+    |
+[5] ReRanker：精排过滤噪声
+    |
+[6] LLM生成：综合多个来源，标注引用
+    |
+返回结果：回答 + 引用来源</div>
+                </div>
+            </div>
+
+            <!-- 第二部分：增量更新策略 -->
+            <div class="section">
+                <h2 class="section-title">二、增量更新策略方案</h2>
+
+                <div class="feature-title">
+                    场景：修改文档的一小部分，只更新受影响的chunks，不重建整个索引
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>方案</th>
+                            <th>原理</th>
+                            <th>更新成本</th>
+                            <th>一致性</th>
+                            <th>复杂度</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="tag tag-alternative">备选</span> 全量重建</td>
+                            <td>每次修改重新处理整个文档</td>
+                            <td>高</td>
+                            <td>完美</td>
+                            <td>低</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-recommend">推荐</span> 文档级Replace</td>
+                            <td>删除文档所有旧chunks，重新切片+embedding</td>
+                            <td>中</td>
+                            <td>完美</td>
+                            <td>低</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-recommend">推荐</span> Chunk级Content Hash</td>
+                            <td>对比每个chunk的hash，只更新变化的</td>
+                            <td>低</td>
+                            <td>好</td>
+                            <td>中</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-complex">复杂</span> CDC算法</td>
+                            <td>用Gearhash让chunk边界由内容决定</td>
+                            <td>很低</td>
+                            <td>好</td>
+                            <td>很高</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-complex">复杂</span> 版本化Chunk ID</td>
+                            <td>用doc_id + content_hash作为ID</td>
+                            <td>低</td>
+                            <td>好</td>
+                            <td>高</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="recommendation">
+                    <h3>推荐方案：Chunk级Content Hash（分阶段实施）</h3>
+                    <ul>
+                        <li>Phase 1：Content Hash对比，跳过未变化的chunks</li>
+                        <li>Phase 2：Chunk级Upsert，按ID替换变化的chunks</li>
+                        <li>Phase 3（可选）：CDC算法，精确控制边界稳定性</li>
+                    </ul>
+                </div>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>为什么推荐Content Hash</h4>
+                        <ul>
+                            <li>实现简单，只需要计算SHA-256</li>
+                            <li>效果好，50倍成本差距（50万文档2%变更率）</li>
+                            <li>ChromaDB原生支持upsert</li>
+                            <li>分阶段实施，风险可控</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>为什么不推荐CDC</h4>
+                        <ul>
+                            <li>实现复杂，需要引入新算法</li>
+                            <li>你的场景不需要精确的边界稳定性</li>
+                            <li>Content Hash已经够用</li>
+                            <li>过早优化，增加维护成本</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="implementation">
+                    <h4>实现方式：Content Hash对比</h4>
+                    <div class="code-block"><span class="keyword">import</span> hashlib
+
+<span class="keyword">def</span> compute_chunk_hash(content: str) -> str:
+    <span class="string">"""计算chunk的内容hash"""</span>
+    <span class="keyword">return</span> hashlib.sha256(content.encode()).hexdigest()
+
+<span class="keyword">def</span> incremental_update(doc_path: str, old_chunks: list):
+    <span class="string">"""增量更新"""</span>
+    <span class="comment"># 1. 重新切片（新chunks）</span>
+    new_chunks = split_document(doc_path)
+
+    <span class="comment"># 2. 对比hash，找出变化的chunks</span>
+    old_hashes = {compute_chunk_hash(c.content): c <span class="keyword">for</span> c <span class="keyword">in</span> old_chunks}
+    to_update = []
+    to_delete = set(old_hashes.keys())
+
+    <span class="keyword">for</span> chunk <span class="keyword">in</span> new_chunks:
+        chunk_hash = compute_chunk_hash(chunk.content)
+        <span class="keyword">if</span> chunk_hash <span class="keyword">in</span> old_hashes:
+            <span class="comment"># 未变化，跳过</span>
+            to_delete.discard(chunk_hash)
+        <span class="keyword">else</span>:
+            <span class="comment"># 变化了，需要更新</span>
+            to_update.append(chunk)
+
+    <span class="comment"># 3. 删除旧的，插入新的</span>
+    vectorstore.delete(where={<span class="string">"source_file"</span>: doc_path})
+    <span class="keyword">if</span> to_update:
+        vectorstore.add(to_update)</div>
+                </div>
+
+                <div class="architecture">
+                    <h4>整体架构</h4>
+                    <div class="flow-diagram">文档修改
+    |
+[1] 重新切片（新chunks）
+    |
+[2] 计算每个chunk的content_hash
+    |
+[3] 对比旧chunks的hash
+    |
+[4] 找出变化的chunks
+    |
+[5] 只embedding变化的chunks
+    |
+[6] Upsert到向量库（按ID替换）
+    |
+完成：增量更新，成本降低50倍</div>
+                </div>
+            </div>
+
+            <!-- 总结 -->
+            <div class="section">
+                <h2 class="section-title">三、总结</h2>
+
+                <div class="recommendation">
+                    <h3>最终推荐方案</h3>
+                    <ul>
+                        <li><strong>跨文档查询：</strong>多子查询拆分 + HyDE + 混合检索 + ReRanker + 增强prompt</li>
+                        <li><strong>增量更新：</strong>Content Hash对比 + Chunk级Upsert</li>
+                        <li><strong>核心原则：</strong>简单够用，不过度设计</li>
+                    </ul>
+                </div>
+
+                <div class="warning">
+                    <h4>重要提醒</h4>
+                    <p>知识图谱（GraphRAG）适合实体关系密集的场景（人物关系、组织架构），不适合技术文档问答场景。不要被最近的热度迷惑，选择适合自己的方案才是最好的。</p>
+                </div>
+
+                <div class="architecture">
+                    <h4>成本对比</h4>
+                    <div class="flow-diagram">方案                        日常更新成本（50万文档，2%变更率）
+------------------------------------------------------------
+全量重建                    $200/天
+文档级Replace               $40/天
+Chunk级Content Hash         $4/天（50倍差距！）
+CDC算法                     $2/天（但实现复杂）</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>文档生成时间：2026-06-21 | 项目：RAG智能问答系统</p>
+        </footer>
+    </div>
+</body>
+</html>

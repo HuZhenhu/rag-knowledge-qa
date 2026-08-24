@@ -645,3 +645,74 @@ Day 5：M7（多模态）+ M9（自动评测）                ✅ 已完成
 - M6-M9：2026-06-11 通过三代理工作流完成实施和测试
 - 测试结果：385/386通过（99.74%），1个跳过
 - Git提交：14个commit，按模块独立提交
+
+---
+
+## M10：Agentic RAG 升级 ✅
+
+> 日期：2026-08-23
+> 设计文档：`docs/superpowers/specs/2026-08-23-agentic-rag-design.md`
+> 备份：`D:\rag-knowledge-qa_backup_20260823`
+
+### 目标
+
+在现有 `langchain` / `original` 双引擎基础上，新增第三条引擎 `RAG_ENGINE=agentic`：
+基于 LangGraph 实现 Supervisor 多 Agent 编排（规划拆解 + 知识库/联网工具调用 + Critic 验证纠错 + Summarizer 汇总），
+前端可视化 Agent 推理过程，评测兼容。
+
+### M10.1：Agentic 引擎（src/core/agentic/）
+
+- `state.py` — `AgentState`：trace / tool_calls / retry_count / citations 等字段
+- `graph.py` — LangGraph 图编排：`start → supervisor → planner → retriever_agent → critic → summarizer`（含 retry 回路）
+- `supervisor_agent.py` — 路由决策（知识库检索 / 联网搜索 / 直接回答）
+- `planner_agent.py` — 复杂问题拆分为子问题，制定检索计划
+- `retriever_agent.py` — 知识库混合检索工具 + 证据带回 `file` + `section`
+- `web_agent.py` — Tavily 联网搜索工具（受 `AGENT_WEB_SEARCH` 开关控制）
+- `critic_agent.py` — 反思校验：证据充分性 / 相关性 / 覆盖度，不足时 retry（上限 `AGENT_CRITIC_MAX_RETRY`）
+- `summarizer_agent.py` — 汇总生成带引用标注（citations 含 file / section / source_url）
+- `AgenticEngine` — 统一入口 `query()` / `query_stream()`，返回 `AgenticRAGResponse`
+  （answer / sources / timing / agent_trace，字段对齐既有 `LangChainRAGResponse` / `RAGResponse`）
+
+### M10.2：推理过程可视化
+
+- 后端 `main.py` 通过 WebSocket 推送五类 agent 事件：`agent_plan / agent_tool_call / agent_evidence / agent_reflect / agent_final / user_question`
+- 前端新增 `AgentTraceTimeline.vue` 时间线面板，集成于 `ChatMessage.vue` / `Chat.vue`
+- `useWebSocket.ts` / `useChat.ts` / `types/index.ts` 扩展五类事件类型
+- 普通引擎（无 `_last_agent_trace`）不推送 agent 事件，前端无回归
+
+### M10.3：评测兼容与专项维度（evaluate.py / eval_metrics.py）
+
+- 250 例评测集（`evaluation/generated_cases_250.json`）在 `RAG_ENGINE=agentic` 下复用 `evaluate.py` 跑通
+- `eval_metrics.py` 新增 `evaluate_agentic_dimensions`，基于 `agent_trace` 计算四个专项维度：
+  - **规划正确率**（planning_accuracy）：子问题 / 计划与最终答案的相关性
+  - **工具选择合理性**（tool_choice_score）：知识库 / 联网工具选择是否匹配问题类型
+  - **平均反思次数**（retry_count）：critic 重试次数
+  - **最终引用正确率**（final_citation_accuracy）：citations 与最终证据来源的一致性
+- `evaluate.py` 新增 `--test-cases` / `--limit` / `--no-four-dim` 参数，报告新增「Agentic 专项评测维度」章节
+
+### M10.4：配置与用法
+
+```bash
+# 启用 Agentic 引擎
+RAG_ENGINE=agentic python main.py
+
+# 关闭联网搜索（仅知识库）
+AGENT_WEB_SEARCH=false RAG_ENGINE=agentic python main.py
+
+# 评测（250 例全量）
+RAG_ENGINE=agentic python evaluate.py --test-cases evaluation/generated_cases_250.json --no-four-dim
+```
+
+关键配置（`.env` / `src/config.py`）：`RAG_ENGINE=agentic`、`AGENT_WEB_SEARCH`、`TAVILY_API_KEY`、`AGENT_CRITIC_MAX_RETRY`
+
+### 验收标准
+
+- [x] Agentic 引擎真实装配跑通（真实 LLM / 检索 / 生成，含 Tavily 联网配置）
+- [x] 250 例评测集在 agentic 下对齐输出格式可跑，四个专项维度产出
+- [x] 普通引擎（langchain）回归无异常，agentic 维度仅对 agentic 引擎生效
+- [x] README.md / SPEC-upgrade.md 新增 Agentic 章节
+- [x] 修复 Dashboard.vue getStatusType 未使用 TS6133 基线问题
+
+### Git commit
+
+`feat(agentic): M10 Agentic RAG 升级 — LangGraph 多Agent引擎 + 前端可视化 + 评测专项维度 + 文档`

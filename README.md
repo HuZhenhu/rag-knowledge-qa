@@ -12,6 +12,14 @@
 - **多轮对话** — SessionManager 管理会话历史，支持上下文追问
 - **引用可追溯** — 回答中标注来源（文件名 + 章节名）
 
+### Agentic RAG（RAG_ENGINE=agentic，M10 新增）
+- **Supervisor 多 Agent 编排** — 基于 LangGraph 实现规划拆解 → 工具调用 → Critic 验证纠错 → Summarizer 汇总的完整推理链路
+- **规划拆解** — Supervisor 路由 + Planner 将复杂问题拆分为子问题并制定检索计划
+- **多源工具调用** — 知识库混合检索（向量+BM25）与联网搜索（Tavily）按需选择
+- **Critic 验证纠错** — 对检索证据进行反思与质量校验，证据不足时自动重试（带 retry 上限）
+- **推理过程可视化** — 前端时间线面板展示 Agent 规划 / 工具调用 / 证据 / 反思 / 最终回答全过程
+- **评测兼容** — 同一套 evaluate.py 跑通 250 例评测集，新增规划正确率 / 工具选择合理性 / 平均反思次数 / 最终引用正确率四个专项维度
+
 ### 管理后台（Vue 3）
 - **仪表盘** — 系统概览、统计卡片、最近文档、告警状态
 - **文档管理** — 知识库文档列表、上传、删除
@@ -41,7 +49,7 @@
 
 | 组件 | 技术 |
 |------|------|
-| **LLM应用框架** | **LangChain**（业界主流） |
+| **LLM应用框架** | **LangChain**（业界主流）+ **LangGraph**（Agentic 多 Agent 编排） |
 | LLM | DeepSeek / OpenAI / Anthropic Claude（可切换） |
 | Embedding | sentence-transformers / OpenAI Embeddings（可切换） |
 | 向量数据库 | ChromaDB（langchain-chroma 集成） |
@@ -115,6 +123,16 @@ rag-knowledge-qa/
 │   │   ├── validation.py  # 安全验证（注入防护、文件检查）
 │   │   └── schemas.py     # Pydantic 数据模型
 │   ├── core/              # RAG 核心逻辑
+│   │   ├── agentic/       # Agentic RAG 引擎（LangGraph Supervisor 多 Agent，M10）
+│   │   │   ├── __init__.py # AgenticEngine 入口（query/query_stream）
+│   │   │   ├── state.py    # AgentState（trace/tool_calls/retry_count/citations）
+│   │   │   ├── graph.py    # LangGraph 图编排（start→supervisor→planner→retriever→critic→summarizer）
+│   │   │   ├── supervisor_agent.py # 路由决策
+│   │   │   ├── planner_agent.py    # 问题拆解与规划
+│   │   │   ├── retriever_agent.py  # 知识库/联网工具调用
+│   │   │   ├── critic_agent.py     # 反思校验与重试决策
+│   │   │   ├── summarizer_agent.py # 汇总生成
+│   │   │   └── web_agent.py        # Tavily 联网搜索
 │   │   ├── loaders/       # 文档加载器（md/txt/docx/pdf/图片）
 │   │   ├── splitter.py    # 智能切片
 │   │   ├── embedder.py    # Embedding
@@ -161,7 +179,10 @@ rag-knowledge-qa/
 
 | 配置项 | 默认值 | 说明 |
 |--------|--------|------|
-| RAG_ENGINE | langchain | RAG引擎：langchain / original |
+| RAG_ENGINE | langchain | RAG引擎：langchain / original / agentic |
+| AGENT_WEB_SEARCH | true | Agentic 引擎是否启用联网搜索 |
+| TAVILY_API_KEY | - | Agentic 联网搜索密钥（https://tavily.com） |
+| AGENT_CRITIC_MAX_RETRY | 3 | Agentic Critic 最大反思重试次数 |
 | LLM_PROVIDER | deepseek | LLM提供商：deepseek/openai/anthropic |
 | OPENAI_API_KEY | - | OpenAI兼容API密钥（DeepSeek等） |
 | OPENAI_BASE_URL | https://api.deepseek.com | API地址 |
@@ -217,6 +238,7 @@ curl -X POST http://localhost:8080/api/v1/documents/upload \
 
 ## 更新日志
 
+- [v1.3.0 — Agentic RAG（M10 升级）](docs/superpowers/specs/2026-08-23-agentic-rag-design.md)
 - [v1.2.0 — LangChain框架集成](docs/v1.2.0-changelog.md)
 - [v1.1.0 — 管理后台 + 安全功能](docs/v1.1.0-changelog.md)
 
