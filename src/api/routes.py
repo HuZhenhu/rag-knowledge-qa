@@ -39,6 +39,10 @@ if RAG_ENGINE == "langchain":
     from src.core.langchain_rag import LangChainRAGEngine
     rag_engine = LangChainRAGEngine()
     vector_store = rag_engine.vectorstore  # LangChain Chroma实例
+elif RAG_ENGINE == "agentic":
+    from src.core.agentic import AgenticEngine
+    rag_engine = AgenticEngine()
+    vector_store = rag_engine.vector_store
 else:
     from src.core.rag_engine import RAGEngine
     from src.core.vector_store import VectorStore

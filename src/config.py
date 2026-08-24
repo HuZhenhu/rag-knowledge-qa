@@ -35,15 +35,30 @@ DEEPSEEK_MODEL = OPENAI_MODEL
 EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "local")  # local 或 api
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "models/BAAI/bge-m3")
 
-# RAG引擎选择：langchain / original
+# RAG引擎选择：langchain / original / agentic
 RAG_ENGINE = os.getenv("RAG_ENGINE", "langchain")
+
+# ===== Agentic RAG 配置（RAG_ENGINE=agentic 时生效）=====
+AGENT_MAX_RETRY = int(os.getenv("AGENT_MAX_RETRY", "3"))  # Critic 反思重试上限
+AGENT_TIMEOUT = int(os.getenv("AGENT_TIMEOUT", "60"))  # 全局执行超时（秒）
+AGENT_WEB_SEARCH = os.getenv("AGENT_WEB_SEARCH", "false").lower() == "true"  # 是否启用联网搜索
+AGENT_WEB_SEARCH_PROVIDER = os.getenv("AGENT_WEB_SEARCH_PROVIDER", "bocha")  # 联网服务商（bocha/tavily）
+AGENT_WEB_SEARCH_API_KEY = os.getenv("AGENT_WEB_SEARCH_API_KEY", "")  # 联网服务 API Key
+AGENT_MODEL = os.getenv("AGENT_MODEL", OPENAI_MODEL)  # Agent 节点使用的大模型（默认与 RAG 一致）
+AGENT_RETRIEVAL_TOP_K = int(os.getenv("AGENT_RETRIEVAL_TOP_K", "5"))  # Agent 单次检索 top_k
 
 # 切片配置
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "800"))
 CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "100"))
 
+# 父子切片配置（P1-2，默认关闭；开启后需重建向量库索引）
+USE_PARENT_CHILD = os.getenv("USE_PARENT_CHILD", "false").lower() == "true"
+CHILD_TOKEN_SIZE = int(os.getenv("CHILD_TOKEN_SIZE", "150"))   # child 检索单元：100~200 tokens
+PARENT_TOKEN_SIZE = int(os.getenv("PARENT_TOKEN_SIZE", "700"))  # parent 生成单元：600~800 tokens
+
 # 检索配置
 RETRIEVAL_TOP_K = int(os.getenv("RETRIEVAL_TOP_K", "10"))
+RETRIEVAL_CANDIDATE_K = int(os.getenv("RETRIEVAL_CANDIDATE_K", "30"))  # 混合检索大召回候选数（Top-30 再精排）
 RRF_K = int(os.getenv("RRF_K", "60"))  # RRF参数
 USE_HYBRID_RETRIEVAL = os.getenv("USE_HYBRID_RETRIEVAL", "true").lower() == "true"
 USE_QUERY_EXPANSION = os.getenv("USE_QUERY_EXPANSION", "false").lower() == "true"

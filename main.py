@@ -100,6 +100,10 @@ if RAG_ENGINE == "langchain":
     from src.core.langchain_rag import LangChainRAGEngine
     rag_engine = LangChainRAGEngine()
     logger.info("使用 LangChain RAG 引擎")
+elif RAG_ENGINE == "agentic":
+    from src.core.agentic import AgenticEngine
+    rag_engine = AgenticEngine()
+    logger.info("使用 Agentic RAG 引擎")
 else:
     from src.core.rag_engine import RAGEngine
     rag_engine = RAGEngine(
@@ -176,6 +180,26 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str = "default"):
 
                     # 记录AI回复到会话
                     session_manager.add_message(session_id, "assistant", full_answer)
+
+                    # Agent 推理过程事件推送（Agentic RAG 前端可视化，M5，设计文档 §4.1）
+                    # 仅 agentic 引擎产生 _last_agent_trace；普通引擎无该属性，不推送任何 agent 事件
+                    agent_trace = getattr(rag_engine, "_last_agent_trace", None) or []
+                    for ev in agent_trace:
+                        ev_type = ev.get("event", "")
+                        if ev_type not in (
+                            "agent_plan",
+                            "agent_tool_call",
+                            "agent_evidence",
+                            "agent_reflect",
+                            "agent_final",
+                            "user_question",
+                        ):
+                            continue
+                        await websocket.send_json({
+                            "type": ev_type,
+                            "message_id": message_id,
+                            "data": ev,
+                        })
 
                     # 发送来源
                     source_list = []
