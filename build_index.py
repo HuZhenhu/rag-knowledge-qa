@@ -19,6 +19,7 @@ from src.core.loaders import LOADERS, get_loader_for_file
 from src.core.splitter import SmartSplitter
 from src.core.embedder import Embedder
 from src.core.vector_store import VectorStore
+from src.core.acl import enrich_acl_metadata
 
 
 def _load_single_file(file_path: Path, splitter: SmartSplitter) -> list:
@@ -136,7 +137,8 @@ def build_index_full():
         chunk_id = hashlib.md5(f"{source}_{i}".encode()).hexdigest()
         ids.append(chunk_id)
         documents.append(chunk.content)
-        metadatas.append(_sanitize_metadata(chunk.metadata))
+        # P0-1 chunk 级 ACL 元数据注入（doc_id/owner_user_id/allowed_roles/kb_id）
+        metadatas.append(_sanitize_metadata(enrich_acl_metadata(chunk.metadata)))
 
     # 清空旧数据
     try:

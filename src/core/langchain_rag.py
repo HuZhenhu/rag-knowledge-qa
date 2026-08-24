@@ -36,8 +36,10 @@ from src.config import (
     USE_PARENT_CHILD,
     CHILD_TOKEN_SIZE,
     PARENT_TOKEN_SIZE,
+    ACL_ENFORCE,
 )
 from src.core.tracer import Trace
+from src.core.acl import enrich_acl_metadata, assert_sources_allowed, allowed_doc_ids_from_filter
 
 logger = logging.getLogger(__name__)
 
@@ -73,6 +75,7 @@ class LangChainRAGEngine:
         use_hyde: bool = USE_HYDE,
         candidate_k: int = RETRIEVAL_CANDIDATE_K,
         use_parent_child: bool = USE_PARENT_CHILD,
+        acl_enforce: bool = ACL_ENFORCE,
     ):
         self.top_k = top_k
         self.use_hybrid = use_hybrid
@@ -84,8 +87,10 @@ class LangChainRAGEngine:
         self.use_hyde = use_hyde
         self.candidate_k = candidate_k
         self.use_parent_child = use_parent_child
+        self.acl_enforce = acl_enforce  # P0-1: 检索链路 ACL 开关（默认关）
         self._reranker = None
         self._query_understander = None
+        self._bm25_metadatas = None  # BM25 索引对应的 chunk 元数据（ACL 过滤用）
 
         # 初始化LLM
         self.llm = ChatOpenAI(
@@ -133,8 +138,11 @@ class LangChainRAGEngine:
             all_docs = self.vectorstore.get()
             if all_docs and all_docs.get("documents"):
                 texts = all_docs["documents"]
+                metas = all_docs.get("metadatas") or [{}] * len(texts)
+                self._bm25_metadatas = list(metas)
                 self._bm25_retriever = BM25Retriever.from_texts(
                     texts,
+                    metadatas=self._bm25_metadatas,
                     k=self.candidate_k,
                 )
                 logger.info("BM25索引初始化完成，共 %d 个文档，候选数 k=%d", len(texts), self.candidate_k)
@@ -178,21 +186,30 @@ class LangChainRAGEngine:
         )
         self._retriever = self.vector_retriever
 
-    def _hybrid_retrieve(self, query: str, candidate_k: int | None = None) -> list[tuple[object, float]]:
+    def _hybrid_retrieve(self, query: str, candidate_k: int | None = None, acl_filter: dict | None = None) -> list[tuple[object, float]]:
         """混合检索：向量 + BM25 加权 RRF 融合，返回 [(doc, rrf_score)] 按分数降序
 
         RRF: score = w_v/(k+rank_v) + w_b/(k+rank_b)，k=RRF_K 默认 60。
         向量用完整 query，BM25 用精炼关键词，双路各自召回 candidate_k 再融合。
+        P0-1: acl_filter 非空时，向量路走 Chroma where（检索前过滤），BM25 路按 doc_id 二次过滤。
         """
         k = candidate_k or self.candidate_k
-        # 向量路
-        vector_raw = self.vectorstore.similarity_search_with_score(query, k=k)
+        # 向量路（P0-1: 检索前过滤）
+        vector_raw = self.vectorstore.similarity_search_with_score(query, k=k, filter=acl_filter)
         nv = len(vector_raw)
-        # BM25 路（按 BM25 得分降序）
+        # BM25 路（按 BM25 得分降序；P0-1: 按 doc_id 过滤越权 chunk）
         bm25_docs = []
         if self.use_hybrid and self._bm25_retriever is not None:
             try:
-                bm25_docs = self._bm25_retriever.invoke(query)
+                raw_bm25 = self._bm25_retriever.invoke(query)
+                if acl_filter:
+                    allowed = allowed_doc_ids_from_filter(acl_filter)
+                    if allowed is not None:
+                        raw_bm25 = [
+                            d for d in raw_bm25
+                            if (d.metadata or {}).get("doc_id") in allowed
+                        ]
+                bm25_docs = raw_bm25
             except Exception as e:
                 logger.warning("BM25检索失败: %s", e)
                 bm25_docs = []
@@ -216,11 +233,12 @@ class LangChainRAGEngine:
         fused.sort(key=lambda x: x[1], reverse=True)
         return fused
 
-    def _retrieve_multi(self, question: str, candidate_k: int | None = None) -> list[tuple[object, float]]:
+    def _retrieve_multi(self, question: str, candidate_k: int | None = None, acl_filter: dict | None = None) -> list[tuple[object, float]]:
         """多路检索：多子查询(扩展) + HyDE 双路融合，返回候选池 [(doc, score)] 按分数降序
 
         所有路的结果合并到一个 pool，取最高分去重；返回 Top-candidate_k。
         HyDE 路分数用 RRF 量纲(1/(RRF_K+rank))，与 query 路 RRF 分数同量纲可比较。
+        P0-1: acl_filter 透传给每条检索路。
         """
         k = candidate_k or self.candidate_k
         queries = [question]
@@ -235,7 +253,7 @@ class LangChainRAGEngine:
         pool: dict[str, tuple[object, float]] = {}
         for q in queries:
             try:
-                for doc, score in self._hybrid_retrieve(q, k):
+                for doc, score in self._hybrid_retrieve(q, k, acl_filter=acl_filter):
                     key = doc.page_content[:200]
                     if key not in pool or score > pool[key][1]:
                         pool[key] = (doc, score)
@@ -247,7 +265,9 @@ class LangChainRAGEngine:
             try:
                 hyde_text = self._get_query_understander().generate_hyde(question)
                 hyde_emb = self.embeddings.embed_query(hyde_text)
-                hyde_raw = self.vectorstore.similarity_search_by_vector_with_relevance_scores(hyde_emb, k=k)
+                hyde_raw = self.vectorstore.similarity_search_by_vector_with_relevance_scores(
+                    hyde_emb, k=k, filter=acl_filter,
+                )
                 for rank, (doc, _dist) in enumerate(hyde_raw):
                     key = doc.page_content[:200]
                     hyde_score = 1.0 / (RRF_K + rank + 1)
@@ -336,6 +356,7 @@ class LangChainRAGEngine:
         history: list[dict] | None = None,
         summary: str = "",
         user_id: str = "",
+        acl_filter: dict | None = None,
     ) -> LangChainRAGResponse:
         """执行RAG问答
 
@@ -362,10 +383,10 @@ class LangChainRAGEngine:
                 except Exception as e:
                     logger.warning("查询纠错失败: %s", e)
 
-            # 1. 混合检索（大召回 Top-candidate_k）
+            # 1. 混合检索（大召回 Top-candidate_k；P0-1: 透传 acl_filter 检索前过滤）
             retrieval_start = time.time()
             top_k = top_k or self.top_k
-            scored_docs = self._retrieve_multi(effective_q, self.candidate_k)
+            scored_docs = self._retrieve_multi(effective_q, self.candidate_k, acl_filter=acl_filter)
             timing["retrieval_ms"] = round((time.time() - retrieval_start) * 1000, 2)
 
             # 2. 构建 sources + 重排精排 → Top-K
@@ -374,6 +395,14 @@ class LangChainRAGEngine:
 
             # 2.5 父子切片回取：child → parent（P1-2）
             sources = self._resolve_parent(sources)
+
+            # 2.6 P0-1 运行时归属断言（防检索前过滤被绕过/重排引入越权项）
+            if self.acl_enforce and acl_filter:
+                allowed_ids = allowed_doc_ids_from_filter(acl_filter)
+                if allowed_ids is not None:
+                    sources, removed = assert_sources_allowed(sources, allowed_ids)
+                    if removed:
+                        logger.warning("ACL运行时断言：剔除 %d 条越权来源", removed)
 
             # 3. 生成回答（用与 sources 一致的文档，绕过 chain 内部重复检索）
             generation_start = time.time()
@@ -416,7 +445,8 @@ class LangChainRAGEngine:
     def query_stream(self, question: str, top_k: int | None = None,
                      history: list[dict] | None = None,
                      summary: str = "",
-                     user_id: str = ""):
+                     user_id: str = "",
+                     acl_filter: dict | None = None):
         """流式RAG问答
 
         Yields:
@@ -441,7 +471,7 @@ class LangChainRAGEngine:
             trace.start_span("retrieval")
             retrieval_start = time.time()
             top_k = top_k or self.top_k
-            scored_docs = self._retrieve_multi(effective_q, self.candidate_k)
+            scored_docs = self._retrieve_multi(effective_q, self.candidate_k, acl_filter=acl_filter)
             timing["retrieval_ms"] = round((time.time() - retrieval_start) * 1000, 2)
             trace.end_span({"docs_count": len(scored_docs)})
 
@@ -451,6 +481,14 @@ class LangChainRAGEngine:
 
             # 2.5 父子切片回取：child → parent（P1-2）
             sources = self._resolve_parent(sources)
+
+            # 2.6 P0-1 运行时归属断言（防检索前过滤被绕过）
+            if self.acl_enforce and acl_filter:
+                allowed_ids = allowed_doc_ids_from_filter(acl_filter)
+                if allowed_ids is not None:
+                    sources, removed = assert_sources_allowed(sources, allowed_ids)
+                    if removed:
+                        logger.warning("ACL运行时断言：剔除 %d 条越权来源", removed)
 
             # 3. 流式生成（注入 context，避免 chain 内部重复检索）
             trace.start_span("generation")
@@ -495,6 +533,10 @@ class LangChainRAGEngine:
             texts: 文档文本列表
             metadatas: 元数据列表（可选）
         """
+        # P0-1 chunk 级 ACL 元数据注入（doc_id 等，供检索前过滤/断言）
+        if metadatas:
+            metadatas = [enrich_acl_metadata(m) for m in metadatas]
+
         # 父子切片模式（P1-2）：child 入库（检索单元），metadata 携带 parent_content 供回取
         if self.use_parent_child:
             self._add_documents_parent_child(texts, metadatas)
@@ -532,6 +574,10 @@ class LangChainRAGEngine:
 
     def _add_documents_parent_child(self, texts: list[str], metadatas: list[dict] | None = None):
         """父子切片入库：child 进向量库，parent 全文存于 child 的 metadata"""
+        # P0-1 chunk 级 ACL 元数据注入
+        if metadatas:
+            metadatas = [enrich_acl_metadata(m) for m in metadatas]
+
         from src.core.parent_child_splitter import ParentChildSplitter
         splitter = ParentChildSplitter(
             child_token_size=CHILD_TOKEN_SIZE,

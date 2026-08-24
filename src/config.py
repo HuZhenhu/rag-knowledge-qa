@@ -156,4 +156,13 @@ MILVUS_INDEX_NLIST = int(os.getenv("MILVUS_INDEX_NLIST", "128"))
 MILVUS_INDEX_NPROBE = int(os.getenv("MILVUS_INDEX_NPROBE", "10"))
 MILVUS_QUANTIZER = os.getenv("MILVUS_QUANTIZER", "")  # 空 / SCALAR（SQ8风格）/ QUANTIZE_BIT（2.4+）
 
+# ===== P0 安全合规配置 =====
+# P0-1 检索链路 ACL/租户隔离（默认关，灰度开启）
+# 开启后需重建索引（chunk 元数据需携带 doc_id/allowed_roles 等 ACL 字段），
+# 并在数据库 document_permissions 中配置各用户可读文档，否则无权限记录的用户检索结果为空。
+ACL_ENFORCE = os.getenv("ACL_ENFORCE", "false").lower() == "true"
+ACL_ADMIN_ROLES = tuple(
+    r.strip() for r in os.getenv("ACL_ADMIN_ROLES", "admin").split(",") if r.strip()
+)  # 命中这些角色的用户免 ACL 过滤（默认 admin）
+
 

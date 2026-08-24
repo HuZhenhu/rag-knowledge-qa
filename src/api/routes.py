@@ -25,8 +25,10 @@ from src.api.jwt_auth import (
 from src.storage.database import (
     create_user, get_user_by_username, update_user_login,
     create_knowledge_base, get_knowledge_base, list_knowledge_bases,
+    get_user_readable_doc_ids,
 )
-from src.config import USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, ALLOW_REGISTRATION, USE_CONVERSATION_SUMMARY, RAG_ENGINE
+from src.config import USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, ALLOW_REGISTRATION, USE_CONVERSATION_SUMMARY, RAG_ENGINE, ACL_ENFORCE, ACL_ADMIN_ROLES
+from src.core.acl import build_acl_filter
 from src.core.session import SessionManager
 from src.core.metrics import metrics
 from src.core.tracer import get_trace, list_recent_traces
@@ -204,8 +206,14 @@ async def query(
     if USE_CONVERSATION_SUMMARY:
         summary = session_manager.get_summary(session_id)
 
+    # P0-1 检索前过滤：构造 acl_filter（ACL_ENFORCE 开启时生效，admin 角色豁免不过滤）
+    acl_filter = None
+    if ACL_ENFORCE:
+        readable_ids = get_user_readable_doc_ids(user["id"])
+        acl_filter = build_acl_filter(readable_ids, role=user.get("role"), admin_roles=ACL_ADMIN_ROLES)
+
     response = rag_engine.query(req.question, top_k=req.top_k, history=history,
-                                  summary=summary, user_id=user["id"])
+                                  summary=summary, user_id=user["id"], acl_filter=acl_filter)
     session_manager.add_message(session_id, "assistant", response.answer)
 
     sources = [
