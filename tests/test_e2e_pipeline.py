@@ -18,6 +18,14 @@ for _mod_name in _MOCK_MODULES:
 
 from src.core.rag_engine import RAGEngine  # noqa: E402
 
+# 项目模块导入完成后，恢复被 mock 的 rank_bm25 真实模块：
+# retriever 在运行时延迟 `from rank_bm25 import BM25Okapi`，若不恢复会
+# 污染同进程后续测试（test_retriever::test_bm25_search 会拿到 Mock 报错）。
+if _original_modules.get("rank_bm25") is not None:
+    sys.modules["rank_bm25"] = _original_modules["rank_bm25"]
+else:
+    sys.modules.pop("rank_bm25", None)
+
 
 def _patch_engine_deps():
     """返回一组 patcher，用于 mock RAGEngine 的所有外部依赖。"""

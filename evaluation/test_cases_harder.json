@@ -1,0 +1,799 @@
+[
+  {
+    "id": "h001",
+    "question": "MCP 服务器可以通过哪三种能力暴露给 Claude？其中哪一种最适合把天气查询这类外部 API 包装成可调用函数？",
+    "expected_answer": "MCP 服务器可以暴露 Tools（可调用函数，最常用）、Resources（可读取的数据源）、Prompts（预定义的提示模板）三种能力。其中 Tools 最适合包装天气查询这类外部 API，因为天气查询就是一个可调用函数。",
+    "expected_keywords": [
+      "Tools",
+      "Resources",
+      "Prompts",
+      "函数"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "multi_hop",
+    "domain": "ai_tech",
+    "source_chunk": "MCP 服务器可以暴露三种能力：\nTools** — 可调用的函数（最常用）\nResources** — 可读取的数据源\nPrompts** — 预定义的提示模板"
+  },
+  {
+    "id": "h002",
+    "question": "Hermes 和 OpenClaw 在定位上有什么区别？为什么这种定位差异导致 Hermes 更难被开发者理解？",
+    "expected_answer": "OpenClaw 定位非常清楚——编码执行 Agent；Hermes 定位更复杂——总指挥、编排调度、质量审查。Hermes 概念更重、理解门槛更高，所以开发者更难理解。",
+    "expected_keywords": [
+      "OpenClaw",
+      "编码执行",
+      "Hermes",
+      "总指挥",
+      "编排"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "multi_hop",
+    "domain": "ai_tech",
+    "source_chunk": "原因2：定位清晰度不同\nOpenClaw**：定位非常清楚——编码执行Agent，写代码、跑测试、调Bug。开发者一看就懂\"哦，这是帮我写代码的\"\nHermes**：定位更复杂——总指挥、编排调度、质量审查。概念上比OpenClaw\"重\"，理解门槛更高"
+  },
+  {
+    "id": "h003",
+    "question": "RAG 的完整流程是什么？其中哪个环节被认为是最影响业务效果的部分？",
+    "expected_answer": "RAG 完整流程：文档加载 → 文本分割 → 向量化（Embedding）→ 检索 → 召回后排序 → 生成答案。其中检索质量是业务效果的瓶颈，需要重点优化。",
+    "expected_keywords": [
+      "文档加载",
+      "文本分割",
+      "向量化",
+      "检索",
+      "召回后排序",
+      "生成答案"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "multi_hop",
+    "domain": "ai_tech",
+    "source_chunk": "RAG（检索增强生成）— 核心技能\n完整流程：文档加载 → 文本分割 → 向量化（Embedding）→ 检索 → 召回后排序 → 生成答案\n重点：优化检索质量（业务效果的瓶颈）"
+  },
+  {
+    "id": "h004",
+    "question": "要开发一个 MCP 服务器，TypeScript 和 Python 两种方案分别需要先安装什么依赖？",
+    "expected_answer": "TypeScript 方案需要安装 @modelcontextprotocol/sdk 和 zod；Python 方案需要 pip install mcp（使用 FastMCP）。",
+    "expected_keywords": [
+      "@modelcontextprotocol/sdk",
+      "zod",
+      "pip install mcp",
+      "FastMCP"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "multi_hop",
+    "domain": "ai_tech",
+    "source_chunk": "# MCP 与 API 开发知识总结 ## 一、MCP (Model Context Protocol) 是什么 MCP 是一个插件系统，让 Claude 能调用外部服务的能力。 **工作流程：** Claude Code ←—stdio/JSON-RPC—→ MCP Server ←—→ 外部服务/API/数据库 MCP 服务器可以暴露三种能力： - **Tools** — 可调用的函数（最常用） - **Resources** — 可读取的数据源 - **Prompts** — 预定义的提示模板 --- ## 二、MCP 配置文件结构 { \"mcpServers\": { \"server-name\": { \"command\": \"npx\", // 启动命令（npx、node、python 都行） \"args\": [\"-y\", \"包名\"], // 命令参数 \"env\": { // 环境变量（传密钥等） \"API_KEY\": \"your-secret-key\" } } } } 配置文件位置：`~/.claude/settings.json` 或项目级 `.claude/settings."
+  },
+  {
+    "id": "h005",
+    "question": "Harness Engineering 的核心铁律是什么？它把 LLM 视为什么样的计算单元？",
+    "expected_answer": "核心铁律是状态分离原则：LLM 必须视为无状态计算单元，所有跨轮次状态全部存于 Harness 管控的外部引擎。",
+    "expected_keywords": [
+      "状态分离",
+      "无状态计算单元",
+      "外部引擎"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "multi_hop",
+    "domain": "ai_tech",
+    "source_chunk": "LLM 的非确定性** — 必须为每一次\"不确定\"设计降级路径\n有限上下文窗口** — 必须做状态分离+上下文压缩\n外部世界的无限状态** — 必须提供沙箱/API网关等工具"
+  },
+  {
+    "id": "h006",
+    "question": "学习路线图中第二阶段和第三阶段的核心目标分别是什么？",
+    "expected_answer": "第二阶段（2-3个月）目标是掌握 RAG 和 Agent，能动手做出智能应用；第三阶段（持续进行）目标是让 AI 系统稳定、可靠，达到生产级标准。",
+    "expected_keywords": [
+      "第二阶段",
+      "RAG",
+      "Agent",
+      "第三阶段",
+      "生产级标准"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "multi_hop",
+    "domain": "ai_tech",
+    "source_chunk": "第三阶段：工程落地与系统迭代（持续进行）"
+  },
+  {
+    "id": "h007",
+    "question": "OpenAI 的实践案例中，3 名工程师通过什么方式 5 个月交付了 100 万行代码？",
+    "expected_answer": "3 名工程师 + Codex 智能体，5 个月交付 100 万行代码，没有一行是人工编写的，这是 Harness Engineering 的实践案例。",
+    "expected_keywords": [
+      "Codex",
+      "智能体",
+      "100万行代码",
+      "5个月"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "multi_hop",
+    "domain": "ai_tech",
+    "source_chunk": "OpenAI 实践案例\n名工程师 + Codex 智能体，5个月交付100万行代码，没有一行是人工编写的\n来源：腾讯云开发者社区《Harness Engineering：AI原生软件开发的未来范式》"
+  },
+  {
+    "id": "h008",
+    "question": "Harness 的 12 大模块中，状态管理和记忆系统分别在你的项目里对应什么实现？",
+    "expected_answer": "状态管理对应 8 状态+12 事件+15 规则的状态机；记忆系统对应 Shared-Brain + Hindsight 的短期/长期记忆管理。",
+    "expected_keywords": [
+      "状态机",
+      "8状态",
+      "12事件",
+      "Shared-Brain",
+      "Hindsight",
+      "记忆"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "multi_hop",
+    "domain": "ai_tech",
+    "source_chunk": "模块 | 说明 | 你项目里对应的 |\n状态管理 | 用状态机控制Agent行为流转 | ✅ 8状态+12事件+15规则 |\n工具调用 | Function Calling的完整生命周期 | 需要补 |\n记忆系统 | 短期/长期记忆管理 | ✅ Shared-Brain+Hindsight |\n规划推理 | Agent怎么拆解任务 | 需要补 |\n安全治理 | 权限管控、敏感操作拦截 | 需要补 |\n沙箱隔离 | 代码在隔离环境运行 | 了解但不深 |\n上下文管理 | 有限Token窗口内的信息优先级 | 需要补 |\n错误处理 | 重试、降级、熔断 | ✅ LLM重试1次+超时降级 |\n可观测性 | 追踪Agent每一步的决策 | ✅ Web展示中间产出 |\n成本控制 | Token预算、API配额 | ✅ 多模型切换省成本 |\n评估体系 | 怎么知道Agent好不好 | 需要补 |\n持续优化 | 数据回流改进系统 | 需要补 |"
+  },
+  {
+    "id": "h009",
+    "question": "学习路线中，RAG 被列为第二阶段的核心技能，而微调只作为加分项，这说明什么问题？",
+    "expected_answer": "说明掌握 RAG 是 AI 应用工程师的核心要求，而微调（如 LoRA）只是加分项，优先级低于 RAG 和 Agent。",
+    "expected_keywords": [
+      "RAG",
+      "核心技能",
+      "微调",
+      "加分项",
+      "LoRA"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "multi_hop",
+    "domain": "ai_tech",
+    "source_chunk": "微调入门（加分项）\nLoRA等轻量级微调技术"
+  },
+  {
+    "id": "h010",
+    "question": "Python 异步编程 async/await 对 AI 应用有什么帮助？它解决了哪类问题？",
+    "expected_answer": "异步编程 async/await 是处理高并发 AI 请求的关键，通过并发执行解决同步串行执行导致的效率问题。",
+    "expected_keywords": [
+      "async/await",
+      "高并发",
+      "并发执行"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "multi_hop",
+    "domain": "programming",
+    "source_chunk": "核心语言 Python\nFastAPI/Flask框架，RESTful API\n异步编程：async/await（处理高并发AI请求的关键）\n环境管理：Conda/Poetry"
+  },
+  {
+    "id": "h011",
+    "question": "MCP 与 API 的关系是什么？MCP 服务器本质上做了什么事？",
+    "expected_answer": "MCP 服务器做的事情就是把 API 包装成 Claude 能调用的工具，Claude 调用 MCP 服务器后，代码再调用 API，结果返回给 Claude。",
+    "expected_keywords": [
+      "把 API 包装",
+      "工具",
+      "Claude 调用"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "multi_hop",
+    "domain": "ai_tech",
+    "source_chunk": "# MCP 与 API 开发知识总结 ## 一、MCP (Model Context Protocol) 是什么 MCP 是一个插件系统，让 Claude 能调用外部服务的能力。 **工作流程：** Claude Code ←—stdio/JSON-RPC—→ MCP Server ←—→ 外部服务/API/数据库 MCP 服务器可以暴露三种能力： - **Tools** — 可调用的函数（最常用） - **Resources** — 可读取的数据源 - **Prompts** — 预定义的提示模板 --- ## 二、MCP 配置文件结构 { \"mcpServers\": { \"server-name\": { \"command\": \"npx\", // 启动命令（npx、node、python 都行） \"args\": [\"-y\", \"包名\"], // 命令参数 \"env\": { // 环境变量（传密钥等） \"API_KEY\": \"your-secret-key\" } } } } 配置文件位置：`~/.claude/settings.json` 或项目级 `.claude/settings."
+  },
+  {
+    "id": "h012",
+    "question": "AI 面试助手这个项目建议采用什么技术栈？它体现的是学习路线中的哪个策略？",
+    "expected_answer": "技术栈：FastAPI + RAG + Prompt 模板 + Docker 部署；体现的是以终为始、项目驱动的学习策略，也是面试时最好的作品。",
+    "expected_keywords": [
+      "FastAPI",
+      "RAG",
+      "Prompt",
+      "Docker",
+      "以终为始",
+      "项目驱动"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "multi_hop",
+    "domain": "ai_tech",
+    "source_chunk": "以终为始，项目驱动** — 做一个完整的【AI面试助手】\n上传简历PDF → 基于JD岗位要求 → 模拟提问\n技术栈：FastAPI + RAG + Prompt模板 + Docker部署\n也是面试时最好的作品"
+  },
+  {
+    "id": "v001",
+    "question": "帮我总结一下相关的学习内容",
+    "expected_answer": "核心是 AI 应用工程师的定位：AI 落地的最后一公里，负责把实验室模型变成用户可用的产品。",
+    "expected_keywords": [
+      "AI应用工程师",
+      "最后一公里",
+      "落地"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "vague",
+    "domain": "general",
+    "source_chunk": "# AI应用工程师学习路线图 > 来源：https://blog.51cto.com/u_39037/14584878 ## 定位 \"AI应用工程师\"本质上是AI落地的\"最后一公里\"，负责把实验室里的模型变成用户可用的产品。核心能力：在强大基座模型基础上，不依赖顶级算法团队，能独立或小团队闭环交付AI应用。 --- ## 第一阶段：基础工程能力（1-2个月） **目标**：能独立开发Web服务，能接手常规后端需求。 ### 核心语言 Python - FastAPI/Flask框架，RESTful API - 异步编程：async/await（处理高并发AI请求的关键） - 环境管理：Conda/Poetry ### 数据库与缓存 - MySQL：CRUD、索引优化 - Redis：字符串、列表、哈希等数据结构，缓存和简单消息队列 - 向量数据库：Milvus或Qdrant的原理和基础用法（RAG基础） ### 部署与容器化 - Docker：Dockerfile + Docker Compose - Linux基础：常用命令、文件权限、进程查看 ### AI辅助编程 - GitHub"
+  },
+  {
+    "id": "v002",
+    "question": "有没有什么推荐的入门方案？",
+    "expected_answer": "推荐以终为始、项目驱动：做一个完整的 AI 面试助手（FastAPI + RAG + Prompt 模板 + Docker 部署）。",
+    "expected_keywords": [
+      "AI面试助手",
+      "以终为始",
+      "项目驱动"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "vague",
+    "domain": "general",
+    "source_chunk": "# AI应用工程师学习路线图 > 来源：https://blog.51cto.com/u_39037/14584878 ## 定位 \"AI应用工程师\"本质上是AI落地的\"最后一公里\"，负责把实验室里的模型变成用户可用的产品。核心能力：在强大基座模型基础上，不依赖顶级算法团队，能独立或小团队闭环交付AI应用。 --- ## 第一阶段：基础工程能力（1-2个月） **目标**：能独立开发Web服务，能接手常规后端需求。 ### 核心语言 Python - FastAPI/Flask框架，RESTful API - 异步编程：async/await（处理高并发AI请求的关键） - 环境管理：Conda/Poetry ### 数据库与缓存 - MySQL：CRUD、索引优化 - Redis：字符串、列表、哈希等数据结构，缓存和简单消息队列 - 向量数据库：Milvus或Qdrant的原理和基础用法（RAG基础） ### 部署与容器化 - Docker：Dockerfile + Docker Compose - Linux基础：常用命令、文件权限、进程查看 ### AI辅助编程 - GitHub"
+  },
+  {
+    "id": "v003",
+    "question": "怎么部署和上线？",
+    "expected_answer": "部署与容器化：使用 Docker（Dockerfile + Docker Compose），并掌握 Linux 基础命令、文件权限、进程查看。",
+    "expected_keywords": [
+      "Docker",
+      "Dockerfile",
+      "Compose",
+      "Linux"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "vague",
+    "domain": "general",
+    "source_chunk": "以终为始，项目驱动** — 做一个完整的【AI面试助手】\n上传简历PDF → 基于JD岗位要求 → 模拟提问\n技术栈：FastAPI + RAG + Prompt模板 + Docker部署\n也是面试时最好的作品"
+  },
+  {
+    "id": "v004",
+    "question": "说说跟 Agent 相关的东西",
+    "expected_answer": "Agent = LLM + Harness，Harness 是除了大模型本身之外让 Agent 能真正干活的一切基础设施。",
+    "expected_keywords": [
+      "Agent",
+      "LLM",
+      "Harness"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md"
+    ],
+    "category": "vague",
+    "domain": "general",
+    "source_chunk": "一句话\nAgent = LLM + Harness**\nHarness 是除了大模型本身之外，让 Agent 能真正干活的一切基础设施。"
+  },
+  {
+    "id": "v005",
+    "question": "我该学点什么？",
+    "expected_answer": "建议按三阶段学习：基础工程能力（Python、数据库、部署）、AI 应用核心开发（RAG、Agent）、工程落地与系统迭代。",
+    "expected_keywords": [
+      "基础工程",
+      "RAG",
+      "Agent",
+      "工程落地"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "vague",
+    "domain": "general",
+    "source_chunk": "# AI应用工程师学习路线图 > 来源：https://blog.51cto.com/u_39037/14584878 ## 定位 \"AI应用工程师\"本质上是AI落地的\"最后一公里\"，负责把实验室里的模型变成用户可用的产品。核心能力：在强大基座模型基础上，不依赖顶级算法团队，能独立或小团队闭环交付AI应用。 --- ## 第一阶段：基础工程能力（1-2个月） **目标**：能独立开发Web服务，能接手常规后端需求。 ### 核心语言 Python - FastAPI/Flask框架，RESTful API - 异步编程：async/await（处理高并发AI请求的关键） - 环境管理：Conda/Poetry ### 数据库与缓存 - MySQL：CRUD、索引优化 - Redis：字符串、列表、哈希等数据结构，缓存和简单消息队列 - 向量数据库：Milvus或Qdrant的原理和基础用法（RAG基础） ### 部署与容器化 - Docker：Dockerfile + Docker Compose - Linux基础：常用命令、文件权限、进程查看 ### AI辅助编程 - GitHub"
+  },
+  {
+    "id": "v006",
+    "question": "这个工具到底行不行？",
+    "expected_answer": "没有绝对的好坏，只有适不适合。受欢迎不等于适合，要客观分析原因后按场景选工具。",
+    "expected_keywords": [
+      "受欢迎",
+      "适合",
+      "场景选工具"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "vague",
+    "domain": "general",
+    "source_chunk": "\"我两个都用。我的多Agent流水线是 Hermes + Claude Code + OpenClaw 一起搭的。\n选择 Hermes 当总指挥，是因为它的记忆机制更适合做判断型任务——它记得住跨会话的上下文，有技能固化能力，能不断积累经验。\n选择 OpenClaw 当执行层，是因为它的沙箱和编码能力更强。\n我的原则是：**不因为一个工具受欢迎就全用他，也不因为一个工具小众就不用他。看场景选工具，不是看名气选工具。**\""
+  },
+  {
+    "id": "d001",
+    "question": "对比 RAG 和 Fine-tuning 两种方法的优缺点。",
+    "expected_answer": "RAG 是第二阶段核心技能，通过检索增强生成解决知识截止和幻觉问题；Fine-tuning（如 LoRA）是加分项，属轻量级微调技术。",
+    "expected_keywords": [
+      "RAG",
+      "检索增强生成",
+      "Fine-tuning",
+      "LoRA"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech",
+    "source_chunk": "微调入门（加分项）\nLoRA等轻量级微调技术"
+  },
+  {
+    "id": "d002",
+    "question": "MCP 和传统 REST API 有什么区别？各适合什么场景？",
+    "expected_answer": "REST API 是通用的 HTTP 接口；MCP 是插件系统，把 API 包装成 Claude 能调用的工具。MCP 适合让大模型直接调用外部服务。",
+    "expected_keywords": [
+      "REST API",
+      "MCP",
+      "插件系统",
+      "工具"
+    ],
+    "source_files": [
+      "MCP与API开发知识总结.md",
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech",
+    "source_chunk": "# MCP 与 API 开发知识总结 ## 一、MCP (Model Context Protocol) 是什么 MCP 是一个插件系统，让 Claude 能调用外部服务的能力。 **工作流程：** Claude Code ←—stdio/JSON-RPC—→ MCP Server ←—→ 外部服务/API/数据库 MCP 服务器可以暴露三种能力： - **Tools** — 可调用的函数（最常用） - **Resources** — 可读取的数据源 - **Prompts** — 预定义的提示模板 --- ## 二、MCP 配置文件结构 { \"mcpServers\": { \"server-name\": { \"command\": \"npx\", // 启动命令（npx、node、python 都行） \"args\": [\"-y\", \"包名\"], // 命令参数 \"env\": { // 环境变量（传密钥等） \"API_KEY\": \"your-secret-key\" } } } } 配置文件位置：`~/.claude/settings.json` 或项目级 `.claude/settings."
+  },
+  {
+    "id": "d003",
+    "question": "做一个 AI 应用工程师需要掌握哪些技能？按阶段应该怎么学？",
+    "expected_answer": "三阶段：基础工程（Python/FastAPI/MySQL/Redis/Docker）、AI 核心（RAG、Agent 开发、Prompt Engineering）、工程落地（观测评估、性能优化、沉淀资产）。",
+    "expected_keywords": [
+      "Python",
+      "FastAPI",
+      "RAG",
+      "Agent",
+      "Prompt",
+      "观测"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "AI应用工程师完整知识手册.md",
+      "Python学习路线.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech",
+    "source_chunk": "# AI应用工程师学习路线图 > 来源：https://blog.51cto.com/u_39037/14584878 ## 定位 \"AI应用工程师\"本质上是AI落地的\"最后一公里\"，负责把实验室里的模型变成用户可用的产品。核心能力：在强大基座模型基础上，不依赖顶级算法团队，能独立或小团队闭环交付AI应用。 --- ## 第一阶段：基础工程能力（1-2个月） **目标**：能独立开发Web服务，能接手常规后端需求。 ### 核心语言 Python - FastAPI/Flask框架，RESTful API - 异步编程：async/await（处理高并发AI请求的关键） - 环境管理：Conda/Poetry ### 数据库与缓存 - MySQL：CRUD、索引优化 - Redis：字符串、列表、哈希等数据结构，缓存和简单消息队列 - 向量数据库：Milvus或Qdrant的原理和基础用法（RAG基础） ### 部署与容器化 - Docker：Dockerfile + Docker Compose - Linux基础：常用命令、文件权限、进程查看 ### AI辅助编程 - GitHub"
+  },
+  {
+    "id": "d004",
+    "question": "Python 中异步编程(async/await)对 AI 应用有什么帮助？",
+    "expected_answer": "async/await 实现异步并发执行，是处理高并发 AI 请求的关键，避免同步串行导致的低效。",
+    "expected_keywords": [
+      "async/await",
+      "异步",
+      "并发",
+      "高并发"
+    ],
+    "source_files": [
+      "Python学习路线.md",
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "multi_doc",
+    "domain": "programming",
+    "source_chunk": "天数 | 内容 | 练习 |\nDay 1 | JSON、CSV处理 | 数据格式转换器 |\nDay 2 | pathlib、正则表达式 | 文件批量重命名 |\nDay 3 | Pandas基础 | 数据清洗 |\nDay 4 | Pandas进阶 | 数据分析报告 |\nDay 5 | requests、API调用 | 天气查询工具 |\nDay 6 | 并发编程 | 异步爬虫 |\nDay 7 | 复习+项目 | 数据可视化仪表板 |"
+  },
+  {
+    "id": "d005",
+    "question": "RAG 系统中如何优化检索质量？有哪些方法？",
+    "expected_answer": "RAG 完整流程中检索是瓶颈：文档加载、文本分割、向量化、检索、召回后排序、生成答案，优化重点在检索与召回排序环节。",
+    "expected_keywords": [
+      "检索",
+      "召回",
+      "排序",
+      "优化"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "AI应用工程师完整知识手册.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech",
+    "source_chunk": "RAG（检索增强生成）— 核心技能\n完整流程：文档加载 → 文本分割 → 向量化（Embedding）→ 检索 → 召回后排序 → 生成答案\n重点：优化检索质量（业务效果的瓶颈）"
+  },
+  {
+    "id": "d006",
+    "question": "为什么 Hermes 没有 OpenClaw 受欢迎？生态和定位各自如何影响？",
+    "expected_answer": "生态：OpenClaw 开源早、社区文档成熟；定位：OpenClaw 编码执行清晰，Hermes 编排调度概念更重。共同导致 Hermes 知名度低。",
+    "expected_keywords": [
+      "生态成熟度",
+      "定位",
+      "编码执行",
+      "编排"
+    ],
+    "source_files": [
+      "Hermes与OpenClaw受欢迎度对比.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech",
+    "source_chunk": "原因1：生态成熟度不同\nOpenClaw**：开源较早，有社区、有文档、有插件生态、有MCP工具桥接，开发者上手快\nHermes（莫斯）**：相对较新，社区小，文档不如OpenClaw完善"
+  },
+  {
+    "id": "d007",
+    "question": "Agent 开发和 Harness Engineering 的关系是什么？",
+    "expected_answer": "Agent = LLM + Harness。Agent 开发关注任务规划、工具调用、记忆管理；Harness 提供状态、工具、记忆等 12 大模块基础设施。",
+    "expected_keywords": [
+      "Agent",
+      "Harness",
+      "任务规划",
+      "工具调用",
+      "12大模块"
+    ],
+    "source_files": [
+      "HarnessEngineering总结.md",
+      "AI应用工程师学习路线图.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech",
+    "source_chunk": "# Harness Engineering（驾驭工程）总结 > 来源：知乎《爆火的Harness Engineering》+ 什么值得买《万字讲透Agent Harness的十二大模块》+ 腾讯云《Harness Engineering：AI原生软件开发的未来范式》 ## 一句话 **Agent = LLM + Harness** Harness 是除了大模型本身之外，让 Agent 能真正干活的一切基础设施。 ## 核心隐喻 大模型是**野马**，Harness Engineering 是**缰绳+马具+训练规范**。 ## Harness 的 12 大核心模块 | 模块 | 说明 | 你项目里对应的 | |------|------|--------------| | 1. 状态管理 | 用状态机控制Agent行为流转 | ✅ 8状态+12事件+15规则 | | 2. 工具调用 | Function Calling的完整生命周期 | 需要补 | | 3. 记忆系统 | 短期/长期记忆管理 | ✅ Shared-Brain+Hindsight | | 4. 规划推理 | Agent怎"
+  },
+  {
+    "id": "d008",
+    "question": "向量数据库在 RAG 中的作用是什么？MCP 在 Agent 中的作用又是什么？",
+    "expected_answer": "向量数据库（Milvus/Qdrant）是 RAG 基础，用于向量化存储与检索；MCP 是插件系统，让 Agent（Claude）能调用外部服务能力。",
+    "expected_keywords": [
+      "向量数据库",
+      "Milvus",
+      "RAG",
+      "MCP",
+      "外部服务"
+    ],
+    "source_files": [
+      "AI应用工程师学习路线图.md",
+      "MCP与API开发知识总结.md"
+    ],
+    "category": "multi_doc",
+    "domain": "ai_tech",
+    "source_chunk": "数据库与缓存\nMySQL：CRUD、索引优化\nRedis：字符串、列表、哈希等数据结构，缓存和简单消息队列\n向量数据库：Milvus或Qdrant的原理和基础用法（RAG基础）"
+  },
+  {
+    "id": "g0210",
+    "question": "根据刑法第二百八十八条，擅自设置、使用无线电台（站）或擅自使用无线电频率，干扰无线电通讯秩序，情节严重的，如何处罚？",
+    "expected_answer": "情节严重的，处三年以下有期徒刑、拘役或者管制，并处或者单处罚金；情节特别严重的，处三年以上七年以下有期徒刑，并处罚金。单位犯前款罪的，对单位判处罚金，并对其直接负责的主管人员和其他直接责任人员，依照前款的规定处罚。",
+    "expected_keywords": [
+      "三年以下有期徒刑",
+      "拘役或者管制",
+      "单处罚金",
+      "三年以上七年以下有期徒刑"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "high_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n第二百八十八条 【扰乱无线电管理秩序罪】违反国家规定，擅自设置、使\n用无线电台（站），或者擅自使用无线电频率，干扰无线电通讯秩序，情节严重"
+  },
+  {
+    "id": "g0121",
+    "question": "根据治安管理处罚法，在英雄烈士纪念设施保护范围内从事有损纪念英雄烈士环境和氛围的活动，不听劝阻的，会受到什么处罚？",
+    "expected_answer": "处五日以上十日以下拘留或者一千元以上三千元以下罚款；情节较重的，处十日以上十五日以下拘留，可以并处五千元以下罚款。",
+    "expected_keywords": [
+      "五日以上十日以下拘留",
+      "一千元以上三千元以下罚款",
+      "十日以上十五日以下拘留",
+      "五千元以下罚款"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "high_fact",
+    "domain": "legal",
+    "source_chunk": "情节较重的，处十日以上十五日以下拘留。\n第三十五条 有下列行为之一的，处五日以上十日以下拘留\n或者一千元以上三千元以下罚款；情节较重的，处十日以上十五\n日以下拘"
+  },
+  {
+    "id": "g0154",
+    "question": "个人健康信息表（Personal Health Information Table）中存储了哪些字段信息？",
+    "expected_answer": "个人健康信息表用于保存创建时间、用户账号、用户姓名、性别、年龄、血脂、血糖、血压、脉搏等信息，ID编号为非空自增主键。",
+    "expected_keywords": [
+      "创建时间",
+      "用户账号",
+      "用户姓名",
+      "性别",
+      "年龄",
+      "血脂",
+      "血糖",
+      "血压",
+      "脉搏"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "high_fact",
+    "domain": "thesis",
+    "source_chunk": "片 是\nsuggestion longtext 处理建议 否\nstatus varchar 8 处理状态 是\nreport_type varchar 4 举报类"
+  },
+  {
+    "id": "g0214",
+    "question": "根据《治安管理处罚法》第四十条，组织、胁迫、诱骗不满十六周岁的人进行恐怖、残忍表演的，会面临什么处罚？",
+    "expected_answer": "根据第四十条，组织、胁迫、诱骗不满十六周岁的人或者残疾人进行恐怖、残忍表演的，处十日以上十五日以下拘留，并处五百元以上一千元以下罚款；情节较轻的，处五日以上十日以下拘留，并处二百元以上五百元以下罚款。",
+    "expected_keywords": [
+      "十日以上十五日以下拘留",
+      "五百元以上一千元以下罚款",
+      "情节较轻"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "high_fact",
+    "domain": "legal",
+    "source_chunk": "第四十条　有下列行为之一的，处十日以上十五日以下拘留，并处五百元以上一千元以下罚款；情节较轻的，处五日以上十日以下拘留，并处二百元以上五百元以下罚款：\n　　（一"
+  },
+  {
+    "id": "g0208",
+    "question": "利用因职务便利获取的内幕信息以外的其他未公开信息，从事相关证券、期货交易活动，情节严重的，如何处罚？",
+    "expected_answer": "依照第一款的规定处罚。",
+    "expected_keywords": [
+      "依照第一款的规定处罚"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "high_fact",
+    "domain": "legal",
+    "source_chunk": "司等金融机构的从业人员以及有关监管部门或者行业协会的工作人\n员，利用因职务便利获取的内幕信息以外的其他未公开的信息，违反规定，从事\n与该信息相关的证券、期货交易"
+  },
+  {
+    "id": "g0428",
+    "question": "金融机构从业人员利用职务便利获取的内幕信息以外的未公开信息，从事相关交易活动，情节严重的，如何处罚？",
+    "expected_answer": "依照第一款的规定处罚。",
+    "expected_keywords": [
+      "依照第一款的规定处罚",
+      "内幕信息以外的未公开信息",
+      "情节严重"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "high_fact",
+    "domain": "legal",
+    "source_chunk": "司等金融机构的从业人员以及有关监管部门或者行业协会的工作人\n员，利用因职务便利获取的内幕信息以外的其他未公开的信息，违反规定，从事\n与该信息相关的证券、期货交易"
+  },
+  {
+    "id": "g0422",
+    "question": "基于Vue+Django的医疗大屏数据可视化系统的设计与实现这篇论文发表在哪个期刊上？",
+    "expected_answer": "该论文发表在《软件》期刊上，2024年第45卷第02期，页码为89-94。",
+    "expected_keywords": [
+      "软件",
+      "2024",
+      "45(02)",
+      "89-94"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "high_fact",
+    "domain": "thesis",
+    "source_chunk": "范建国,许睿.基于Vue+Django的医疗大屏数据可视化系统的设计与实现[J].软件,2024,45(02):89-94."
+  },
+  {
+    "id": "g0432",
+    "question": "根据刑法第一百四十七条，生产假农药、假兽药、假化肥，使生产遭受重大损失的，应如何处罚？",
+    "expected_answer": "使生产遭受重大损失的，处三年以上七年以下有期徒刑，并处销售金额百分之五十以上二倍以下罚金。",
+    "expected_keywords": [
+      "三年以上七年以下有期徒刑",
+      "销售金额百分之五十以上二倍以下罚金"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "high_fact",
+    "domain": "legal",
+    "source_chunk": "品罪】生产不符合保障\n人身、财产安全的国家标准、行业标准的电器、压力容器、易燃易爆产品或者其\n他不符合保障人身、财产安全的国家标准、行业标准的产品，或者销售明知"
+  },
+  {
+    "id": "g0218",
+    "question": "公安机关及其人民警察违法行使职权，侵犯公民、法人和其他组织合法权益的，应当如何处理？",
+    "expected_answer": "公安机关及其人民警察违法行使职权，侵犯公民、法人和其他组织合法权益的，应当赔礼道歉；造成损害的，应当依法承担赔偿责任。",
+    "expected_keywords": [
+      "赔礼道歉",
+      "造成损害",
+      "依法承担赔偿责任"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "high_fact",
+    "domain": "legal",
+    "source_chunk": "的；\n　　（四）私分、侵占、挪用、故意损毁收缴、扣押的财物的；\n　　（五）违反规定使用或者不及时返还被侵害人财物的；\n　　（六）违反规定不及时退还保证金的；\n　"
+  },
+  {
+    "id": "g0219",
+    "question": "如果我对行政拘留处罚决定不服并申请了行政复议，想暂缓执行行政拘留，需要满足什么条件？",
+    "expected_answer": "被处罚人不服行政拘留处罚决定，申请行政复议、提起行政诉讼的，可以向公安机关提出暂缓执行行政拘留的申请。公安机关认为暂缓执行行政拘留不致发生社会危险的，由被处罚人或者其近亲属提出符合本法第一百零八条规定条件的担保人，或者按每日行政拘留二百元的标准交纳保证金，行政拘留的处罚决定暂缓执行。",
+    "expected_keywords": [
+      "暂缓执行行政拘留",
+      "不致发生社会危险",
+      "担保人",
+      "每日二百元保证金"
+    ],
+    "source_files": [
+      "1旧治安管理处罚法.docx"
+    ],
+    "category": "high_fact",
+    "domain": "legal",
+    "source_chunk": "　第一百零七条　被处罚人不服行政拘留处罚决定，申请行政复议、提起行政诉讼的，可以向公安机关提出暂缓执行行政拘留的申请。公安机关认为暂缓执行行政拘留不致发生社会危"
+  },
+  {
+    "id": "g0340",
+    "question": "根据该知识库片段，强买强卖商品、强迫他人提供服务或接受服务的，法律规定的处罚是什么？",
+    "expected_answer": "处五日以上十日以下拘留，并处三千元以上五千元以下罚款；情节较轻的，处五日以下拘留或者一千元以下罚款。",
+    "expected_keywords": [
+      "五日以上十日以下拘留",
+      "三千元以上五千元以下罚款",
+      "五日以下拘留",
+      "一千元以下罚款"
+    ],
+    "source_files": [
+      "治安管理处罚法.pdf"
+    ],
+    "category": "high_fact",
+    "domain": "legal",
+    "source_chunk": "第五十四条 强买强卖商品，强迫他人提供服务或者强迫他\n人接受服务的，处五日以上十日以下拘留，并处三千元以上五千\n元以下罚款；情节较轻的，处五日以下拘留或者一千元"
+  },
+  {
+    "id": "g0420",
+    "question": "系统在数据清洗阶段如何处理原始数据中的缺失值、异常值、重复记录和格式不统一问题？",
+    "expected_answer": "系统采用数据清洗技术对入库数据进行预处理：利用Python的Pandas和NumPy库对缺失值进行均值插补或中位数填充；通过基于标准差的异常检测算法识别并标记超出正常生理范围的异常记录；对重复数据进行去重处理；统一日期格式、数值单位等字段规范。",
+    "expected_keywords": [
+      "Pandas",
+      "NumPy",
+      "均值插补",
+      "中位数填充",
+      "标准差",
+      "异常检测",
+      "去重",
+      "统一格式"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "high_fact",
+    "domain": "thesis",
+    "source_chunk": "在获取原始数据后，原始数据往往存在缺失值、异常值、重复记录或格式不统一等问题，若不加以处理将严重影响后续数据分析的准确性。因此，本系统采用数据清洗技术对入库数据"
+  },
+  {
+    "id": "g0368",
+    "question": "在给定的知识库片段中，边（edge）的样式（style）属性包含哪些具体设置？",
+    "expected_answer": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;fontFamily=Times New Roman",
+    "expected_keywords": [
+      "orthogonalEdgeStyle",
+      "rounded=0",
+      "orthogonalLoop=1",
+      "jettySize=auto",
+      "html=1",
+      "fontSize=10",
+      "fontFamily=Times New Roman"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.pdf"
+    ],
+    "category": "high_fact",
+    "domain": "thesis",
+    "source_chunk": "216%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLo"
+  },
+  {
+    "id": "g0212",
+    "question": "生产不符合保障人身、财产安全的国家标准的电器，造成严重后果的，会如何处罚？",
+    "expected_answer": "生产不符合保障人身、财产安全的国家标准的电器，造成严重后果的，处五年以下有期徒刑，并处销售金额百分之五十以上二倍以下罚金；后果特别严重的，处五年以上有期徒刑，并处销售金额百分之五十以上二倍以下罚金。",
+    "expected_keywords": [
+      "五年以下有期徒刑",
+      "销售金额百分之五十以上二倍以下罚金",
+      "五年以上有期徒刑"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "high_fact",
+    "domain": "legal",
+    "source_chunk": "品罪】生产不符合保障\n人身、财产安全的国家标准、行业标准的电器、压力容器、易燃易爆产品或者其\n他不符合保障人身、财产安全的国家标准、行业标准的产品，或者销售明知"
+  },
+  {
+    "id": "g0095",
+    "question": "本周开发的医生工作台页面（DoctorDashboard）包含哪些内容？",
+    "expected_answer": "医生工作台展示今日概览（待随访患者数、异常指标患者数、新增记录数）、风险提醒列表、近7日风险趋势图、关键患者列表等，使用ECharts折线图和柱状图进行数据可视化呈现。",
+    "expected_keywords": [
+      "今日概览",
+      "风险提醒列表",
+      "近7日风险趋势图",
+      "ECharts折线图和柱状图"
+    ],
+    "source_files": [
+      "毕业设计学生工作记录本_胡贞虎_扩展.docx"
+    ],
+    "category": "high_fact",
+    "domain": "thesis",
+    "source_chunk": "本周开发医生工作台页面（DoctorDashboard）和智能诊断辅助页面（PatientAnalysis）。医生工作台展示今日概览（待随访患者数、异常指标患者"
+  },
+  {
+    "id": "g0202",
+    "question": "这篇关于医疗大屏数据可视化系统的论文的标题、作者、期刊和发表年份是什么？",
+    "expected_answer": "该论文标题为《基于Vue+Django的医疗大屏数据可视化系统的设计与实现》，作者是范建国和许睿，发表于《软件》期刊，2024年第45卷第02期，页码为89-94。",
+    "expected_keywords": [
+      "范建国",
+      "许睿",
+      "基于Vue+Django的医疗大屏数据可视化系统",
+      "软件",
+      "2024"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "high_fact",
+    "domain": "thesis",
+    "source_chunk": "范建国,许睿.基于Vue+Django的医疗大屏数据可视化系统的设计与实现[J].软件,2024,45(02):89-94."
+  },
+  {
+    "id": "g0205",
+    "question": "走私普通货物、物品罪中，偷逃应缴税额巨大或者有其他严重情节的，如何处罚？",
+    "expected_answer": "走私货物、物品偷逃应缴税额巨大或者有其他严重情节的，处三年以上十年以下有期徒刑，并处偷逃应缴税额一倍以上五倍以下罚金。",
+    "expected_keywords": [
+      "三年以上十年以下有期徒刑",
+      "偷逃应缴税额一倍以上五倍以下罚金"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "high_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n处五年以下有期徒刑，并处或者单处罚金；情节特别严重的，处五年以上有期徒\n刑，并处罚金。\n单位犯前两款罪的，对单位判处罚金，并对其直接负责的"
+  },
+  {
+    "id": "g0272",
+    "question": "如何获取关于Python数据分析在电商网站用户行为可视化方面的参考文献？",
+    "expected_answer": "可以查阅王芳的《基于Python的电商网站用户行为数据可视化分析方法》，发表于《电脑编程技巧与维护》2025年第12期，页码为46-48和80。",
+    "expected_keywords": [
+      "王芳",
+      "电商网站用户行为",
+      "可视化",
+      "电脑编程技巧与维护"
+    ],
+    "source_files": [
+      "11开题报告_更新版.docx"
+    ],
+    "category": "high_fact",
+    "domain": "thesis",
+    "source_chunk": "| 查阅资料、文献目录 |\n| --- |\n| 1. 王燕梅. 基于Python爬虫实现手机端数据的分析和可视化[J]. 山东电子技术, 2026(01): 8"
+  },
+  {
+    "id": "g0203",
+    "question": "测试005中，血压、血糖、体重/BMI数据趋势图的时间范围改为多少天？",
+    "expected_answer": "测试005中，把血压、血糖、体重/BMI数据趋势图的时间换成90天，趋势图展示关联90天内血压、血糖、体重/BMI数据，结果和预期的符合，测试通过。",
+    "expected_keywords": [
+      "90天",
+      "趋势图",
+      "血压、血糖、体重/BMI"
+    ],
+    "source_files": [
+      "胡贞虎-毕业论文.docx"
+    ],
+    "category": "high_fact",
+    "domain": "thesis",
+    "source_chunk": "测试005：把血压、血糖、体重/BMI数据趋势图的时间换成90天，趋势图展示关联90天内血压、血糖、体重/BMI数据，结果和预期的符合，测试通过。"
+  },
+  {
+    "id": "g0206",
+    "question": "根据刑法第一百四十四条，生产、销售有毒、有害食品罪的刑罚是如何规定的？",
+    "expected_answer": "在生产、销售的食品中掺入有毒、有害的非食品原料的，或者销售明知掺有有毒、有害的非食品原料的食品的，处五年以下有期徒刑，并处罚金；对人体健康造成严重危害或者有其他严重情节的，处五年以上十年以下有期徒刑，并处罚金；致人死亡或者有其他特别严重情节的，依照本法第一百四十一条的规定处罚。",
+    "expected_keywords": [
+      "五年以下有期徒刑",
+      "五年以上十年以下有期徒刑",
+      "第一百四十一条"
+    ],
+    "source_files": [
+      "刑法.pdf"
+    ],
+    "category": "high_fact",
+    "domain": "legal",
+    "source_chunk": "北京市京师律师事务所\n第一百四十四条 【生产、销售有毒、有害食品罪】在生产、销售的食品中\n掺入有毒、有害的非食品原料的，或者销售明知掺有有毒、有害的非食品原料的"
+  }
+]

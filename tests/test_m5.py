@@ -262,11 +262,12 @@ class TestRelevanceThreshold:
     """验证 RELEVANCE_THRESHOLD 过滤逻辑"""
 
     def test_threshold_filters_low_score(self):
-        """低于阈值的chunk被排除"""
-        from src.config import RELEVANCE_THRESHOLD
+        """低于阈值的chunk被排除，等于阈值保留
 
-        # 模拟 final_results 列表过滤逻辑（与 rag_engine.py 第195行一致）
-        threshold = RELEVANCE_THRESHOLD
+        使用显式阈值验证过滤语义（>= 保留），避免与 .env 运行时配置值耦合
+        （RELEVANCE_THRESHOLD 由 P0 优化调整为 0.55，可被环境覆盖）。
+        """
+        threshold = 0.5
 
         class FakeResult:
             def __init__(self, score):
@@ -278,13 +279,13 @@ class TestRelevanceThreshold:
             FakeResult(0.5),
             FakeResult(0.1),
             FakeResult(0.01),
-            FakeResult(0.3),  # 正好等于阈值（默认0.3）
+            FakeResult(0.3),
         ]
 
         filtered = [r for r in results if r.score >= threshold]
 
-        # 默认阈值0.01: 保留 0.9, 0.5, 0.3, 0.1, 0.01；排除无
-        assert len(filtered) == 5
+        # 阈值0.5: 保留 0.9, 0.5；排除 0.1, 0.01, 0.3
+        assert [r.score for r in filtered] == [0.9, 0.5]
         assert all(r.score >= threshold for r in filtered)
 
     def test_threshold_boundary_equal(self):
@@ -323,9 +324,10 @@ class TestRelevanceThreshold:
         assert len(filtered) == 3
 
     def test_threshold_config_default(self):
-        """config中默认阈值为0.01"""
+        """config中阈值配置为合法范围（默认值可被 .env 覆盖，P0 已调整为 0.55）"""
         from src.config import RELEVANCE_THRESHOLD
-        assert RELEVANCE_THRESHOLD == 0.01
+        assert isinstance(RELEVANCE_THRESHOLD, float)
+        assert 0.0 <= RELEVANCE_THRESHOLD <= 1.0
 
     def test_threshold_custom_via_env(self, monkeypatch):
         """通过环境变量可自定义阈值"""

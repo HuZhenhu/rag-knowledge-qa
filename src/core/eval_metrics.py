@@ -30,8 +30,13 @@ class LLMJudge:
 
     def _chat(self, system: str, user: str, max_tokens: int = 100,
               temperature: float = 0.0) -> str:
-        """调用 LLM"""
-        self._init_client()
+        """调用 LLM（惰性初始化客户端，后续调用复用连接）
+
+        原实现每次调用都执行 _init_client() 新建 OpenAI client，
+        评测大量用例时会反复重建连接。改为首次调用时初始化一次。
+        """
+        if self.client is None:
+            self._init_client()
         try:
             resp = self.client.chat.completions.create(
                 model=self.model,
@@ -116,15 +121,31 @@ def evaluate_faithfulness(question: str, answer: str, sources: list[dict], judge
     return supported / len(claim_list)
 
 
+# 模块级默认 embedder 惰性单例（避免每次评测重复加载模型）
+_default_embedder = None
+
+
+def _get_default_embedder():
+    global _default_embedder
+    if _default_embedder is None:
+        from src.core.embedder import Embedder
+        _default_embedder = Embedder()
+    return _default_embedder
+
+
 # ---------------------------------------------------------------------------
 # RAGAS 指标2：答案相关性 (Answer Relevancy)
 # ---------------------------------------------------------------------------
 
-def evaluate_answer_relevancy(question: str, answer: str, judge: LLMJudge) -> float:
+def evaluate_answer_relevancy(question: str, answer: str, judge: LLMJudge,
+                              embedder=None) -> float:
     """答案相关性 — 回答是否切题
 
     RAGAS 方法：LLM 从回答逆向推导出多个问题变体 → 计算生成问题与原问题的
     embedding 平均余弦相似度。分数越高说明回答越紧扣问题。
+
+    embedder 可复用外部传入的 embedding 实例（如评测引擎已加载的），
+    避免每个用例都重新加载模型（同一模型进程内加载两次在 Windows 会段错误）。
     """
     if not answer:
         return 0.0
@@ -142,8 +163,8 @@ def evaluate_answer_relevancy(question: str, answer: str, judge: LLMJudge) -> fl
 
     # 第二步：计算原问题与生成问题的语义相似度
     try:
-        from src.core.embedder import Embedder
-        embedder = Embedder()
+        if embedder is None:
+            embedder = _get_default_embedder()
         all_texts = [question] + questions
         vecs = embedder.embed(all_texts)
         if len(vecs) < 2:
@@ -252,6 +273,7 @@ def evaluate_all_dimensions(
     sources: list[dict],
     expected_answer: str = "",
     weights: dict | None = None,
+    embedder=None,
 ) -> dict:
     """对一次回答进行 RAGAS 四指标评测
 
@@ -261,6 +283,7 @@ def evaluate_all_dimensions(
         sources: 检索到的来源列表
         expected_answer: 标准答案（用于上下文召回率）
         weights: 各指标权重 {"faithfulness", "answer_relevancy", "context_precision", "context_recall"}
+        embedder: 可复用的 embedding 实例（默认内部惰性加载）
 
     Returns:
         dict: {"faithfulness", "answer_relevancy", "context_precision", "context_recall", "total_score"}
@@ -275,7 +298,7 @@ def evaluate_all_dimensions(
     }
 
     faithfulness = evaluate_faithfulness(question, answer, sources, judge)
-    answer_relevancy = evaluate_answer_relevancy(question, answer, judge)
+    answer_relevancy = evaluate_answer_relevancy(question, answer, judge, embedder=embedder)
     context_precision = evaluate_context_precision(question, sources, judge)
     context_recall = evaluate_context_recall(question, sources, expected_answer, judge)
 
@@ -292,4 +315,214 @@ def evaluate_all_dimensions(
         "context_precision": round(context_precision, 4),
         "context_recall": round(context_recall, 4),
         "total_score": round(total, 4),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Agentic 专项评测维度（M6：Agentic RAG 升级设计文档 §7.2）
+#
+# 四个维度均基于 AgenticEngine 输出的 agent_trace 计算：
+#   1. 规划正确率 (planning_accuracy)   —— Planner 子问题拆解是否合理覆盖原问题
+#   2. 工具选择合理性 (tool_choice_score)—— Retriever/Web Agent 的工具调用是否恰当
+#   3. 平均反思次数 (retry_count)        —— Critic 反思重试次数
+#   4. 最终引用正确率 (final_citation_accuracy) —— 最终引用的 [文件+章节] 是否真实对应检索证据
+# ---------------------------------------------------------------------------
+
+
+def _extract_agentic_trace(agent_trace: list[dict]) -> dict:
+    """从 agent_trace 中提取各节点关键字段（不存在时返回空默认值）。"""
+    out = {
+        "sub_questions": [],
+        "plan": [],
+        "tool_calls": [],
+        "retry_count": 0,
+        "citations": [],
+        "route": "",
+    }
+    if not agent_trace:
+        return out
+    for t in agent_trace:
+        if not isinstance(t, dict):
+            continue
+        node = t.get("node", "")
+        event = t.get("event", "")
+        if node == "planner" and event == "agent_plan":
+            subs = t.get("sub_questions") or []
+            plan = t.get("plan") or []
+            if subs:
+                out["sub_questions"] = [str(s) for s in subs]
+            if plan:
+                out["plan"] = plan
+        elif node == "retriever_agent" and event == "agent_tool_call":
+            calls = t.get("tool_calls") or []
+            out["tool_calls"].extend(calls)
+        elif node == "critic" and event == "agent_reflect":
+            # retry_count 为 Critic 每次评审后的累计值，取最后一条即最终反思次数
+            out["retry_count"] = int(t.get("retry_count", 0) or 0)
+        elif node == "summarizer" and event == "agent_final":
+            cites = t.get("citations") or []
+            if cites:
+                out["citations"] = cites
+        elif node == "supervisor" and event == "agent_plan":
+            out["route"] = t.get("route", "")
+    return out
+
+
+def _normalize_citation_file(cite: dict) -> str:
+    """规范化引用来源文件名（去路径、去扩展名、统一小写）。"""
+    import re
+    f = str(cite.get("file", "") or "")
+    f = f.replace("\\", "/").split("/")[-1]
+    return re.sub(r"\.(pdf|docx|doc|md|txt|png|jpg)$", "", f).lower()
+
+
+def evaluate_planning_accuracy(question: str, sub_questions: list[str],
+                               judge: LLMJudge) -> float:
+    """规划正确率 — Planner 子问题拆解是否合理覆盖原问题。
+
+    单跳问题（子问题为空或仅含原问题本身）视为拆解正确得 1.0；
+    多跳问题由 LLM 裁判判断子问题能否覆盖原问题的回答需求。
+    """
+    if not question:
+        return 0.0
+    subs = [s for s in (sub_questions or []) if str(s).strip()]
+    if not subs:
+        return 1.0  # 未拆解：单跳透传，视为正确
+    if len(subs) == 1 and str(subs[0]).strip() == question.strip():
+        return 1.0  # 透传原问题
+    sub_list = "\n".join(f"- {s}" for s in subs)
+    system = """你是一个 RAG 规划质量评估专家。判断给定的子问题拆解方案是否合理：
+1. 子问题集合应能覆盖回答原问题所需的全部关键信息
+2. 子问题应相互独立、无冗余
+3. 对简单单跳问题，不拆解（仅保留原问题）也是合理的
+只输出一个 0~1 之间的分数（可含两位小数）。"""
+    user = f"""原问题：{question}
+
+子问题拆解：
+{sub_list}
+
+请给出该拆解的合理性评分（0~1）。"""
+    text = judge._chat(system, user, max_tokens=10)
+    return judge._extract_score(text)
+
+
+def evaluate_tool_choice(question: str, tool_calls: list[dict],
+                         judge: LLMJudge) -> float:
+    """工具选择合理性 — 针对问题使用的检索/联网工具是否恰当。
+
+    由 LLM 裁判结合问题语义与工具调用记录判断：
+    知识库可答问题不应过度联网，时效/外部信息问题应补充联网工具。
+    """
+    if not tool_calls:
+        return 0.5  # 无工具调用（如 direct_answer 闲聊）：中性偏合理
+    tools_used = []
+    for tc in tool_calls:
+        if not isinstance(tc, dict):
+            continue
+        name = tc.get("tool", "")
+        query = ""
+        params = tc.get("params") or {}
+        if isinstance(params, dict):
+            query = params.get("query", "")
+        tools_used.append(f"- 工具: {name}  查询: {query}")
+    tools_text = "\n".join(tools_used)
+    system = """你是一个 Agent 工具调用评估专家。判断给定的工具调用是否合理：
+1. 知识库类问题使用 kb_search 类工具合理
+2. 时效性/外部信息问题使用 web_search 合理
+3. 工具查询应与问题相关，不应明显无关
+只输出一个 0~1 之间的分数（可含两位小数）。"""
+    user = f"""用户问题：{question}
+
+工具调用记录：
+{tools_text}
+
+请给出工具选择合理性评分（0~1）。"""
+    text = judge._chat(system, user, max_tokens=10)
+    return judge._extract_score(text)
+
+
+def evaluate_final_citation_accuracy(citations: list[dict],
+                                     evidences: list[dict]) -> float:
+    """最终引用正确率 — 最终答案引用的 [文件+章节] 是否真实对应检索证据。
+
+    启发式：对每条 citation，判断 evidences 中是否存在同文件来源
+    （章节相同时要求章节一致；无章节信息时仅比对文件）。纯规则计算，无 LLM 调用。
+    """
+    if not citations:
+        return 0.0  # 无引用：视为 0（答案未标注可溯源来源）
+    if not evidences:
+        return 0.0
+
+    # 收集证据来源集合（file -> set(section 集合)）
+    file_sections: dict[str, set] = {}
+    for e in evidences:
+        if not isinstance(e, dict):
+            continue
+        meta = e.get("metadata") or {}
+        f = str(meta.get("source_file", "") or meta.get("source", ""))
+        if not f:
+            continue
+        nf = _normalize_citation_file({"file": f})
+        sec = str(meta.get("section", "") or "")
+        file_sections.setdefault(nf, set()).add(sec)
+
+    if not file_sections:
+        return 0.0
+
+    hit = 0
+    for c in citations:
+        if not isinstance(c, dict):
+            continue
+        nf = _normalize_citation_file(c)
+        sec = str(c.get("section", "") or "")
+        if nf not in file_sections:
+            continue
+        if sec and sec not in file_sections[nf]:
+            continue  # 章节不符视为错误引用
+        hit += 1
+
+    return round(hit / len(citations), 4)
+
+
+def evaluate_agentic_dimensions(
+    question: str,
+    agent_trace: list[dict],
+    answer: str = "",
+    evidences: list[dict] | None = None,
+    use_llm: bool = True,
+) -> dict:
+    """Agentic 专项四维度评测（设计文档 §7.2）。
+
+    Args:
+        question: 用户问题
+        agent_trace: AgenticEngine 输出的推理过程（trace 列表）
+        answer: 最终答案（预留，暂未使用）
+        evidences: 检索证据列表（用于引用正确率）
+        use_llm: 是否调用 LLM 裁判评估规划/工具维度（False 时返回占位 0.5）
+
+    Returns:
+        dict: {"planning_accuracy", "tool_choice_score", "retry_count",
+               "final_citation_accuracy"}
+    """
+    trace_data = _extract_agentic_trace(agent_trace)
+
+    if use_llm:
+        judge = LLMJudge()
+        planning_accuracy = evaluate_planning_accuracy(
+            question, trace_data["sub_questions"], judge
+        )
+        tool_choice_score = evaluate_tool_choice(
+            question, trace_data["tool_calls"], judge
+        )
+    else:
+        planning_accuracy = 0.5
+        tool_choice_score = 0.5
+
+    return {
+        "planning_accuracy": round(planning_accuracy, 4),
+        "tool_choice_score": round(tool_choice_score, 4),
+        "retry_count": trace_data["retry_count"],
+        "final_citation_accuracy": evaluate_final_citation_accuracy(
+            trace_data["citations"], evidences or []
+        ),
     }

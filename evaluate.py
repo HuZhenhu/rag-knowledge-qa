@@ -1,11 +1,17 @@
-"""M9: 自动评测脚本 — 评测集跑批 + 语义相似度 + Markdown报告 + 版本对比"""
+"""M9: 自动评测脚本 — 评测集跑批 + 语义相似度 + Markdown报告 + 版本对比
+M6: 支持 RAG_ENGINE=agentic 评测（复用同一入口），并新增 Agentic 专项维度
+（规划正确率 / 工具选择合理性 / 平均反思次数 / 最终引用正确率）。
+"""
 import argparse
 import json
+import logging
 import time
 from datetime import datetime
 from pathlib import Path
 
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 from src.config import (
     BASE_DIR,
@@ -91,18 +97,28 @@ def check_retrieval_hit(sources: list[dict], source_files: list[str]) -> bool:
     # 从 metadata 中提取来源文件名
     retrieved_files = []
     for s in sources:
-        meta = s.get("metadata", {})
+        meta = s.get("metadata", {}) or {}
         f = meta.get("source_file", "") or meta.get("source", "")
         if f:
             retrieved_files.append(norm(str(f)))
     retrieved_texts = " ".join(retrieved_files)
-    return any(norm(sf) in retrieved_texts for sf in source_files)
+    if any(norm(sf) in retrieved_texts for sf in source_files):
+        return True
+    # metadata 无来源信息时，回退到正文匹配（兼容无 metadata 的检索结果）
+    for s in sources:
+        content = str(s.get("content", "") or "")
+        if any(norm(sf) in content.lower() for sf in source_files):
+            return True
+    return False
 
 
 def check_citation(answer: str) -> bool:
-    """检查回答是否包含引用标注 [来源X]"""
+    """检查回答是否包含引用标注
+
+    兼容两种引用格式：RAG 系统常用 [来源X]，通用格式 [X]（如 [1][2]）。
+    """
     import re
-    return bool(re.search(r"\[来源\d+\]", answer))
+    return bool(re.search(r"\[(?:来源)?\d+\]", answer))
 
 
 # ---------------------------------------------------------------------------
@@ -137,6 +153,13 @@ def run_single_test(case: dict, engine, embedder, use_four_dim: bool = True) -> 
             sources = result.get("sources", [])
         elapsed_ms = int((time.time() - start_time) * 1000)
 
+        # M6: 提取 Agentic 引擎推理过程（非 agentic 引擎无 agent_trace 字段）
+        agent_trace = None
+        if hasattr(result, "agent_trace"):
+            agent_trace = result.agent_trace or []
+        elif isinstance(result, dict):
+            agent_trace = result.get("agent_trace") or []
+
         # 关键词评分
         kw_eval = evaluate_answer(answer, expected_keywords)
 
@@ -169,11 +192,23 @@ def run_single_test(case: dict, engine, embedder, use_four_dim: bool = True) -> 
             try:
                 from src.core.eval_metrics import evaluate_all_dimensions
                 four_dims = evaluate_all_dimensions(
-                    question, answer, sources, expected_answer
+                    question, answer, sources, expected_answer, embedder=embedder
                 )
             except Exception as e:
                 logger.warning("四维评测失败 %s: %s", case_id, e)
                 four_dims = {}
+
+        # M6: Agentic 专项维度评测（仅 agentic 引擎有 agent_trace）
+        agentic_dims = {}
+        if agent_trace:
+            try:
+                from src.core.eval_metrics import evaluate_agentic_dimensions
+                agentic_dims = evaluate_agentic_dimensions(
+                    question, agent_trace, answer, sources
+                )
+            except Exception as e:
+                logger.warning("Agentic 专项评测失败 %s: %s", case_id, e)
+                agentic_dims = {}
 
         return {
             "case_id": case_id,
@@ -194,6 +229,11 @@ def run_single_test(case: dict, engine, embedder, use_four_dim: bool = True) -> 
             "context_precision": four_dims.get("context_precision"),
             "context_recall": four_dims.get("context_recall"),
             "four_dim_total": four_dims.get("total_score"),
+            # M6: Agentic 专项维度
+            "planning_accuracy": agentic_dims.get("planning_accuracy"),
+            "tool_choice_score": agentic_dims.get("tool_choice_score"),
+            "retry_count": agentic_dims.get("retry_count"),
+            "final_citation_accuracy": agentic_dims.get("final_citation_accuracy"),
         }
 
     except Exception as e:
@@ -211,6 +251,10 @@ def run_single_test(case: dict, engine, embedder, use_four_dim: bool = True) -> 
             "retrieval_hit": False,
             "citation_correct": False,
             "accuracy": 0.0,
+            "planning_accuracy": None,
+            "tool_choice_score": None,
+            "retry_count": None,
+            "final_citation_accuracy": None,
         }
 
 
@@ -252,6 +296,9 @@ def run_evaluation(
             if RAG_ENGINE == "langchain":
                 from src.core.langchain_rag import LangChainRAGEngine
                 engine = LangChainRAGEngine()
+            elif RAG_ENGINE == "agentic":
+                from src.core.agentic import AgenticEngine
+                engine = AgenticEngine()
             else:
                 from src.core.rag_engine import RAGEngine
                 engine = RAGEngine()
@@ -265,6 +312,9 @@ def run_evaluation(
                 def embed(self, texts):
                     return engine.embeddings.embed_documents(list(texts))
             embedder = _LangChainEmbedder()
+        elif RAG_ENGINE == "agentic" and hasattr(engine, "embedder"):
+            # Agentic 引擎内部已加载 Embedder，直接复用避免重复加载模型
+            embedder = engine.embedder
         else:
             embedder = Embedder()
     except Exception as e:
@@ -317,6 +367,7 @@ def compute_summary(results: list[dict], version: str) -> dict:
             "avg_semantic_similarity": 0.0,
             "avg_latency_ms": 0.0,
             "category_accuracy": {},
+            "avg_agentic": {},
         }
 
     retrieval_hits = sum(1 for r in success_results if r["retrieval_hit"])
@@ -333,6 +384,18 @@ def compute_summary(results: list[dict], version: str) -> dict:
         vals = [r[key] for r in success_results if r.get(key) is not None]
         if vals:
             avg_dims[key] = round(sum(vals) / len(vals), 4)
+
+    # M6: Agentic 专项维度平均值（仅统计有值的用例）
+    agentic_keys = ["planning_accuracy", "tool_choice_score", "final_citation_accuracy"]
+    avg_agentic: dict[str, float] = {}
+    for key in agentic_keys:
+        vals = [r[key] for r in success_results if r.get(key) is not None]
+        if vals:
+            avg_agentic[key] = round(sum(vals) / len(vals), 4)
+    retry_vals = [r["retry_count"] for r in success_results
+                  if r.get("retry_count") is not None]
+    if retry_vals:
+        avg_agentic["avg_retry_count"] = round(sum(retry_vals) / len(retry_vals), 4)
 
     # 按类别统计
     category_stats: dict[str, list[float]] = {}
@@ -355,6 +418,7 @@ def compute_summary(results: list[dict], version: str) -> dict:
         "avg_latency_ms": round(avg_latency, 2),
         "category_accuracy": category_accuracy,
         "avg_dimensions": avg_dims,
+        "avg_agentic": avg_agentic,
     }
 
 
@@ -414,6 +478,30 @@ def write_report(summary: dict) -> str:
                 lines.append(f"| {label} | {avg_dims[key]:.2f} |")
         lines.append("")
 
+    # M6: Agentic 专项维度指标
+    avg_agentic = summary.get("avg_agentic", {})
+    if avg_agentic:
+        agentic_labels = {
+            "planning_accuracy": "规划正确率",
+            "tool_choice_score": "工具选择合理性",
+            "final_citation_accuracy": "最终引用正确率",
+            "avg_retry_count": "平均反思次数",
+        }
+        lines += [
+            "## Agentic 专项评测维度",
+            "",
+            "| 维度 | 分数 |",
+            "|------|------|",
+        ]
+        for key, label in agentic_labels.items():
+            if key in avg_agentic:
+                val = avg_agentic[key]
+                if key == "avg_retry_count":
+                    lines.append(f"| {label} | {val:.2f} |")
+                else:
+                    lines.append(f"| {label} | {val:.2%} |")
+        lines.append("")
+
     # 分类准确率
     cat_acc = summary.get("category_accuracy", {})
     if cat_acc:
@@ -451,21 +539,42 @@ def write_report(summary: dict) -> str:
         lines.append("")
 
     # 详细结果表
-    lines += [
-        "## 详细结果",
-        "",
-        "| ID | 问题 | 准确率 | 四维总分 | 检索 | 引用 | 耗时 |",
-        "|-----|------|--------|---------|------|------|------|",
-    ]
+    show_agentic = bool(summary.get("avg_agentic", {}))
+    if show_agentic:
+        lines += [
+            "## 详细结果",
+            "",
+            "| ID | 问题 | 准确率 | 四维总分 | 检索 | 引用 | 规划 | 工具 | 反思 | 终引 | 耗时 |",
+            "|-----|------|--------|---------|------|------|------|------|------|------|------|",
+        ]
+    else:
+        lines += [
+            "## 详细结果",
+            "",
+            "| ID | 问题 | 准确率 | 四维总分 | 检索 | 引用 | 耗时 |",
+            "|-----|------|--------|---------|------|------|------|",
+        ]
     for r in results:
         q = r.get("question", "")[:25]
         acc = r.get("accuracy", 0)
-        four_dim = r.get("four_dim_total", "")
+        four_dim = r.get("four_dim_total", None)
         four_dim_str = f"{four_dim:.2f}" if four_dim is not None else "-"
         hit = "Y" if r.get("retrieval_hit") else "N"
         cite = "Y" if r.get("citation_correct") else "N"
         ms = r.get("elapsed_ms", 0)
-        lines.append(f"| {r.get('case_id', '')} | {q} | {acc:.2f} | {four_dim_str} | {hit} | {cite} | {ms}ms |")
+        if show_agentic:
+            def _fmt(v):
+                return "-" if v is None else f"{v:.2f}"
+            plan = _fmt(r.get("planning_accuracy"))
+            tool = _fmt(r.get("tool_choice_score"))
+            retry = "-" if r.get("retry_count") is None else str(r["retry_count"])
+            fcite = _fmt(r.get("final_citation_accuracy"))
+            lines.append(
+                f"| {r.get('case_id', '')} | {q} | {acc:.2f} | {four_dim_str} | {hit} | {cite} "
+                f"| {plan} | {tool} | {retry} | {fcite} | {ms}ms |"
+            )
+        else:
+            lines.append(f"| {r.get('case_id', '')} | {q} | {acc:.2f} | {four_dim_str} | {hit} | {cite} | {ms}ms |")
     lines.append("")
 
     content = "\n".join(lines)
@@ -563,6 +672,12 @@ def main():
                         help="列出所有已保存的评测版本")
     parser.add_argument("--save-db", action="store_true",
                         help="将评测结果保存到 SQLite")
+    parser.add_argument("--test-cases", type=str, default="",
+                        help="评测集 JSON 路径（默认用配置 EVAL_TEST_CASES_PATH）")
+    parser.add_argument("--limit", type=int, default=0,
+                        help="仅评测前 N 条用例（0=全部）")
+    parser.add_argument("--no-four-dim", action="store_true",
+                        help="跳过四维度 LLM 评测（更快，只做关键词评分）")
     args = parser.parse_args()
 
     if args.list:
@@ -585,7 +700,19 @@ def main():
 
     # 运行评测
     version = args.version
-    summary = run_evaluation(version=version)
+    test_cases = None
+    if args.test_cases:
+        test_cases = load_test_cases(args.test_cases)
+        if args.limit > 0:
+            test_cases = test_cases[:args.limit]
+    elif args.limit > 0:
+        all_cases = load_test_cases()
+        test_cases = all_cases[:args.limit]
+    summary = run_evaluation(
+        test_cases=test_cases,
+        version=version,
+        use_four_dim=not args.no_four_dim,
+    )
 
     if args.save_db:
         save_to_database(summary)
