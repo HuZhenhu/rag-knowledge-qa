@@ -70,6 +70,17 @@ class IncrementalIndexer:
                 print(f"  索引失败 {file_path.name}: {e}")
                 stats["errors"] += 1
 
+        # P1-3 缓存失效钩子：检测到任一增/删/改后清空检索/语义缓存
+        # （build_index.py 的 build_index_incremental 走本 sync，统一在此失效）
+        changed = stats["added"] + stats["updated"] + stats["deleted"]
+        if changed > 0:
+            try:
+                from src.core.semantic_cache import clear_all_caches
+                clear_all_caches()
+                print(f"  缓存失效：文档变更 {changed} 项，已清空检索/语义缓存")
+            except Exception as e:
+                print(f"  缓存清理失败: {e}")
+
         return stats
 
     def _add_file(self, file_path: Path) -> None:

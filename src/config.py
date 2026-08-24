@@ -171,4 +171,18 @@ USE_PII_REDACTION = os.getenv("USE_PII_REDACTION", "false").lower() == "true"
 PII_REDACT_MODE = os.getenv("PII_REDACT_MODE", "mask")  # mask 掩码 / remove 删除 / replace 占位
 PII_PLACEHOLDER = os.getenv("PII_PLACEHOLDER", "[PII]")
 
+# ===== P1 性能与可靠性配置 =====
+# P1-3 缓存（默认开；进程内精确缓存 + SQLite 语义缓存，key 均含 ACL 指纹防跨权限泄露）
+QUERY_CACHE_ENABLED = os.getenv("QUERY_CACHE_ENABLED", "true").lower() == "true"
+SEMANTIC_CACHE_ENABLED = os.getenv("SEMANTIC_CACHE_ENABLED", "true").lower() == "true"
+SEMANTIC_CACHE_THRESHOLD = float(os.getenv("SEMANTIC_CACHE_THRESHOLD", "0.92"))  # 语义缓存余弦命中阈值
+
+# P1-4 延迟收敛
+PARALLEL_RETRIEVAL_WORKERS = int(os.getenv("PARALLEL_RETRIEVAL_WORKERS", "3"))  # 多路检索并行线程数
+HYDE_SKIP_SIMPLE = os.getenv("HYDE_SKIP_SIMPLE", "true").lower() == "true"  # 简单事实问题跳过 HyDE（条件化降级）
+
+# P1-6 置信度门控/拒答硬化（默认关，灰度开启）
+ENABLE_CONFIDENCE_REFUSE = os.getenv("ENABLE_CONFIDENCE_REFUSE", "false").lower() == "true"
+CONFIDENCE_REFUSE_THRESHOLD = float(os.getenv("CONFIDENCE_REFUSE_THRESHOLD", "0.35"))
+
 
