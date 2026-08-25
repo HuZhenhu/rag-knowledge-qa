@@ -159,8 +159,10 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str = "default"):
                     final_sources = []
                     final_timing = {}
 
-                    # 流式生成
-                    for token, is_last, sources, timing in rag_engine.query_stream(
+                    # 流式生成（T1.1：同步生成器放入线程池，避免阻塞事件循环）
+                    from src.core.async_util import aiter_in_thread
+                    async for token, is_last, sources, timing in aiter_in_thread(
+                        rag_engine.query_stream,
                         query,
                         top_k=3,
                         history=history,

@@ -29,6 +29,7 @@ from src.storage.database import (
 )
 from src.config import USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, ALLOW_REGISTRATION, USE_CONVERSATION_SUMMARY, RAG_ENGINE, ACL_ENFORCE, ACL_ADMIN_ROLES
 from src.core.acl import build_acl_filter
+from src.core.async_util import run_in_thread
 from src.core.session import SessionManager
 from src.core.metrics import metrics
 from src.core.tracer import get_trace, list_recent_traces
@@ -225,8 +226,11 @@ async def query(
         readable_ids = get_user_readable_doc_ids(user["id"])
         acl_filter = build_acl_filter(readable_ids, role=user.get("role"), admin_roles=ACL_ADMIN_ROLES)
 
-    response = rag_engine.query(req.question, top_k=req.top_k, history=history,
-                                  summary=summary, user_id=user["id"], acl_filter=acl_filter)
+    response = await run_in_thread(
+        rag_engine.query, req.question,
+        top_k=req.top_k, history=history,
+        summary=summary, user_id=user["id"], acl_filter=acl_filter,
+    )
     session_manager.add_message(session_id, "assistant", response.answer)
 
     sources = [
@@ -451,7 +455,7 @@ async def upload_document(
     try:
         from src.core.incremental_indexer import IncrementalIndexer
         indexer = IncrementalIndexer()
-        indexer._add_file(save_path)
+        await run_in_thread(indexer._add_file, save_path)
         doc.status = "indexed"
         doc.indexed_at = DocumentRecord.now()
         doc.updated_at = doc.indexed_at
@@ -531,7 +535,7 @@ async def index_sync(user: dict = Depends(require_role("admin")), request: Reque
     """执行增量同步"""
     from src.core.incremental_indexer import IncrementalIndexer
     indexer = IncrementalIndexer()
-    stats = indexer.sync()
+    stats = await run_in_thread(indexer.sync)
     log_audit(user["id"], "index_sync", "system", "",
               details=json.dumps(stats, ensure_ascii=False),
               ip_address=_get_client_ip(request) if request else "")
@@ -693,7 +697,7 @@ async def run_evaluation_now(
 ):
     """手动触发一次评测"""
     from evaluate import run_evaluation, save_to_database
-    summary = run_evaluation(version=version, engine=rag_engine)
+    summary = await run_in_thread(run_evaluation, version=version, engine=rag_engine)
     if "error" in summary:
         raise HTTPException(status_code=500, detail=summary["error"])
     save_to_database(summary)
