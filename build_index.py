@@ -31,7 +31,7 @@ def _load_single_file(file_path: Path, splitter: SmartSplitter) -> list:
     return splitter.split_elements(doc_elements)
 
 
-def build_index_full():
+def build_index_full(data_dir: Path = None):
     """全量模式：清空重建整个向量库"""
     print("=" * 50)
     print("全量构建向量索引（M6批量优化）")
@@ -51,9 +51,10 @@ def build_index_full():
     for loader_cls in LOADERS:
         supported_extensions.update(loader_cls.supported_extensions())
 
+    scan_dir = data_dir or DATA_DIR
     all_files: list[Path] = []
     for ext in supported_extensions:
-        all_files.extend(DATA_DIR.rglob(f"*{ext}"))
+        all_files.extend(scan_dir.rglob(f"*{ext}"))
     all_files = sorted(set(all_files))
     print(f"找到 {len(all_files)} 个文档文件")
 
@@ -239,10 +240,15 @@ def build_index():
         "--full", action="store_true",
         help="全量模式：清空并重建整个向量库"
     )
+    parser.add_argument(
+        "--data-dir", default="",
+        help="Data source directory (default: DATA_DIR)",
+    )
     args = parser.parse_args()
 
+    data_dir = Path(args.data_dir) if args.data_dir else DATA_DIR
     if args.full:
-        build_index_full()
+        build_index_full(data_dir)
     else:
         build_index_incremental()
 

@@ -1,0 +1,42 @@
+[
+  {
+    "question": "AI应用工程师的核心定位是什么？",
+    "expected_answer": "AI应用工程师本质上是AI落地的最后一公里，负责把实验室里的模型变成用户可用的产品。"
+  },
+  {
+    "question": "学习路线图中第一阶段基础工程能力的目标是什么？",
+    "expected_answer": "能独立开发Web服务，能接手常规后端需求。"
+  },
+  {
+    "question": "RAG的完整流程包含哪些步骤？",
+    "expected_answer": "文档加载、文本分割、向量化Embedding、检索、召回后排序、生成答案。"
+  },
+  {
+    "question": "行动建议中推荐的完整实践项目是什么？",
+    "expected_answer": "做一个完整的AI面试助手，上传简历PDF，基于JD岗位要求模拟提问，技术栈用FastAPI加RAG加Prompt模板加Docker部署。"
+  },
+  {
+    "question": "OpenClaw更受欢迎的真实原因有哪些？",
+    "expected_answer": "开源较早生态成熟文档完善、定位清晰是编码执行Agent、使用场景普适适合绝大多数开发团队。"
+  },
+  {
+    "question": "Hermes的定位是什么？",
+    "expected_answer": "Hermes定位更复杂，是总指挥，做编排调度、质量审查和上下文管理。"
+  },
+  {
+    "question": "面试官问为什么Hermes没有OpenClaw受欢迎，真正想考察什么？",
+    "expected_answer": "考察你是否清楚自己的工具在行业里的定位，有没有客观的自我认知，是否具备工具理性。"
+  },
+  {
+    "question": "MCP服务器可以暴露哪三种能力？",
+    "expected_answer": "Tools可调用的函数、Resources可读取的数据源、Prompts预定义的提示模板。"
+  },
+  {
+    "question": "MCP配置文件默认放在哪里？",
+    "expected_answer": "配置文件位置是用户级目录下的.claude/settings.json或项目级的.claude/settings.json。"
+  },
+  {
+    "question": "MCP与API的关系是什么？",
+    "expected_answer": "MCP服务器做的事情就是把API包装成Claude能调用的工具。"
+  }
+]
