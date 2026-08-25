@@ -16,7 +16,7 @@ from src.core.alert_manager import alert_manager
 from src.core.tracer import init_traces_table
 from src.storage.database import init_db
 from src.config import (
-    API_HOST, API_PORT, USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, RAG_ENGINE,
+    API_HOST, API_PORT,
     CORS_ALLOW_ORIGINS, CORS_ALLOW_CREDENTIALS, validate_security_config,
 )
 from src.core.session import SessionManager
@@ -95,23 +95,9 @@ app.add_middleware(RateLimitMiddleware)
 # 路由
 app.include_router(router)
 
-# RAG 引擎（WebSocket 使用）
-if RAG_ENGINE == "langchain":
-    from src.core.langchain_rag import LangChainRAGEngine
-    rag_engine = LangChainRAGEngine()
-    logger.info("使用 LangChain RAG 引擎")
-elif RAG_ENGINE == "agentic":
-    from src.core.agentic import AgenticEngine
-    rag_engine = AgenticEngine()
-    logger.info("使用 Agentic RAG 引擎")
-else:
-    from src.core.rag_engine import RAGEngine
-    rag_engine = RAGEngine(
-        use_query_expansion=USE_QUERY_EXPANSION,
-        use_hyde=USE_HYDE,
-        use_reranker=USE_RERANKER,
-    )
-    logger.info("使用原版 RAG 引擎")
+# T1.2: 引擎单例化——HTTP 与 WebSocket 经 engine_factory 共享同一实例（缓存/BM25 只建一次）
+from src.core.engine_factory import get_engine
+rag_engine = get_engine()
 session_manager = SessionManager()
 
 

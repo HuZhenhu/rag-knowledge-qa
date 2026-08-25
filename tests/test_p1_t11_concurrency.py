@@ -94,8 +94,12 @@ def routes_module(fake_engine, tmp_path, monkeypatch):
     monkeypatch.setattr(database, "DB_PATH", tmp_path / "test.db")
     database.init_db()
 
-    import src.api.routes as routes
-    with patch("src.core.langchain_rag.LangChainRAGEngine", return_value=fake_engine):
+    # T1.2 单例化适配：reset 引擎工厂并 patch _build_engine，
+    # 使 reload 后的 routes 从单例工厂拿到 fake_engine
+    from src.core import engine_factory
+    engine_factory.reset()
+    with patch.object(engine_factory, "_build_engine", return_value=fake_engine):
+        import src.api.routes as routes
         import importlib
         importlib.reload(routes)
     monkeypatch.setattr(routes, "get_current_user", lambda *a, **k: {"id": "u1", "role": "admin"})

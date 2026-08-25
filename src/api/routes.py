@@ -30,6 +30,7 @@ from src.storage.database import (
 from src.config import USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, ALLOW_REGISTRATION, USE_CONVERSATION_SUMMARY, RAG_ENGINE, ACL_ENFORCE, ACL_ADMIN_ROLES
 from src.core.acl import build_acl_filter
 from src.core.async_util import run_in_thread
+from src.core.engine_factory import get_engine, get_vector_store
 from src.core.session import SessionManager
 from src.core.metrics import metrics
 from src.core.tracer import get_trace, list_recent_traces
@@ -37,24 +38,9 @@ from src.core.alert_manager import alert_manager
 
 router = APIRouter(prefix="/api/v1")
 
-# 初始化组件（根据配置选择引擎）
-if RAG_ENGINE == "langchain":
-    from src.core.langchain_rag import LangChainRAGEngine
-    rag_engine = LangChainRAGEngine()
-    vector_store = rag_engine.vectorstore  # LangChain Chroma实例
-elif RAG_ENGINE == "agentic":
-    from src.core.agentic import AgenticEngine
-    rag_engine = AgenticEngine()
-    vector_store = rag_engine.vector_store
-else:
-    from src.core.rag_engine import RAGEngine
-    from src.core.vector_store import VectorStore
-    rag_engine = RAGEngine(
-        use_query_expansion=USE_QUERY_EXPANSION,
-        use_hyde=USE_HYDE,
-        use_reranker=USE_RERANKER,
-    )
-    vector_store = VectorStore()
+# T1.2: 引擎单例化——HTTP 与 WebSocket 经 engine_factory 共享同一实例
+rag_engine = get_engine()
+vector_store = get_vector_store()
 
 session_manager = SessionManager()
 
