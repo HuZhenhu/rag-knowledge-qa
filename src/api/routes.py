@@ -246,6 +246,8 @@ async def query(
         usage=response.usage,
         timing=response.timing,
         confidence=getattr(response, "confidence", None),
+        citation_spans=getattr(response, "citation_spans", []),
+        trace_id=response.trace_id,
     )
 
 

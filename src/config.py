@@ -185,4 +185,11 @@ HYDE_SKIP_SIMPLE = os.getenv("HYDE_SKIP_SIMPLE", "true").lower() == "true"  # �
 ENABLE_CONFIDENCE_REFUSE = os.getenv("ENABLE_CONFIDENCE_REFUSE", "false").lower() == "true"
 CONFIDENCE_REFUSE_THRESHOLD = float(os.getenv("CONFIDENCE_REFUSE_THRESHOLD", "0.35"))
 
+# ===== P2 企业级增强配置 =====
+# P2-7 引用真实性校验（默认关；开启时若模型答案中所有引用均为幻觉引用则拒答）
+USE_CITATION_VERIFY = os.getenv("USE_CITATION_VERIFY", "false").lower() == "true"
+
+# P2-8 可观测性：延迟告警阈值（秒），响应超过该值记录 alert（默认 3s，对齐企业级 P95<3s 目标）
+METRICS_LATENCY_ALERT_SECONDS = float(os.getenv("METRICS_LATENCY_ALERT_SECONDS", "3.0"))
+
 

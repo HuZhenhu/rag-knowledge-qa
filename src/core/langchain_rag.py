@@ -20,6 +20,17 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+from src.core.tracer import Trace
+from src.core.acl import enrich_acl_metadata, assert_sources_allowed, allowed_doc_ids_from_filter
+from src.core.pii_redactor import redact_texts, mask_text
+from src.core.query_cache import get_query_cache
+from src.core.semantic_cache import get_semantic_cache
+from src.core.citation import (
+    build_context_with_citations,
+    parse_citations,
+    validate_citations,
+    build_citation_spans,
+)
 from src.config import (
     DEEPSEEK_API_KEY,
     DEEPSEEK_BASE_URL,
@@ -53,12 +64,8 @@ from src.config import (
     HYDE_SKIP_SIMPLE,
     ENABLE_CONFIDENCE_REFUSE,
     CONFIDENCE_REFUSE_THRESHOLD,
+    USE_CITATION_VERIFY,
 )
-from src.core.tracer import Trace
-from src.core.acl import enrich_acl_metadata, assert_sources_allowed, allowed_doc_ids_from_filter
-from src.core.pii_redactor import redact_texts, mask_text
-from src.core.query_cache import get_query_cache
-from src.core.semantic_cache import get_semantic_cache
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +79,7 @@ class LangChainRAGResponse:
     timing: dict = field(default_factory=dict)
     trace_id: str = ""
     confidence: float | None = None  # P1-6: 置信度（启用门控时透出）
+    citation_spans: list = field(default_factory=list)  # P2-7: 引用 span 列表
 
 
 class LangChainRAGEngine:
@@ -100,6 +108,7 @@ class LangChainRAGEngine:
         hyde_skip_simple: bool = HYDE_SKIP_SIMPLE,
         use_confidence_refuse: bool = ENABLE_CONFIDENCE_REFUSE,
         confidence_refuse_threshold: float = CONFIDENCE_REFUSE_THRESHOLD,
+        use_citation_verify: bool = USE_CITATION_VERIFY,
     ):
         self.top_k = top_k
         self.use_hybrid = use_hybrid
@@ -118,6 +127,8 @@ class LangChainRAGEngine:
         # P1-6: 置信度门控开关与阈值（默认关，灰度开启）
         self.use_confidence_refuse = use_confidence_refuse
         self.confidence_refuse_threshold = float(confidence_refuse_threshold)
+        # P2-7: 引用真实性校验开关（默认关）
+        self.use_citation_verify = use_citation_verify
         self._last_confidence: float | None = None
         self._last_rerank_ms = 0.0
         # P1-3: 缓存（进程内单例，索引失效钩子可清同一实例）
@@ -240,6 +251,25 @@ class LangChainRAGEngine:
             return 0.0
         return round(max(0.0, min(1.0, top1 / denom)), 4)
 
+    def _build_citation_spans(self, answer: str, cit_index: dict, sources: list[dict]) -> list[dict]:
+        """P2-7: 解析答案中的 [cit:N] 引用并做真实性校验，产出结构化 span。
+
+        - 真实检索 ID 集 = sources 中 metadata.doc_id（入库时 enrich_acl_metadata 写入）；
+        - 引用编号不在 cit_index（上下文未提供该来源）或对应 doc_id 不在真实 ID 集 → 幻觉引用（valid=False）。
+        """
+        if not answer:
+            return []
+        source_ids = {
+            str(s.get("metadata", {}).get("doc_id"))
+            for s in sources
+            if s.get("metadata", {}).get("doc_id")
+        }
+        cited = parse_citations(answer)
+        if not cited:
+            return []
+        valid = validate_citations(cited, cit_index, source_ids)
+        return build_citation_spans(answer, cit_index, valid)
+
     def _build_chain(self):
         """构建RAG Chain"""
         # Prompt模板
@@ -250,7 +280,7 @@ class LangChainRAGEngine:
 1. 只基于提供的上下文回答，不要编造信息
 2. 如果上下文中没有相关信息，请明确说明"知识库中未找到相关信息"
 3. 回答要准确、简洁、专业
-4. 在回答末尾标注引用来源，格式为 [来源X]
+4. 引用标注：如需引用来源，在对应句子后标注编号 [cit:N]（N 为上下文来源编号），严禁编造不存在的编号
 
 上下文信息：
 {context}"""),
@@ -490,6 +520,7 @@ class LangChainRAGEngine:
                         timing=hit_timing,
                         confidence=cached.get("confidence"),
                         trace_id=cached.get("trace_id", ""),
+                        citation_spans=cached.get("citation_spans", []),
                     )
 
             # 0. 查询纠错（P1-1）
@@ -509,10 +540,14 @@ class LangChainRAGEngine:
                 if hit is not None:
                     answer, srcs, sim = hit
                     logger.info("语义缓存命中: %s (sim=%.3f)", mask_text(effective_q[:40]), sim)
+                    # P2-7: 缓存命中按 sources 顺序重建编号索引，构建引用 span
+                    cit_index = {str(i + 1): s for i, s in enumerate(srcs)}
+                    citation_spans = self._build_citation_spans(answer, cit_index, srcs)
                     return LangChainRAGResponse(
                         answer=answer, sources=srcs, usage={},
                         timing={"cache_hit": True, "semantic": True, "total_ms": 1},
                         confidence=round(float(sim), 4),
+                        citation_spans=citation_spans,
                     )
 
             # 1. 混合检索（大召回 Top-candidate_k；P0-1: 透传 acl_filter 检索前过滤）
@@ -548,17 +583,24 @@ class LangChainRAGEngine:
             if not sources or refuse:
                 answer = "知识库中未找到相关信息"
                 usage = {}
+                citation_spans = []
             else:
-                context = "\n\n".join(
-                    f"[来源{i+1}: {s['metadata'].get('source_file','未知来源')}]\n{s['content']}"
-                    for i, s in enumerate(sources)
-                )
+                # P2-7: 上下文带 [cit:N] 编号，构建 编号->来源 索引
+                context, cit_index = build_context_with_citations(sources)
                 chain_out = (
                     {"context": lambda _: context, "question": RunnablePassthrough()}
                     | self.prompt | self.llm | StrOutputParser()
                 )
                 answer = chain_out.invoke(question)
                 usage = {}  # LangChain不直接暴露token使用量
+                # P2-7: 解析引用编号 → 校验真实性（仅真实检索 ID 集合内的来源有效）→ 构建 span
+                citation_spans = self._build_citation_spans(answer, cit_index, sources)
+                if self.use_citation_verify:
+                    cited = [sp["citation_id"] for sp in citation_spans]
+                    valid_cnt = sum(1 for sp in citation_spans if sp["valid"])
+                    if cited and valid_cnt == 0:
+                        logger.warning("引用校验：全部 %d 个引用均为幻觉引用，按拒答处理", len(cited))
+                        answer = "知识库中未找到相关信息"
             timing["generation_ms"] = round((time.time() - generation_start) * 1000, 2)
 
             total_time = (time.time() - start_time) * 1000
@@ -569,6 +611,7 @@ class LangChainRAGEngine:
                 self.query_cache.set(question, top_k, {
                     "answer": answer, "sources": sources, "usage": usage,
                     "timing": timing, "confidence": confidence, "trace_id": "",
+                    "citation_spans": citation_spans,
                 }, acl_fp)
             if self.semantic_cache is not None and answer and answer != "知识库中未找到相关信息":
                 self.semantic_cache.set(effective_q, answer, sources, acl_fp, self.embeddings.embed_query)
@@ -579,6 +622,7 @@ class LangChainRAGEngine:
                 usage=usage,
                 timing=timing,
                 confidence=confidence,
+                citation_spans=citation_spans,
             )
 
         except Exception as e:
@@ -677,10 +721,8 @@ class LangChainRAGEngine:
                 trace.end_span({"status": "refused" if refuse else "no_sources"})
                 return
 
-            context = "\n\n".join(
-                f"[来源{i+1}: {s['metadata'].get('source_file','未知来源')}]\n{s['content']}"
-                for i, s in enumerate(sources)
-            )
+            # P2-7: 上下文带 [cit:N] 编号，构建 编号->来源 索引
+            context, cit_index = build_context_with_citations(sources)
             chain_out = (
                 {"context": lambda _: context, "question": RunnablePassthrough()}
                 | self.prompt | self.llm | StrOutputParser()
@@ -694,13 +736,23 @@ class LangChainRAGEngine:
 
             timing["generation_ms"] = round((time.time() - generation_start) * 1000, 2)
             timing["total_ms"] = round((time.time() - start_time) * 1000, 2)
-            trace.end_span({"answer_length": len(full_answer)})
+            # P2-7: 引用校验与 span（随最后一个 token 的 timing 透出）
+            citation_spans = self._build_citation_spans(full_answer, cit_index, sources)
+            timing["citation_spans"] = citation_spans
+            if self.use_citation_verify:
+                cited = [sp["citation_id"] for sp in citation_spans]
+                valid_cnt = sum(1 for sp in citation_spans if sp["valid"])
+                if cited and valid_cnt == 0:
+                    logger.warning("引用校验(stream)：全部 %d 个引用均为幻觉引用，按拒答处理", len(cited))
+                    timing["refused_reason"] = "hallucinated_citations"
+            trace.end_span({"answer_length": len(full_answer), "citations": len(citation_spans)})
 
             # P1-3 未命中 → 写缓存（key 含 acl_fp；语义缓存仅写有真实答案的条目）
             if self.query_cache is not None:
                 self.query_cache.set(question, top_k, {
                     "answer": full_answer, "sources": sources, "usage": {},
                     "timing": timing, "confidence": confidence, "trace_id": "",
+                    "citation_spans": citation_spans,
                 }, acl_fp)
             if self.semantic_cache is not None and full_answer and full_answer != "知识库中未找到相关信息":
                 self.semantic_cache.set(effective_q, full_answer, sources, acl_fp, self.embeddings.embed_query)

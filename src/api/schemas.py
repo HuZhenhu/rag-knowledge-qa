@@ -20,6 +20,9 @@ class QueryResponse(BaseModel):
     usage: dict = Field(default_factory=dict, description="Token用量")
     timing: dict = Field(default_factory=dict, description="耗时统计")
     confidence: float | None = Field(None, description="置信度分数（P1-6，启用时输出）")
+    citation_spans: list[dict] = Field(default_factory=list,
+                                       description="引用 span 列表（P2-7：含起止位置/来源定位/有效性标记）")
+    trace_id: str | None = Field(None, description="链路追踪 ID（P2-8：关联 trace 记录）")
 
 
 class HealthResponse(BaseModel):
