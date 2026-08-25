@@ -75,6 +75,54 @@ def decode_token(token: str) -> dict:
         raise HTTPException(status_code=401, detail="无效的Token")
 
 
+# ---- T0.4: refresh token 吊销（SQLite 吊销表） ----
+
+def _revoked_store():
+    from src.storage.database import revoke_token, is_token_revoked
+    return revoke_token, is_token_revoked
+
+
+def revoke_refresh_token(token: str) -> bool:
+    """吊销 refresh token（写入 SQLite 吊销表）。token 无效/已过期时无法吊销，返回 False。"""
+    try:
+        payload = decode_token(token)
+    except HTTPException:
+        return False
+    if payload.get("type") != "refresh":
+        return False
+    revoke_token, _ = _revoked_store()
+    revoke_token(
+        jti=payload["jti"],
+        token_type="refresh",
+        user_id=payload.get("sub", ""),
+        expires_at=str(payload.get("exp", "")),
+    )
+    return True
+
+
+def is_refresh_token_revoked(token: str) -> bool:
+    """查询 refresh token 是否已被吊销。token 无法解码时返回 False（由校验方处理）。"""
+    try:
+        payload = decode_token(token)
+    except HTTPException:
+        return False
+    _, is_revoked = _revoked_store()
+    return is_revoked(payload.get("jti", ""))
+
+
+def validate_refresh_token_for_use(token: str) -> dict:
+    """校验 refresh token 是否可用于刷新：签名有效 + type=refresh + 未被吊销。
+
+    失败时抛 401；成功返回 payload。
+    """
+    payload = decode_token(token)
+    if payload.get("type") != "refresh":
+        raise HTTPException(status_code=401, detail="无效的刷新Token")
+    if is_refresh_token_revoked(token):
+        raise HTTPException(status_code=401, detail="刷新Token已吊销，请重新登录")
+    return payload
+
+
 # ---- 旧 API Key 向后兼容 ----
 
 # 旧的内存 API Key 存储（由 main.py 初始化）

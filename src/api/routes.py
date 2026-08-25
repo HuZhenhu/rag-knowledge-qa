@@ -116,17 +116,22 @@ async def login(req: LoginRequest, request: Request):
 
 @router.post("/auth/refresh", response_model=TokenResponse)
 async def refresh_token(req: RefreshRequest):
-    """刷新Token"""
-    payload = decode_token(req.refresh_token)
-    if payload.get("type") != "refresh":
-        raise HTTPException(status_code=401, detail="无效的刷新Token")
+    """刷新Token（T0.4：轮换机制，旧 refresh 使用一次即吊销）"""
+    from src.api.jwt_auth import (
+        validate_refresh_token_for_use, revoke_refresh_token,
+    )
+    payload = validate_refresh_token_for_use(req.refresh_token)
 
     user_id = payload["sub"]
     from src.storage.database import get_user_by_id
     user = get_user_by_id(user_id)
     if user is None or not user.get("is_active", True):
+        # 用户失效：同时吊销该 refresh token，防止继续复用
+        revoke_refresh_token(req.refresh_token)
         raise HTTPException(status_code=401, detail="用户不存在或已被禁用")
 
+    # 轮换：旧 refresh token 立即吊销，签发新 access + 新 refresh
+    revoke_refresh_token(req.refresh_token)
     access_token = create_access_token(user["id"], user["role"])
     new_refresh_token = create_refresh_token(user["id"])
 
@@ -136,6 +141,14 @@ async def refresh_token(req: RefreshRequest):
         refresh_token=new_refresh_token,
         expires_in=JWT_ACCESS_TOKEN_EXPIRE_MINUTES * 60,
     )
+
+
+@router.post("/auth/logout")
+async def logout(req: RefreshRequest):
+    """登出：吊销 refresh token，使其不可再用于刷新"""
+    from src.api.jwt_auth import revoke_refresh_token
+    revoke_refresh_token(req.refresh_token)
+    return {"success": True}
 
 
 # ===================================================================

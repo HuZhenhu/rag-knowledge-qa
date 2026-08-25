@@ -128,6 +128,17 @@ def init_db() -> None:
             )
         """)
 
+        # T0.4: JWT 吊销表（refresh token 轮换/登出吊销）
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS revoked_tokens (
+                jti TEXT PRIMARY KEY,
+                token_type TEXT NOT NULL DEFAULT 'refresh',
+                user_id TEXT DEFAULT '',
+                expires_at TEXT DEFAULT '',
+                revoked_at TEXT NOT NULL
+            )
+        """)
+
         conn.commit()
     finally:
         conn.close()
@@ -508,6 +519,37 @@ def create_audit_log(user_id: str, action: str, resource_type: str = "",
              datetime.now().isoformat(timespec="seconds")),
         )
         conn.commit()
+    finally:
+        conn.close()
+
+
+# ---------------------------------------------------------------------------
+# T0.4: JWT Token 吊销
+# ---------------------------------------------------------------------------
+
+def revoke_token(jti: str, token_type: str = "refresh",
+                 user_id: str = "", expires_at: str = "") -> None:
+    """吊销 token（写入 revoked_tokens 表，幂等）"""
+    conn = _get_conn()
+    try:
+        conn.execute(
+            "INSERT OR IGNORE INTO revoked_tokens (jti, token_type, user_id, expires_at, revoked_at) "
+            "VALUES (?, ?, ?, ?, ?)",
+            (jti, token_type, user_id, expires_at, datetime.now().isoformat(timespec="seconds")),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def is_token_revoked(jti: str) -> bool:
+    """查询 token 是否已被吊销"""
+    conn = _get_conn()
+    try:
+        row = conn.execute(
+            "SELECT 1 FROM revoked_tokens WHERE jti = ?", (jti,)
+        ).fetchone()
+        return row is not None
     finally:
         conn.close()
 
