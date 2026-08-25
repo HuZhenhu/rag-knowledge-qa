@@ -4,6 +4,10 @@ import time
 from collections import defaultdict
 from dataclasses import dataclass, field
 
+# P2-8: 延迟告警阈值与成本单价（可在 config 覆盖，这里提供默认避免循环依赖）
+_LATENCY_ALERT_SECONDS_DEFAULT = 3.0
+_COST_USD_PER_1K_DEFAULT = 0.5
+
 
 @dataclass
 class _HistogramBucket:
@@ -103,6 +107,52 @@ class MetricsCollector:
     def get_counter(self, name: str) -> int:
         with self._lock:
             return self._counters.get(name, 0)
+
+    # ------------------------------------------------------------------
+    # P2-8: 延迟告警阈值配置（可在 config 覆盖）
+    # ------------------------------------------------------------------
+
+    def _latency_alert_seconds(self) -> float:
+        try:
+            from src.config import METRICS_LATENCY_ALERT_SECONDS
+            return float(METRICS_LATENCY_ALERT_SECONDS)
+        except Exception:
+            return _LATENCY_ALERT_SECONDS_DEFAULT
+
+    # ------------------------------------------------------------------
+    # P2-8: token / 成本指标
+    # ------------------------------------------------------------------
+
+    def record_llm_usage(self, latency_ms: float, prompt_tokens: int = 0,
+                         completion_tokens: int = 0) -> None:
+        """记录一次生成调用的延迟、token 与估算成本。
+
+        - 延迟超过阈值自动产生 latency 告警（对齐企业级 P95<3s 目标）。
+        - token 与成本按 1min 窗口直方图聚合，供 /metrics 快照与 Prometheus 导出。
+        """
+        self.inc_counter("llm_calls", 1)
+        self.record_histogram("llm_latency_ms", latency_ms)
+        total_tokens = int(prompt_tokens or 0) + int(completion_tokens or 0)
+        if total_tokens:
+            self.inc_counter("llm_tokens_total", total_tokens)
+            self.record_histogram("llm_tokens", float(total_tokens))
+            cost = total_tokens / 1000.0 * self._cost_per_1k()
+            self.inc_counter("llm_cost_usd_total", round(cost, 6))
+            self.record_histogram("llm_cost_usd", cost)
+
+        if latency_ms / 1000.0 > self._latency_alert_seconds():
+            self.record_alert(
+                "latency_high",
+                f"生成延迟 {latency_ms:.0f}ms 超过阈值 {self._latency_alert_seconds() * 1000:.0f}ms",
+                {"latency_ms": latency_ms, "tokens": total_tokens},
+            )
+
+    def _cost_per_1k(self) -> float:
+        try:
+            from src.config import METRICS_COST_USD_PER_1K
+            return float(METRICS_COST_USD_PER_1K)
+        except Exception:
+            return _COST_USD_PER_1K_DEFAULT
 
     # ------------------------------------------------------------------
     # 直方图

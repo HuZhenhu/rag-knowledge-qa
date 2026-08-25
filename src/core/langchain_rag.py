@@ -25,6 +25,7 @@ from src.core.acl import enrich_acl_metadata, assert_sources_allowed, allowed_do
 from src.core.pii_redactor import redact_texts, mask_text
 from src.core.query_cache import get_query_cache
 from src.core.semantic_cache import get_semantic_cache
+from src.core.metrics import metrics
 from src.core.citation import (
     build_context_with_citations,
     parse_citations,
@@ -513,6 +514,9 @@ class LangChainRAGEngine:
                     hit_timing = dict(cached.get("timing") or {})
                     hit_timing["cache_hit"] = True
                     hit_timing["total_ms"] = 1
+                    metrics.inc_counter("total_queries", 1)
+                    metrics.inc_counter("cache_hits", 1)
+                    metrics.record_histogram("latency_ms", 1.0)
                     return LangChainRAGResponse(
                         answer=cached.get("answer", ""),
                         sources=cached.get("sources", []),
@@ -543,6 +547,9 @@ class LangChainRAGEngine:
                     # P2-7: 缓存命中按 sources 顺序重建编号索引，构建引用 span
                     cit_index = {str(i + 1): s for i, s in enumerate(srcs)}
                     citation_spans = self._build_citation_spans(answer, cit_index, srcs)
+                    metrics.inc_counter("total_queries", 1)
+                    metrics.inc_counter("cache_hits", 1)
+                    metrics.record_histogram("latency_ms", 1.0)
                     return LangChainRAGResponse(
                         answer=answer, sources=srcs, usage={},
                         timing={"cache_hit": True, "semantic": True, "total_ms": 1},
@@ -616,6 +623,15 @@ class LangChainRAGEngine:
             if self.semantic_cache is not None and answer and answer != "知识库中未找到相关信息":
                 self.semantic_cache.set(effective_q, answer, sources, acl_fp, self.embeddings.embed_query)
 
+            # P2-8: 采集查询总量/延迟/token与成本（token 用字符/4 估算，成本按 config 单价）
+            metrics.inc_counter("total_queries", 1)
+            metrics.record_histogram("latency_ms", total_time)
+            metrics.record_llm_usage(
+                latency_ms=float(timing.get("generation_ms", 0) or 0),
+                prompt_tokens=len(context) // 4 if "context" in dir() else 0,
+                completion_tokens=len(answer) // 4,
+            )
+
             return LangChainRAGResponse(
                 answer=answer,
                 sources=sources,
@@ -628,6 +644,9 @@ class LangChainRAGEngine:
         except Exception as e:
             logger.error("LangChain RAG查询失败: %s", e)
             total_time = (time.time() - start_time) * 1000
+            metrics.inc_counter("total_queries", 1)
+            metrics.inc_counter("total_errors", 1)
+            metrics.record_histogram("latency_ms", total_time)
             return LangChainRAGResponse(
                 answer=f"查询失败: {str(e)}",
                 sources=[],
@@ -660,6 +679,11 @@ class LangChainRAGEngine:
                     hit_timing = dict(cached.get("timing") or {})
                     hit_timing["cache_hit"] = True
                     hit_timing["total_ms"] = 1
+                    trace.start_span("cache", {"kind": "exact"})
+                    trace.end_span({"hit": True})
+                    metrics.inc_counter("total_queries", 1)
+                    metrics.inc_counter("cache_hits", 1)
+                    metrics.record_histogram("latency_ms", 1.0)
                     yield cached.get("answer", ""), True, cached.get("sources", []), hit_timing
                     return
 
@@ -679,6 +703,11 @@ class LangChainRAGEngine:
                 if hit is not None:
                     answer, srcs, sim = hit
                     logger.info("语义缓存命中(stream): %s (sim=%.3f)", mask_text(effective_q[:40]), sim)
+                    trace.start_span("cache", {"kind": "semantic"})
+                    trace.end_span({"hit": True, "sim": round(float(sim), 4)})
+                    metrics.inc_counter("total_queries", 1)
+                    metrics.inc_counter("cache_hits", 1)
+                    metrics.record_histogram("latency_ms", 1.0)
                     yield answer, True, srcs, {"cache_hit": True, "semantic": True, "total_ms": 1}
                     return
 
@@ -691,8 +720,10 @@ class LangChainRAGEngine:
             trace.end_span({"docs_count": len(scored_docs)})
 
             # 2. 构建sources + 重排
+            trace.start_span("rerank")
             sources = self._build_sources(effective_q, scored_docs, top_k)
             timing["rerank_ms"] = round(getattr(self, "_last_rerank_ms", 0), 2)
+            trace.end_span({"sources_count": len(sources), "rerank_ms": timing["rerank_ms"]})
 
             # 2.5 父子切片回取：child → parent（P1-2）
             sources = self._resolve_parent(sources)
@@ -717,6 +748,9 @@ class LangChainRAGEngine:
             trace.start_span("generation")
             generation_start = time.time()
             if not sources or refuse:
+                metrics.inc_counter("total_queries", 1)
+                metrics.record_histogram("latency_ms", (time.time() - start_time) * 1000)
+                metrics.record_llm_usage(latency_ms=0.0, prompt_tokens=0, completion_tokens=0)
                 yield "知识库中未找到相关信息", True, sources, timing
                 trace.end_span({"status": "refused" if refuse else "no_sources"})
                 return
@@ -757,11 +791,24 @@ class LangChainRAGEngine:
             if self.semantic_cache is not None and full_answer and full_answer != "知识库中未找到相关信息":
                 self.semantic_cache.set(effective_q, full_answer, sources, acl_fp, self.embeddings.embed_query)
 
+            # P2-8: 流式链路采集总量/延迟/token与成本
+            metrics.inc_counter("total_queries", 1)
+            total_ms = float(timing.get("total_ms", 0) or 0)
+            metrics.record_histogram("latency_ms", total_ms)
+            metrics.record_llm_usage(
+                latency_ms=float(timing.get("generation_ms", 0) or 0),
+                prompt_tokens=len(context) // 4 if "context" in dir() else 0,
+                completion_tokens=len(full_answer) // 4,
+            )
+
             yield "", True, sources, timing
 
         except Exception as e:
             logger.error("LangChain RAG流式查询失败: %s", e)
             trace.status = "error"
+            metrics.inc_counter("total_queries", 1)
+            metrics.inc_counter("total_errors", 1)
+            metrics.record_histogram("latency_ms", (time.time() - start_time) * 1000)
             yield f"查询失败: {str(e)}", True, [], {"total_ms": round((time.time() - start_time) * 1000, 2)}
         finally:
             trace.finish()

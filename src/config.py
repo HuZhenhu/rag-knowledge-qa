@@ -191,5 +191,6 @@ USE_CITATION_VERIFY = os.getenv("USE_CITATION_VERIFY", "false").lower() == "true
 
 # P2-8 可观测性：延迟告警阈值（秒），响应超过该值记录 alert（默认 3s，对齐企业级 P95<3s 目标）
 METRICS_LATENCY_ALERT_SECONDS = float(os.getenv("METRICS_LATENCY_ALERT_SECONDS", "3.0"))
+METRICS_COST_USD_PER_1K = float(os.getenv("METRICS_COST_USD_PER_1K", "0.5"))  # 生成 token 估算单价（USD / 1K tokens，用于成本监控近似）
 
 
