@@ -1,4 +1,5 @@
 """JWT认证 — 支持 JWT Token 和旧 API Key 向后兼容"""
+import os
 import uuid
 from datetime import datetime, timedelta, timezone
 
@@ -78,6 +79,30 @@ def decode_token(token: str) -> dict:
 
 # 旧的内存 API Key 存储（由 main.py 初始化）
 _LEGACY_API_KEYS: dict[str, dict] = {}
+
+
+def register_legacy_key_from_env(key_env: str = "LEGACY_API_KEY",
+                                 role_env: str = "LEGACY_API_KEY_ROLE") -> str | None:
+    """T0.3 从环境变量可选注入旧体系 API Key。
+
+    未配置 LEGACY_API_KEY 时不注册任何默认 key（杜绝默认 admin 后门）；
+    配置后同时写入 jwt_auth 旧 Key 存储与 src.api.auth 内存存储（保持原双写语义）。
+    返回注入的 key；未配置时返回 None。
+    """
+    key = os.getenv(key_env, "").strip()
+    if not key:
+        return None
+    role = os.getenv(role_env, "viewer").strip() or "viewer"
+    from src.api.auth import API_KEYS
+    info = {
+        "key": key,
+        "role": role,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "active": True,
+    }
+    _LEGACY_API_KEYS[key] = info
+    API_KEYS[key] = info
+    return key
 
 
 def register_legacy_api_key(key: str, info: dict) -> None:

@@ -9,15 +9,20 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 from src.api.routes import router
 from src.api.rate_limit import RateLimitMiddleware
-from src.api.auth import API_KEYS
-from src.api.jwt_auth import register_legacy_api_key
+from src.api.jwt_auth import register_legacy_key_from_env
 from src.api.logging_config import log_request, request_id_ctx, logger
 from src.core.metrics import metrics
 from src.core.alert_manager import alert_manager
 from src.core.tracer import init_traces_table
 from src.storage.database import init_db
-from src.config import API_HOST, API_PORT, USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, RAG_ENGINE
+from src.config import (
+    API_HOST, API_PORT, USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, RAG_ENGINE,
+    CORS_ALLOW_ORIGINS, CORS_ALLOW_CREDENTIALS, validate_security_config,
+)
 from src.core.session import SessionManager
+
+# T0.2: 启动安全校验——生产环境（APP_ENV=production）使用默认 JWT 密钥时直接报错退出
+validate_security_config()
 
 # 初始化所有数据表（包括新增的 users / knowledge_bases 等）
 init_db()
@@ -59,15 +64,9 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 
         return response
 
-# 预置开发用 API Key（旧体系，保持向后兼容）
-API_KEYS["sk-rag-dev-key-12345"] = {
-    "key": "sk-rag-dev-key-12345",
-    "role": "admin",
-    "created_at": "2026-01-01",
-    "active": True,
-}
-# 注册到 JWT 模块的旧 Key 存储，供统一认证回退使用
-register_legacy_api_key("sk-rag-dev-key-12345", API_KEYS["sk-rag-dev-key-12345"])
+# T0.3: 旧体系 API Key 可选注入——默认不注册任何 key（消除默认 admin 后门）。
+# 需启用时配置环境变量 LEGACY_API_KEY（可选 LEGACY_API_KEY_ROLE=viewer/editor/admin）。
+register_legacy_key_from_env()
 
 app = FastAPI(
     title="RAG智能问答API",
@@ -77,11 +76,12 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# CORS
+# T0.1: CORS 白名单化——allow_origins 从 env 读取（默认仅 localhost）；
+# 白名单含 * 时 allow_credentials 自动为 False，杜绝非法组合。
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=CORS_ALLOW_ORIGINS,
+    allow_credentials=CORS_ALLOW_CREDENTIALS,
     allow_methods=["*"],
     allow_headers=["*"],
 )

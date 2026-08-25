@@ -80,6 +80,35 @@ LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "2000"))
 API_HOST = os.getenv("API_HOST", "0.0.0.0")
 API_PORT = int(os.getenv("API_PORT", "8080"))
 
+# 运行环境：development / test / staging / production
+APP_ENV = os.getenv("APP_ENV", "development").strip().lower()
+
+# CORS 白名单（T0.1）：从 env CORS_ALLOW_ORIGINS 逗号分隔读取，默认仅本地开发地址；
+# 禁止 allow_origins=["*"] 与 allow_credentials=True 的非法组合。
+DEFAULT_CORS_ORIGINS = (
+    "http://localhost:5173",
+    "http://localhost:8080",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:8080",
+)
+
+
+def parse_cors_allow_origins(raw: str | None = None) -> list[str]:
+    """解析 CORS 白名单。raw 为空时返回默认本地地址列表。"""
+    raw = raw if raw is not None else os.getenv("CORS_ALLOW_ORIGINS", "")
+    if not raw.strip():
+        return list(DEFAULT_CORS_ORIGINS)
+    return [o.strip() for o in raw.split(",") if o.strip()]
+
+
+def cors_allow_credentials_allowed(allow_origins: list[str]) -> bool:
+    """白名单含 * 时禁止携带凭据（浏览器规范：* 与 credentials 不能同时为真）。"""
+    return "*" not in allow_origins
+
+
+CORS_ALLOW_ORIGINS = parse_cors_allow_origins()
+CORS_ALLOW_CREDENTIALS = cors_allow_credentials_allowed(CORS_ALLOW_ORIGINS)
+
 # 多轮对话配置
 MAX_HISTORY_ROUNDS = int(os.getenv("MAX_HISTORY_ROUNDS", "5"))
 SESSION_TIMEOUT_MINUTES = int(os.getenv("SESSION_TIMEOUT_MINUTES", "30"))
@@ -94,10 +123,24 @@ RATE_LIMIT_PER_MINUTE = int(os.getenv("RATE_LIMIT_PER_MINUTE", "10"))
 RATE_LIMIT_DB = os.getenv("RATE_LIMIT_DB", str(BASE_DIR / "rate_limit.db"))
 
 # JWT认证配置
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "rag-knowledge-qa-dev-secret-key-change-in-production")
+JWT_DEFAULT_SECRET = "rag-knowledge-qa-dev-secret-key-change-in-production"
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", JWT_DEFAULT_SECRET)
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 JWT_ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))  # 24小时
 JWT_REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("JWT_REFRESH_TOKEN_EXPIRE_DAYS", "30"))
+
+
+def validate_security_config(app_env: str | None = None, jwt_secret: str | None = None) -> None:
+    """T0.2 启动安全校验：生产环境（APP_ENV=production）下若 JWT 密钥仍为默认值，直接抛错阻止启动。
+
+    测试/开发环境不受影响。
+    """
+    env = (app_env or APP_ENV).strip().lower()
+    secret = jwt_secret if jwt_secret is not None else JWT_SECRET_KEY
+    if env == "production" and secret == JWT_DEFAULT_SECRET:
+        raise RuntimeError(
+            "生产环境禁止使用默认 JWT_SECRET_KEY，请在环境变量 JWT_SECRET_KEY 中配置强随机密钥后重启。"
+        )
 
 # 注册开关（admin可关闭开放注册）
 ALLOW_REGISTRATION = os.getenv("ALLOW_REGISTRATION", "true").lower() == "true"
