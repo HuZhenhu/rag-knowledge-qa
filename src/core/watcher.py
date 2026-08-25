@@ -6,7 +6,7 @@ from pathlib import Path
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from src.config import DATA_DIR
+from src.config import DATA_DIR, WATCHER_DEBOUNCE_SECONDS
 
 logger = logging.getLogger(__name__)
 
@@ -17,14 +17,16 @@ SUPPORTED_EXTENSIONS = {".md", ".txt", ".docx", ".pdf", ".xlsx", ".png", ".jpg",
 class _DebounceHandler(FileSystemEventHandler):
     """防抖动文件事件处理器
 
-    短时间内多次写入同一个文件只触发一次处理（等 DEBOUNCE_SECONDS）。
+    短时间内多次写入同一个文件只触发一次处理（等 DEBOUNCE_SECONDS，P2-9 起
+    该窗口可通过环境变量 WATCHER_DEBOUNCE_SECONDS 配置，默认 5 秒）。
     """
 
-    DEBOUNCE_SECONDS = 5.0
+    DEBOUNCE_SECONDS = WATCHER_DEBOUNCE_SECONDS
 
-    def __init__(self, on_change_callback):
+    def __init__(self, on_change_callback, debounce_seconds: float | None = None):
         super().__init__()
         self._callback = on_change_callback
+        self._debounce_seconds = debounce_seconds if debounce_seconds is not None else WATCHER_DEBOUNCE_SECONDS
         self._pending: set[str] = set()
         self._lock = threading.Lock()
         self._timer: threading.Timer | None = None
@@ -53,7 +55,7 @@ class _DebounceHandler(FileSystemEventHandler):
             self._pending.add(str(path))
             if self._timer is not None:
                 self._timer.cancel()
-            self._timer = threading.Timer(self.DEBOUNCE_SECONDS, self._flush)
+            self._timer = threading.Timer(self._debounce_seconds, self._flush)
             self._timer.daemon = True
             self._timer.start()
 
@@ -66,7 +68,7 @@ class _DebounceHandler(FileSystemEventHandler):
         if paths:
             logger.info("检测到 %d 个文件变化，开始增量索引", len(paths))
             try:
-                self._callback()
+                self._callback(paths)
             except Exception:
                 logger.exception("增量索引失败")
 
@@ -106,8 +108,12 @@ class FileWatcher:
         self._running = False
         logger.info("文件监听器已停止")
 
-    def _on_change(self):
-        """文件变化回调：执行增量索引，并通过 WebSocket 广播结果"""
+    def _on_change(self, paths: list[str]):
+        """文件变化回调：执行路径级增量索引，并通过 WebSocket 广播结果
+
+        P2-9: 事件驱动同步——只对事件给出的具体路径做 hash 对比与增/删/改，
+        避免全目录重扫，实现亚分钟级响应。
+        """
         import asyncio
         from src.core.incremental_indexer import IncrementalIndexer
         from src.core.data_monitor import get_data_monitor
@@ -119,11 +125,11 @@ class FileWatcher:
         try:
             loop = asyncio.get_event_loop()
             if loop.is_running():
-                asyncio.ensure_future(monitor.on_file_change([], "indexing"))
+                asyncio.ensure_future(monitor.on_file_change(paths, "indexing"))
         except RuntimeError:
             pass
 
-        stats = indexer.sync()
+        stats = indexer.sync_paths(paths)
         logger.info("增量索引完成: %s", stats)
 
         # 广播：索引完成

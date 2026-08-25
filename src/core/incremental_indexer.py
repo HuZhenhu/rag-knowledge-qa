@@ -5,6 +5,7 @@ from pathlib import Path
 from src.core.document_scanner import (
     ScanResult,
     compute_file_hash,
+    get_supported_extensions,
     scan_data_directory,
     update_registry,
 )
@@ -16,6 +17,7 @@ from src.storage.database import (
     init_db,
     get_document_by_path,
     delete_document,
+    list_documents,
 )
 
 
@@ -72,6 +74,69 @@ class IncrementalIndexer:
 
         # P1-3 缓存失效钩子：检测到任一增/删/改后清空检索/语义缓存
         # （build_index.py 的 build_index_incremental 走本 sync，统一在此失效）
+        changed = stats["added"] + stats["updated"] + stats["deleted"]
+        if changed > 0:
+            try:
+                from src.core.semantic_cache import clear_all_caches
+                clear_all_caches()
+                print(f"  缓存失效：文档变更 {changed} 项，已清空检索/语义缓存")
+            except Exception as e:
+                print(f"  缓存清理失败: {e}")
+
+        return stats
+
+    def sync_paths(self, paths: list[str]) -> dict:
+        """P2-9: 路径级增量同步（事件驱动，仅处理变更文件）
+
+        由 watcher 文件系统事件回调触发，只对事件给出的具体路径做 hash 对比与
+        增/删/改索引，避免每次事件全目录重扫，实现亚分钟级事件驱动同步。
+        数据库 CDC（binlog/WAL）不适用：数据源为本地文件而非数据库事务日志。
+
+        Args:
+            paths: 文件系统事件给出的绝对/相对路径列表
+
+        Returns:
+            操作统计 dict（added/updated/deleted/errors）
+        """
+        from src.config import DATA_DIR
+        init_db()
+
+        stats = {"added": 0, "updated": 0, "deleted": 0, "errors": 0}
+        supported = get_supported_extensions()
+        existing = {r.file_path: r for r in list_documents()}
+        base_parent = DATA_DIR.parent
+
+        def to_rel(p: str) -> str:
+            try:
+                return str(Path(p).resolve().relative_to(Path(base_parent).resolve()))
+            except ValueError:
+                return str(p)
+
+        for p in paths:
+            try:
+                path = Path(p)
+                if not path.is_file():
+                    # 文件不存在 → 按删除处理
+                    rel = to_rel(p)
+                    if rel in existing:
+                        self._delete_file(rel)
+                        stats["deleted"] += 1
+                    continue
+                if path.suffix.lower() not in supported:
+                    continue
+                rel = to_rel(p)
+                cur = compute_file_hash(path)
+                if rel in existing:
+                    if existing[rel].file_hash != cur:
+                        self._update_file(path)
+                        stats["updated"] += 1
+                else:
+                    self._add_file(path)
+                    stats["added"] += 1
+            except Exception as e:
+                print(f"  同步失败 {p}: {e}")
+                stats["errors"] += 1
+
         changed = stats["added"] + stats["updated"] + stats["deleted"]
         if changed > 0:
             try:

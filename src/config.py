@@ -110,6 +110,7 @@ DEDUP_SIMILARITY_THRESHOLD = float(os.getenv("DEDUP_SIMILARITY_THRESHOLD", "0.95
 
 # 文件监听器配置
 WATCHER_AUTO_START = os.getenv("WATCHER_AUTO_START", "true").lower() == "true"  # 服务启动时自动启动监听
+WATCHER_DEBOUNCE_SECONDS = float(os.getenv("WATCHER_DEBOUNCE_SECONDS", "5.0"))  # 文件事件防抖窗口（亚分钟级事件驱动同步）
 
 # M7: 多模态能力配置（默认关闭）
 MULTIMODAL_ENABLED = os.getenv("MULTIMODAL_ENABLED", "false").lower() == "true"
