@@ -16,7 +16,7 @@ from src.core.alert_manager import alert_manager
 from src.core.tracer import init_traces_table
 from src.storage.database import init_db
 from src.config import (
-    API_HOST, API_PORT,
+    API_HOST, API_PORT, UVICORN_WORKERS,
     CORS_ALLOW_ORIGINS, CORS_ALLOW_CREDENTIALS, validate_security_config,
 )
 from src.core.session import SessionManager
@@ -68,7 +68,45 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 # 需启用时配置环境变量 LEGACY_API_KEY（可选 LEGACY_API_KEY_ROLE=viewer/editor/admin）。
 register_legacy_key_from_env()
 
+
+# ---------------------------------------------------------------------------
+# T1.3: 启动预热（消除首请求 4 秒冷启动）
+# ---------------------------------------------------------------------------
+
+def warmup_models() -> None:
+    """预热 embedding 与 reranker 模型，仅初始化一次。"""
+    from src.core.embedder import Embedder
+    from src.core.reranker import Reranker
+    from src.config import WARMUP_ON_START
+
+    if not WARMUP_ON_START:
+        return
+    try:
+        Embedder().warmup()
+        logger.info("Embedding 模型预热完成")
+    except Exception as e:  # noqa: BLE001
+        logger.warning("Embedding 预热失败（不影响启动）: %s", e)
+    try:
+        Reranker().warmup()
+        logger.info("ReRanker 模型预热完成")
+    except Exception as e:  # noqa: BLE001
+        logger.warning("ReRanker 预热失败（不影响启动）: %s", e)
+
+
+from contextlib import asynccontextmanager
+
+
+@asynccontextmanager
+async def lifespan(app):
+    """应用生命周期：启动时预热模型（T1.3）"""
+    import asyncio
+    loop = asyncio.get_running_loop()
+    await loop.run_in_executor(None, warmup_models)
+    yield
+
+
 app = FastAPI(
+    lifespan=lifespan,
     title="RAG智能问答API",
     description="基于个人知识库的智能问答服务",
     version="1.1.0",
@@ -266,4 +304,6 @@ if WATCHER_AUTO_START:
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host=API_HOST, port=API_PORT)
+    # T1.3: 多 worker（默认 UVICORN_WORKERS=1 保持现行为；生产设 4 利用多核）。
+    # 多 worker 模式下必须以 "main:app" 字符串形式传入，由 uvicorn 各 worker 独立 import。
+    uvicorn.run("main:app", host=API_HOST, port=API_PORT, workers=UVICORN_WORKERS)

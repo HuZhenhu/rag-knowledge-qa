@@ -72,6 +72,12 @@ HYBRID_BM25_WEIGHT = float(os.getenv("HYBRID_BM25_WEIGHT", "1.0"))
 RELEVANCE_THRESHOLD = float(os.getenv("RELEVANCE_THRESHOLD", "0.01"))
 RERANKER_MODEL = os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-base")
 
+# T1.3: 多worker + 启动预热 + Embedding 量化（默认保持现行为，灰度开关）
+UVICORN_WORKERS = int(os.getenv("UVICORN_WORKERS", "1"))  # 默认 1 worker 保持现行为；生产可设 4
+WARMUP_ON_START = os.getenv("WARMUP_ON_START", "true").lower() == "true"  # 启动预热 embedding/reranker，消除首请求冷启动
+EMBEDDING_HALF_PRECISION = os.getenv("EMBEDDING_HALF_PRECISION", "false").lower() == "true"  # bge-m3 转 half 降内存；开启后需重建索引
+RERANKER_HALF_PRECISION = os.getenv("RERANKER_HALF_PRECISION", "false").lower() == "true"
+
 # LLM配置
 LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.7"))
 LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "2000"))

@@ -27,6 +27,13 @@ class Reranker:
             print(f"加载ReRanker模型: {self.model_name}")
             self.model = CrossEncoder(self.model_name)
 
+    def warmup(self):
+        """启动预热：强制加载模型并跑一次预测，消除首请求冷启动"""
+        self._load_model()
+        if self.model is None:
+            return
+        self.model.predict([("warmup", "warmup")])
+
     def rerank(
         self,
         query: str,

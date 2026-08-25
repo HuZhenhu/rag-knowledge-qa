@@ -12,4 +12,4 @@ COPY src/ src/
 COPY main.py .
 COPY build_index.py .
 EXPOSE 8080
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "4"]
