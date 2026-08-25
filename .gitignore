@@ -10,6 +10,7 @@ models/
 _debug_chunks.txt
 *.log
 .pytest_cache/
+.pytest_tmp/
 .ruff_cache/
 
 # 测试残留与临时产物（勿入库）
