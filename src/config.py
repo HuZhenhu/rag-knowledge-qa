@@ -304,6 +304,14 @@ LLM_GATEWAY_RATE_RPM = int(os.getenv("LLM_GATEWAY_RATE_RPM", "60"))  # 每 provi
 LLM_GATEWAY_SMALL_MODEL = os.getenv("LLM_GATEWAY_SMALL_MODEL", "deepseek-chat")  # 小模型（简单问题，低成本）
 LLM_GATEWAY_LARGE_MODEL = os.getenv("LLM_GATEWAY_LARGE_MODEL", "deepseek-reasoner")  # 大模型（复杂问题）
 
+# ===== T3.1 模型分级：意图分类 + 复杂度评估 → 小模型/低温度 / 大模型（灰度开关默认关）=====
+MODEL_ROUTER_ENABLED = os.getenv("MODEL_ROUTER_ENABLED", "false").lower() == "true"  # 模型分级总开关，默认关保持原链路
+MODEL_ROUTER_SMALL_MODEL = os.getenv("MODEL_ROUTER_SMALL_MODEL", LLM_GATEWAY_SMALL_MODEL)  # 简单事实问题 → 小模型（低单价）
+MODEL_ROUTER_LARGE_MODEL = os.getenv("MODEL_ROUTER_LARGE_MODEL", LLM_GATEWAY_LARGE_MODEL)  # 复杂问题 → 大模型
+MODEL_ROUTER_SMALL_TEMPERATURE = float(os.getenv("MODEL_ROUTER_SMALL_TEMPERATURE", "0.1"))  # 小模型低温度（低方差、省token）
+MODEL_ROUTER_MAX_TOKENS_SMALL = int(os.getenv("MODEL_ROUTER_MAX_TOKENS_SMALL", "1024"))  # 小模型 max_tokens 上限
+MODEL_ROUTER_MAX_TOKENS_LARGE = int(os.getenv("MODEL_ROUTER_MAX_TOKENS_LARGE", "2048"))  # 大模型 max_tokens 上限
+
 # ===== T2.5 多租户与渠道隔离（默认关，灰度开启）=====
 TENANT_ISOLATION_ENABLED = os.getenv("TENANT_ISOLATION_ENABLED", "false").lower() == "true"  # 租户级隔离总开关
 TENANT_CHANNELS = tuple(c.strip() for c in os.getenv("TENANT_CHANNELS", "web,wechat,app,ivr").split(",") if c.strip())

@@ -67,6 +67,7 @@ from src.config import (
     CONFIDENCE_REFUSE_THRESHOLD,
     USE_CITATION_VERIFY,
     LLM_GUARD_ENABLED,
+    MODEL_ROUTER_ENABLED,
 )
 from src.core.llm_guard import guarded_llm_invoke, get_llm_guard
 
@@ -112,6 +113,8 @@ class LangChainRAGEngine:
         use_confidence_refuse: bool = ENABLE_CONFIDENCE_REFUSE,
         confidence_refuse_threshold: float = CONFIDENCE_REFUSE_THRESHOLD,
         use_citation_verify: bool = USE_CITATION_VERIFY,
+        model_router=None,
+        enable_model_router: bool | None = None,
     ):
         self.top_k = top_k
         self.use_hybrid = use_hybrid
@@ -149,6 +152,12 @@ class LangChainRAGEngine:
             temperature=self.temperature,
             max_tokens=2048,
         )
+        # T3.1 模型分级：路由开关（默认关时为 None，保持 legacy 单模型链路）
+        self.model_router = model_router
+        self.enable_model_router = (
+            MODEL_ROUTER_ENABLED if enable_model_router is None else enable_model_router
+        )
+        self.llm_factory = None  # 注入用（测试/自定义）；None 时按配置创建 ChatOpenAI
 
         # 初始化Embeddings（使用本地HuggingFace模型）
         self.embeddings = HuggingFaceEmbeddings(
@@ -485,6 +494,33 @@ class LangChainRAGEngine:
                 resolved.append(s)
         return resolved
 
+    # T3.1 模型分级：按决策选择生成用 LLM
+    def _select_llm(self, question: str) -> tuple:
+        """按模型分级决策返回 (llm, decision)。
+
+        - 开关关 / 决策为 legacy → 返回默认 self.llm（保持原行为）
+        - 决策 small / large → 返回对应模型 LLM（小模型低温度）
+        - 缓存优先：决策 tier=cache 时返回 (None, decision)，调用方跳过生成
+        """
+        from src.core.model_router import ModelRouter
+
+        if self.model_router is None:
+            self.model_router = ModelRouter(enabled=self.enable_model_router)
+        decision = self.model_router.decide(question)
+        if decision.tier == "cache":
+            return None, decision
+        if not decision.enabled or decision.model is None:
+            return self.llm, decision
+        factory = self.llm_factory
+        if factory is None:
+            def factory(model: str, temperature: float, max_tokens: int):
+                return ChatOpenAI(
+                    model=model, api_key=DEEPSEEK_API_KEY, base_url=DEEPSEEK_BASE_URL,
+                    temperature=temperature, max_tokens=max_tokens,
+                )
+            self.llm_factory = factory
+        return factory(decision.model, decision.temperature, decision.max_tokens), decision
+
     def query(
         self,
         question: str,
@@ -599,9 +635,11 @@ class LangChainRAGEngine:
             else:
                 # P2-7: 上下文带 [cit:N] 编号，构建 编号->来源 索引
                 context, cit_index = build_context_with_citations(sources)
+                # T3.1 模型分级：按决策选择生成 LLM（简单→小模型低温度，复杂→大模型）
+                gen_llm, _decision = self._select_llm(question)
                 chain_out = (
                     {"context": lambda _: context, "question": RunnablePassthrough()}
-                    | self.prompt | self.llm | StrOutputParser()
+                    | self.prompt | (gen_llm or self.llm) | StrOutputParser()
                 )
                 # T1.5: LLM 调用受限流/重试/熔断保护；限流排队或熔断降级时返回降级文案
                 answer = guarded_llm_invoke(self.llm_guard, lambda: chain_out.invoke(question))
@@ -763,9 +801,11 @@ class LangChainRAGEngine:
 
             # P2-7: 上下文带 [cit:N] 编号，构建 编号->来源 索引
             context, cit_index = build_context_with_citations(sources)
+            # T3.1 模型分级：按决策选择生成 LLM（简单→小模型低温度，复杂→大模型）
+            gen_llm, _decision = self._select_llm(question)
             chain_out = (
                 {"context": lambda _: context, "question": RunnablePassthrough()}
-                | self.prompt | self.llm | StrOutputParser()
+                | self.prompt | (gen_llm or self.llm) | StrOutputParser()
             )
 
             full_answer = ""
