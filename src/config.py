@@ -277,4 +277,16 @@ SESSION_BACKEND = os.getenv("SESSION_BACKEND", "memory").lower()  # memory / red
 SESSION_REDIS_TTL_SECONDS = int(os.getenv("SESSION_REDIS_TTL_SECONDS", "1800"))  # 会话过期（秒）
 TASK_STATE_BACKEND = os.getenv("TASK_STATE_BACKEND", "memory").lower()  # memory / redis
 
+# ===== T2.3 消息队列任务编排：生产者-消费者抽象（memory=进程内 fallback / file=文件持久化 / kafka / rabbitmq）=====
+QUEUE_BACKEND = os.getenv("QUEUE_BACKEND", "memory").lower()
+FILE_QUEUE_DIR = os.getenv("FILE_QUEUE_DIR", "data/queue")
+KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
+KAFKA_GROUP_ID = os.getenv("KAFKA_GROUP_ID", "rag-worker")
+RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "localhost")
+RABBITMQ_PORT = int(os.getenv("RABBITMQ_PORT", "5672"))
+RABBITMQ_USER = os.getenv("RABBITMQ_USER", "guest")
+RABBITMQ_PASSWORD = os.getenv("RABBITMQ_PASSWORD", "guest")
+RABBITMQ_VHOST = os.getenv("RABBITMQ_VHOST", "/")
+QUEUE_RETRY_MAX_DELIVERY = int(os.getenv("QUEUE_RETRY_MAX_DELIVERY", "3"))  # 消费者失败重投上限
+
 

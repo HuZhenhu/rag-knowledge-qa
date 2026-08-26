@@ -1,0 +1,35 @@
+# T2.3 消息队列任务编排 — RabbitMQ 生产编排（交付配置，本机无 RabbitMQ 时不实测）
+# 供 rag-api 以 QUEUE_BACKEND=rabbitmq 联调。
+# 用法：docker compose -f docker-compose.rabbitmq.yml up -d
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rag-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # management UI: http://localhost:15672 (guest/guest)
+    environment:
+      - RABBITMQ_DEFAULT_USER=rag
+      - RABBITMQ_DEFAULT_PASS=rag-dev-password
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  rag-api:
+    build: .
+    container_name: rag-api-rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - QUEUE_BACKEND=rabbitmq
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=rag
+      - RABBITMQ_PASSWORD=rag-dev-password
+      - VECTOR_STORE_BACKEND=chroma
+      - RAG_ENGINE=langchain
+    ports:
+      - "8001:8000"
