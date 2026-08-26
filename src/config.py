@@ -1,4 +1,5 @@
 """配置管理"""
+import json
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -311,6 +312,21 @@ MODEL_ROUTER_LARGE_MODEL = os.getenv("MODEL_ROUTER_LARGE_MODEL", LLM_GATEWAY_LAR
 MODEL_ROUTER_SMALL_TEMPERATURE = float(os.getenv("MODEL_ROUTER_SMALL_TEMPERATURE", "0.1"))  # 小模型低温度（低方差、省token）
 MODEL_ROUTER_MAX_TOKENS_SMALL = int(os.getenv("MODEL_ROUTER_MAX_TOKENS_SMALL", "1024"))  # 小模型 max_tokens 上限
 MODEL_ROUTER_MAX_TOKENS_LARGE = int(os.getenv("MODEL_ROUTER_MAX_TOKENS_LARGE", "2048"))  # 大模型 max_tokens 上限
+
+# ===== T3.2 缓存策略深化（默认开/保守参数，可配置覆盖）=====
+# 前缀缓存：相同规范化前缀（去空白标点，取前 PREFIX_WIDTH 字符）的相近问法放宽语义阈值，提升客服高频场景命中率
+SEMANTIC_CACHE_PREFIX_ENABLED = os.getenv("SEMANTIC_CACHE_PREFIX_ENABLED", "true").lower() == "true"
+SEMANTIC_CACHE_PREFIX_WIDTH = int(os.getenv("SEMANTIC_CACHE_PREFIX_WIDTH", "16"))  # 前缀规范化宽度（字符）
+SEMANTIC_CACHE_PREFIX_FALLBACK_THRESHOLD = float(os.getenv("SEMANTIC_CACHE_PREFIX_FALLBACK_THRESHOLD", "0.86"))  # 前缀命中时的放宽阈值
+# 淘汰策略：TTL 过期 + 超上限 LRU 淘汰（默认 7 天 / 5 万条，客服高频场景可按内存预算调）
+SEMANTIC_CACHE_TTL_SECONDS = int(os.getenv("SEMANTIC_CACHE_TTL_SECONDS", "604800"))
+SEMANTIC_CACHE_MAX_ENTRIES = int(os.getenv("SEMANTIC_CACHE_MAX_ENTRIES", "50000"))
+# 按领域调优语义缓存阈值（JSON: '{"faq":0.88,"tech":0.94,"general":0.92}'）；未命中领域时回退 SEMANTIC_CACHE_THRESHOLD
+SEMANTIC_CACHE_DOMAIN_THRESHOLDS = json.loads(os.getenv("SEMANTIC_CACHE_DOMAIN_THRESHOLDS", "{}"))
+# 热门问题预热（JSON）：'["q1","q2"]' 或 '[{"q":"...","a":"...","sources":[...]}]'，启动/部署时批量写入语义缓存
+SEMANTIC_CACHE_HOT_QUESTIONS = json.loads(os.getenv("SEMANTIC_CACHE_HOT_QUESTIONS", "[]"))
+# 部署领域标注（可选）：语义缓存按该领域使用对应阈值（配置 SEMANTIC_CACHE_DOMAIN_THRESHOLDS 后生效）
+SEMANTIC_CACHE_DOMAIN = os.getenv("SEMANTIC_CACHE_DOMAIN", "").strip()
 
 # ===== T2.5 多租户与渠道隔离（默认关，灰度开启）=====
 TENANT_ISOLATION_ENABLED = os.getenv("TENANT_ISOLATION_ENABLED", "false").lower() == "true"  # 租户级隔离总开关

@@ -61,6 +61,8 @@ from src.config import (
     QUERY_CACHE_ENABLED,
     SEMANTIC_CACHE_ENABLED,
     SEMANTIC_CACHE_THRESHOLD,
+    SEMANTIC_CACHE_DOMAIN,
+    SEMANTIC_CACHE_HOT_QUESTIONS,
     PARALLEL_RETRIEVAL_WORKERS,
     HYDE_SKIP_SIMPLE,
     ENABLE_CONFIDENCE_REFUSE,
@@ -115,6 +117,7 @@ class LangChainRAGEngine:
         use_citation_verify: bool = USE_CITATION_VERIFY,
         model_router=None,
         enable_model_router: bool | None = None,
+        cache_domain: str | None = None,
     ):
         self.top_k = top_k
         self.use_hybrid = use_hybrid
@@ -140,6 +143,8 @@ class LangChainRAGEngine:
         # P1-3: 缓存（进程内单例，索引失效钩子可清同一实例）
         self.query_cache = get_query_cache()
         self.semantic_cache = get_semantic_cache()
+        # T3.2: 语义缓存按部署领域调优阈值（SEMANTIC_CACHE_DOMAIN_THRESHOLDS 中配置对应领域）
+        self.cache_domain = (cache_domain or SEMANTIC_CACHE_DOMAIN) or None
         self._reranker = None
         self._query_understander = None
         self._bm25_metadatas = None  # BM25 索引对应的 chunk 元数据（ACL 过滤用）
@@ -191,6 +196,24 @@ class LangChainRAGEngine:
 
         # T1.5: LLM 限流/重试/熔断防护（LLM_GUARD_ENABLED 时启用，默认 None 保持现行为）
         self.llm_guard = get_llm_guard(LLM_GUARD_ENABLED)
+
+        # T3.2: 热门问题预热（配置 SEMANTIC_CACHE_HOT_QUESTIONS 时写入语义缓存，提升客服高频命中率）
+        self.warmup_semantic_cache()
+
+    def warmup_semantic_cache(self) -> int:
+        """热门问题预热：将 SEMANTIC_CACHE_HOT_QUESTIONS 批量写入语义缓存（幂等）。
+
+        返回写入条数；语义缓存关闭、无配置或热问为空时返回 0。
+        """
+        if self.semantic_cache is None or not SEMANTIC_CACHE_HOT_QUESTIONS:
+            return 0
+        embed_query = getattr(self, "embeddings", None)
+        if embed_query is None:
+            return 0
+        return self.semantic_cache.warmup(
+            SEMANTIC_CACHE_HOT_QUESTIONS, embed_query.embed_query,
+            acl_fp=None, domain=self.cache_domain,
+        )
 
     def _setup_bm25_index(self):
         """构建 BM25 检索索引（大召回 candidate_k，供 RRF 融合）"""
@@ -581,7 +604,7 @@ class LangChainRAGEngine:
 
             # P1-3 语义缓存命中（纠错后 query + acl_fp，余弦相似度召回）
             if self.semantic_cache is not None:
-                hit = self.semantic_cache.get(effective_q, acl_fp, self.embeddings.embed_query)
+                hit = self.semantic_cache.get(effective_q, acl_fp, self.embeddings.embed_query, domain=self.cache_domain)
                 if hit is not None:
                     answer, srcs, sim = hit
                     logger.info("语义缓存命中: %s (sim=%.3f)", mask_text(effective_q[:40]), sim)
@@ -665,7 +688,7 @@ class LangChainRAGEngine:
                     "citation_spans": citation_spans,
                 }, acl_fp)
             if self.semantic_cache is not None and answer and answer != "知识库中未找到相关信息":
-                self.semantic_cache.set(effective_q, answer, sources, acl_fp, self.embeddings.embed_query)
+                self.semantic_cache.set(effective_q, answer, sources, acl_fp, self.embeddings.embed_query, domain=self.cache_domain)
 
             # P2-8: 采集查询总量/延迟/token与成本（token 用字符/4 估算，成本按 config 单价）
             metrics.inc_counter("total_queries", 1)
@@ -743,7 +766,7 @@ class LangChainRAGEngine:
 
             # P1-3 语义缓存命中（纠错后 query + acl_fp，余弦相似度召回）
             if self.semantic_cache is not None:
-                hit = self.semantic_cache.get(effective_q, acl_fp, self.embeddings.embed_query)
+                hit = self.semantic_cache.get(effective_q, acl_fp, self.embeddings.embed_query, domain=self.cache_domain)
                 if hit is not None:
                     answer, srcs, sim = hit
                     logger.info("语义缓存命中(stream): %s (sim=%.3f)", mask_text(effective_q[:40]), sim)
@@ -835,7 +858,7 @@ class LangChainRAGEngine:
                     "citation_spans": citation_spans,
                 }, acl_fp)
             if self.semantic_cache is not None and full_answer and full_answer != "知识库中未找到相关信息":
-                self.semantic_cache.set(effective_q, full_answer, sources, acl_fp, self.embeddings.embed_query)
+                self.semantic_cache.set(effective_q, full_answer, sources, acl_fp, self.embeddings.embed_query, domain=self.cache_domain)
 
             # P2-8: 流式链路采集总量/延迟/token与成本
             metrics.inc_counter("total_queries", 1)

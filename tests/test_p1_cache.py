@@ -92,6 +92,7 @@ def _make_engine(monkeypatch, **attrs):
     eng.acl_enforce = False
     eng.query_cache = None
     eng.semantic_cache = None
+    eng.cache_domain = None
     eng.embeddings = SimpleNamespace(embed_query=lambda t: [1.0, 0.0])
     eng._last_confidence = None
     eng._last_rerank_ms = 0.0
