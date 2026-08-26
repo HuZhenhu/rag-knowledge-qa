@@ -226,6 +226,11 @@ PII_PLACEHOLDER = os.getenv("PII_PLACEHOLDER", "[PII]")
 QUERY_CACHE_ENABLED = os.getenv("QUERY_CACHE_ENABLED", "true").lower() == "true"
 SEMANTIC_CACHE_ENABLED = os.getenv("SEMANTIC_CACHE_ENABLED", "true").lower() == "true"
 SEMANTIC_CACHE_THRESHOLD = float(os.getenv("SEMANTIC_CACHE_THRESHOLD", "0.92"))  # 语义缓存余弦命中阈值
+# T1.4 进程外缓存后端：QUERY_CACHE_BACKEND = memory|redis（默认 memory，进程内 cachetools）
+# SEMANTIC_CACHE_BACKEND = sqlite|redis（默认 sqlite，跨 worker 共享文件）
+QUERY_CACHE_BACKEND = os.getenv("QUERY_CACHE_BACKEND", "memory").lower()
+SEMANTIC_CACHE_BACKEND = os.getenv("SEMANTIC_CACHE_BACKEND", "sqlite").lower()
+REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
 # P1-4 延迟收敛
 PARALLEL_RETRIEVAL_WORKERS = int(os.getenv("PARALLEL_RETRIEVAL_WORKERS", "3"))  # 多路检索并行线程数

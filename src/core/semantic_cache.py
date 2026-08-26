@@ -3,18 +3,21 @@
 - 基于 embed 函数（默认 langchain 引擎的 HuggingFaceEmbeddings.embed_query，本地 bge-m3）
   对 query 编码，与缓存库中同 ACL 指纹的历史 query 向量算余弦相似度，
   最高相似度 ≥ SEMANTIC_CACHE_THRESHOLD(默认0.92) 视为命中，返回对应 answer + sources。
-- 存储用轻量 SQLite（复用 tracer.py 的 sqlite 模式），线程安全。
+- 存储用可插拔后端（T1.4）：默认 SQLiteBackend（跨 worker 共享文件），可切换 RedisBackend（进程外共享）。
 - 缓存条目按 acl_fp 隔离：不同租户/权限指纹互不可见，防跨权限缓存泄露。
 - 提供进程内单例 get_semantic_cache() 与 clear_all_caches()（索引变更失效钩子）。
 """
+import hashlib
 import json
 import math
-import sqlite3
-import threading
-import time
 from pathlib import Path
 
-from src.config import BASE_DIR, SEMANTIC_CACHE_ENABLED, SEMANTIC_CACHE_THRESHOLD
+from src.config import (
+    BASE_DIR,
+    SEMANTIC_CACHE_BACKEND,
+    SEMANTIC_CACHE_ENABLED,
+    SEMANTIC_CACHE_THRESHOLD,
+)
 
 DB_PATH: Path = BASE_DIR / "data" / "semantic_cache.db"
 
@@ -34,50 +37,14 @@ class SemanticCache:
         threshold: 余弦相似度命中阈值
     """
 
-    def __init__(self, db_path: Path | str = DB_PATH, threshold: float = SEMANTIC_CACHE_THRESHOLD):
+    def __init__(self, db_path: Path | str = DB_PATH, threshold: float = SEMANTIC_CACHE_THRESHOLD,
+                 backend=None):
         self.db_path = Path(db_path)
         self.threshold = threshold
-        self._lock = threading.Lock()
-        self._init_db()
-
-    # -- 内部 helpers -----------------------------------------------------
-    def _conn(self) -> sqlite3.Connection:
-        self.db_path.parent.mkdir(parents=True, exist_ok=True)
-        conn = sqlite3.connect(str(self.db_path))
-        conn.row_factory = sqlite3.Row
-        return conn
-
-    def _exec(self, sql: str, params: tuple = (), fetchone: bool = False,
-              fetchall: bool = False):
-        """执行 SQL 并提交（线程安全）；fetch 在连接关闭前完成，返回行数据/None"""
-        with self._lock:
-            conn = self._conn()
-            try:
-                cur = conn.execute(sql, params)
-                conn.commit()
-                if fetchall:
-                    return cur.fetchall()
-                if fetchone:
-                    return cur.fetchone()
-                return None
-            finally:
-                conn.close()
-
-    def _init_db(self) -> None:
-        self._exec(
-            """
-            CREATE TABLE IF NOT EXISTS semantic_cache (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                query TEXT NOT NULL,
-                query_vec TEXT NOT NULL,   -- JSON 数组
-                answer TEXT NOT NULL,
-                sources TEXT DEFAULT '[]', -- JSON
-                acl_fp TEXT DEFAULT 'none',
-                created_at REAL DEFAULT 0
-            )
-            """
-        )
-        self._exec("CREATE INDEX IF NOT EXISTS idx_acl ON semantic_cache(acl_fp)")
+        if backend is None:
+            from src.core.cache_backend import SQLiteBackend
+            backend = SQLiteBackend(str(self.db_path))
+        self._backend = backend
 
     # -- 对外接口 ---------------------------------------------------------
     def get(self, query: str, acl_fp: str | None = None, embed_query=None):
@@ -91,26 +58,22 @@ class SemanticCache:
             return None
         vec = embed_query(query)
         fp = acl_fp or "none"
-        rows = self._exec(
-            "SELECT query_vec, answer, sources FROM semantic_cache WHERE acl_fp = ?",
-            (fp,),
-            fetchall=True,
-        )
         best = None
-        for row in rows:
+        for _key, raw in self._backend.scan(f"{fp}|||"):
             try:
-                hist = json.loads(row["query_vec"])
+                data = json.loads(raw)
+                hist = data.get("query_vec") or []
+                if not hist:
+                    continue
+                sim = _cosine(vec, hist)
+                if sim >= self.threshold and (best is None or sim > best[2]):
+                    try:
+                        srcs = data.get("sources") or []
+                    except Exception:
+                        srcs = []
+                    best = (data.get("answer", ""), srcs, round(sim, 4))
             except Exception:
                 continue
-            if not hist:
-                continue
-            sim = _cosine(vec, hist)
-            if sim >= self.threshold and (best is None or sim > best[2]):
-                try:
-                    srcs = json.loads(row["sources"] or "[]")
-                except Exception:
-                    srcs = []
-                best = (row["answer"], srcs, round(sim, 4))
         return best
 
     def set(self, query: str, answer: str, sources: list | None = None,
@@ -120,21 +83,22 @@ class SemanticCache:
             return
         vec = embed_query(query)
         fp = acl_fp or "none"
-        self._exec(
-            "INSERT INTO semantic_cache(query, query_vec, answer, sources, acl_fp, created_at) "
-            "VALUES (?,?,?,?,?,?)",
-            (query, json.dumps(vec), answer, json.dumps(sources or [], ensure_ascii=False),
-             fp, time.time()),
-        )
+        key = f"{fp}|||{hashlib.md5(query.encode('utf-8')).hexdigest()}"
+        value = json.dumps({
+            "query": query,
+            "query_vec": vec,
+            "answer": answer,
+            "sources": sources or [],
+        }, ensure_ascii=False)
+        self._backend.set(key, value)
 
     def clear(self) -> None:
         """清空全部缓存条目"""
-        self._exec("DELETE FROM semantic_cache")
+        self._backend.clear()
 
     @property
     def size(self) -> int:
-        row = self._exec("SELECT COUNT(*) AS c FROM semantic_cache", fetchone=True)
-        return int(row["c"]) if row else 0
+        return self._backend.size()
 
 
 _SEMANTIC_CACHE: SemanticCache | None = None
@@ -146,7 +110,10 @@ def get_semantic_cache() -> SemanticCache | None:
     if not SEMANTIC_CACHE_ENABLED:
         return None
     if _SEMANTIC_CACHE is None:
-        _SEMANTIC_CACHE = SemanticCache()
+        from src.core.cache_backend import make_cache_backend
+        backend = make_cache_backend(SEMANTIC_CACHE_BACKEND, db_path=DB_PATH,
+                                     namespace="rag:sem")
+        _SEMANTIC_CACHE = SemanticCache(db_path=DB_PATH, backend=backend)
     return _SEMANTIC_CACHE
 
 
