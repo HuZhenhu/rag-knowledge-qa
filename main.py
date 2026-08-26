@@ -7,7 +7,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from src.api.routes import router
+from src.api.routes import router, ws_router
 from src.api.rate_limit import RateLimitMiddleware
 from src.api.jwt_auth import register_legacy_key_from_env
 from src.api.logging_config import log_request, request_id_ctx, logger
@@ -132,6 +132,9 @@ app.add_middleware(RateLimitMiddleware)
 
 # 路由
 app.include_router(router)
+
+# T1.6: 提交-推送 WebSocket 通道（/ws/tasks）
+app.include_router(ws_router)
 
 # T1.2: 引擎单例化——HTTP 与 WebSocket 经 engine_factory 共享同一实例（缓存/BM25 只建一次）
 from src.core.engine_factory import get_engine

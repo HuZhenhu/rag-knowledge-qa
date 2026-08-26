@@ -250,6 +250,12 @@ LLM_CIRCUIT_FAILURE_THRESHOLD = int(os.getenv("LLM_CIRCUIT_FAILURE_THRESHOLD", "
 LLM_CIRCUIT_RESET_TIMEOUT = float(os.getenv("LLM_CIRCUIT_RESET_TIMEOUT", "30.0"))  # 熔断重置窗口（秒）
 LLM_QUEUE_MAXSIZE = int(os.getenv("LLM_QUEUE_MAXSIZE", "100"))  # 有界任务队列容量
 
+# ===== T1.6 提交-推送模式（默认同步，灰度开关）=====
+# /query 异步模式下立即返回 task_id，后台执行查询，结果经 WebSocket 推送；
+# 保留同步模式：QUERY_ASYNC_MODE=false（默认）时 /query 保持同步响应现行为。
+QUERY_ASYNC_MODE = os.getenv("QUERY_ASYNC_MODE", "false").lower() == "true"
+TASK_RESULT_TTL_SECONDS = int(os.getenv("TASK_RESULT_TTL_SECONDS", "300"))  # 任务结果保留时长（秒），超时由清理回收
+
 # ===== P2 企业级增强配置 =====
 # P2-7 引用真实性校验（默认关；开启时若模型答案中所有引用均为幻觉引用则拒答）
 USE_CITATION_VERIFY = os.getenv("USE_CITATION_VERIFY", "false").lower() == "true"

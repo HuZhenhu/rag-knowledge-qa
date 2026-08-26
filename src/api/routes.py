@@ -1,9 +1,10 @@
 """API路由 — JWT认证 + 多知识库 + 审计日志 + M4监控"""
 import uuid
 import json
+import asyncio
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, UploadFile, File, WebSocket, WebSocketDisconnect
 from fastapi.responses import PlainTextResponse
 
 from src.api.schemas import (
@@ -27,23 +28,29 @@ from src.storage.database import (
     create_knowledge_base, get_knowledge_base, list_knowledge_bases,
     get_user_readable_doc_ids,
 )
-from src.config import USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, ALLOW_REGISTRATION, USE_CONVERSATION_SUMMARY, RAG_ENGINE, ACL_ENFORCE, ACL_ADMIN_ROLES, LLM_GUARD_ENABLED
+from src.config import USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, ALLOW_REGISTRATION, USE_CONVERSATION_SUMMARY, RAG_ENGINE, ACL_ENFORCE, ACL_ADMIN_ROLES, LLM_GUARD_ENABLED, QUERY_ASYNC_MODE
 from src.core.acl import build_acl_filter
 from src.core.async_util import run_in_thread
 from src.core.engine_factory import get_engine, get_vector_store
 from src.core.llm_guard import get_llm_guard
+from src.core.task_manager import get_task_manager
 from src.core.session import SessionManager
 from src.core.metrics import metrics
 from src.core.tracer import get_trace, list_recent_traces
 from src.core.alert_manager import alert_manager
 
 router = APIRouter(prefix="/api/v1")
+# T1.6: WebSocket 提交-推送通道（无 prefix，保持 /ws/tasks 顶层路径）
+ws_router = APIRouter()
 
 # T1.2: 引擎单例化——HTTP 与 WebSocket 经 engine_factory 共享同一实例
 rag_engine = get_engine()
 vector_store = get_vector_store()
 
 session_manager = SessionManager()
+
+# T1.6: 进程内任务管理器（提交-推送模式）
+task_manager = get_task_manager()
 
 
 # ===================================================================
@@ -218,6 +225,19 @@ async def query(
     if llm_guard is not None and llm_guard.queue.full():
         raise HTTPException(status_code=503, detail="系统繁忙，正在排队处理中，请稍后重试")
 
+    # T1.6 提交-推送模式（灰度开关）：立即返回 task_id，后台执行查询，结果经 WebSocket 推送
+    if QUERY_ASYNC_MODE:
+        task_id = task_manager.create_task()
+        asyncio.create_task(_run_query_task(
+            task_id, req, user, session_id, history, summary, acl_filter, request_id,
+        ))
+        return QueryResponse(
+            request_id=request_id,
+            answer="",
+            task_id=task_id,
+            status="pending",
+        )
+
     response = await run_in_thread(
         rag_engine.query, req.question,
         top_k=req.top_k, history=history,
@@ -225,6 +245,13 @@ async def query(
     )
     session_manager.add_message(session_id, "assistant", response.answer)
 
+    result = _build_query_result(response, request_id)
+    _log_query_audit(user, req, response, request)
+    return QueryResponse(**result)
+
+
+def _build_query_result(response, request_id: str) -> dict:
+    """将引擎响应统一组装为 QueryResponse 可接受的 dict（同步/异步共用）。"""
     sources = [
         Source(
             file=s["metadata"].get("source_file", "") or s["metadata"].get("source", "未知"),
@@ -235,8 +262,20 @@ async def query(
         )
         for s in response.sources
     ]
+    return {
+        "request_id": response.trace_id or request_id,
+        "answer": response.answer,
+        "sources": sources,
+        "usage": response.usage,
+        "timing": response.timing,
+        "confidence": getattr(response, "confidence", None),
+        "citation_spans": getattr(response, "citation_spans", []),
+        "trace_id": response.trace_id,
+    }
 
-    # 审计日志
+
+def _log_query_audit(user, req, response, request) -> None:
+    """统一查询审计日志（同步/异步共用）。"""
     log_audit(
         user["id"], "query", "knowledge_base",
         req.kb_id or "default",
@@ -248,16 +287,88 @@ async def query(
         ip_address=_get_client_ip(request) if request else "",
     )
 
-    return QueryResponse(
-        request_id=response.trace_id or request_id,
-        answer=response.answer,
-        sources=sources,
-        usage=response.usage,
-        timing=response.timing,
-        confidence=getattr(response, "confidence", None),
-        citation_spans=getattr(response, "citation_spans", []),
-        trace_id=response.trace_id,
-    )
+
+async def _run_query_task(task_id: str, req, user, session_id: str, history, summary,
+                          acl_filter, request_id: str) -> None:
+    """T1.6 异步查询后台任务：引擎调用在线程池执行，完成后写结果并推送。"""
+    task_manager.set_running(task_id)
+    try:
+        response = await run_in_thread(
+            rag_engine.query, req.question,
+            top_k=req.top_k, history=history,
+            summary=summary, user_id=user["id"], acl_filter=acl_filter,
+        )
+        await run_in_thread(session_manager.add_message, session_id, "assistant", response.answer)
+        result = _build_query_result(response, request_id)
+        _log_query_audit(user, req, response, None)
+        task_manager.complete(task_id, result)
+    except Exception as e:  # noqa: BLE001
+        task_manager.fail(task_id, str(e))
+
+
+@router.get("/tasks/{task_id}")
+async def get_task_status(
+    task_id: str,
+    user: dict = Depends(get_current_user),
+):
+    """T1.6 提交-推送模式：查询异步任务状态（结果轮询兜底，WebSocket 推送为主）。"""
+    task = task_manager.get(task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="任务不存在或已过期")
+    return task
+
+
+# ===================================================================
+# T1.6: WebSocket 提交-推送通道——订阅 task_id，任务完成即推送 task_done
+# ===================================================================
+
+@ws_router.websocket("/ws/tasks")
+async def ws_tasks(websocket: WebSocket):
+    """WebSocket端点 - 任务结果推送（复用 WS 通道，前端无需轮询）。
+
+    客户端消息：
+        {"type": "subscribe", "task_id": "task_xxx"}   -> 订阅指定任务
+        {"type": "unsubscribe", "task_id": "task_xxx"} -> 取消订阅
+    服务端推送：
+        {"type": "task_done", "task_id": ..., "status": ..., "result": ..., "error": ...}
+    """
+    await websocket.accept()
+    queue: asyncio.Queue = asyncio.Queue()
+    running = True
+
+    async def _pump():
+        while running:
+            payload = await queue.get()
+            if payload is None:
+                break
+            await websocket.send_json(payload)
+
+    pump_task = asyncio.create_task(_pump())
+    try:
+        while True:
+            data = await websocket.receive_text()
+            msg = json.loads(data)
+            mtype = msg.get("type")
+            if mtype == "subscribe":
+                task_id = msg.get("task_id")
+                if task_id:
+                    task_manager.subscribe(task_id, queue)
+                    await websocket.send_json({"type": "subscribed", "task_id": task_id})
+            elif mtype == "unsubscribe":
+                task_id = msg.get("task_id")
+                if task_id:
+                    task_manager.unsubscribe(task_id, queue)
+    except WebSocketDisconnect:
+        pass
+    except Exception:  # noqa: BLE001
+        pass
+    finally:
+        running = False
+        pump_task.cancel()
+        try:
+            await pump_task
+        except (asyncio.CancelledError, Exception):  # noqa: BLE001
+            pass
 
 
 # ===================================================================

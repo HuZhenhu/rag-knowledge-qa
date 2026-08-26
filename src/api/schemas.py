@@ -23,6 +23,8 @@ class QueryResponse(BaseModel):
     citation_spans: list[dict] = Field(default_factory=list,
                                        description="引用 span 列表（P2-7：含起止位置/来源定位/有效性标记）")
     trace_id: str | None = Field(None, description="链路追踪 ID（P2-8：关联 trace 记录）")
+    task_id: str | None = Field(None, description="T1.6 提交-推送模式：异步任务ID（同步模式为 None）")
+    status: str | None = Field(None, description="T1.6 任务状态：pending/running/done/error（同步模式为 None）")
 
 
 class HealthResponse(BaseModel):
