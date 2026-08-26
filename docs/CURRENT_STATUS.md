@@ -1,9 +1,20 @@
+---
+AIGC:
+    Label: "1"
+    ContentProducer: 001191440300708461136T1XGW3
+    ProduceID: 12c4ab0be885f937bdaeebb9f27bfe85_a6724a2ca15511f1a238525400e6dd8f
+    ReservedCode1: O6qQhxalLYrWDfSb139uR0Szadksh1rplWWDOp3Tqjyz9jhbqMnqi0cUi1T1pnFEHQtNy1GL63CJnzAzEqG6YPpCI4ct5eXa+s+bkBFy6HLIdWkEwoc09FSgN/cWe2m8a7xeVYKbJB4UGEgp0mprUnIoSC00jZO+icRRU5X6ta2jS6vp/nquOYNH3AY=
+    ContentPropagator: 001191440300708461136T1XGW3
+    PropagateID: 12c4ab0be885f937bdaeebb9f27bfe85_a6724a2ca15511f1a238525400e6dd8f
+    ReservedCode2: O6qQhxalLYrWDfSb139uR0Szadksh1rplWWDOp3Tqjyz9jhbqMnqi0cUi1T1pnFEHQtNy1GL63CJnzAzEqG6YPpCI4ct5eXa+s+bkBFy6HLIdWkEwoc09FSgN/cWe2m8a7xeVYKbJB4UGEgp0mprUnIoSC00jZO+icRRU5X6ta2jS6vp/nquOYNH3AY=
+---
+
 # 当前状态（Current Status）
 
 > 维护基线文档：**本文件为当前唯一权威状态文档**，与代码保持同步。
 > 历史计划/审计文档已归档至 [docs/archive/](archive/README.md)，决策记录见 [docs/adr/](adr/)。
 > 任务书：《enterprise-rag-scale-plan.md》。
-> 最后更新：2026-08-26（Phase 3 完成，全量测试 858 passed）
+> 最后更新：2026-08-26（Phase 3 全部完成并收尾校对，全量测试 869 passed）
 
 ---
 
@@ -63,7 +74,7 @@ BM25Retriever 改用自研 `src/core/bm25_retriever.py`（基于 `rank-bm25`）�
 
 ## 4. 评测与质量闭环
 
-- 评测命令：`python -m pytest tests/`（本机全量 **858 passed**）；
+- 评测命令：`python -m pytest tests/`（本机全量 **869 passed**）；
   检索/生成链路回归：`evaluation/eval_baseline.py`。
 - **线上反馈回流（T3.3）**：赞/踩反馈写库 → `eval_feedback.export_feedback_cases` 汇入
   `evaluation/feedback_cases.json` → 纳入评测集（上限 `EVAL_FEEDBACK_LIMIT`）。
@@ -84,8 +95,8 @@ BM25Retriever 改用自研 `src/core/bm25_retriever.py`（基于 `rank-bm25`）�
 
 ## 6. 测试基线
 
-- 全量：`pytest --basetemp .pytest_tmp tests/` → **858 passed, 0 failed**（2026-08-26）。
-- Phase 2 末 797 → T3.1 +9=806 → T3.2 +19=825 → T3.3 +19=844 → T3.4 +14=858。
+- 全量：`pytest --basetemp .pytest_tmp tests/` → **869 passed, 0 failed**（2026-08-26，Phase 3 全部完成后实测）。
+- Phase 2 末 797 → T3.1 +9=806 → T3.2 +19=825 → T3.3 +19=844 → T3.4 +14=858 → T3.5 +11=869。
 - 说明：K8s manifests、Prometheus 告警规则、Milvus/Redis 接入为**交付配置**（本机无对应服务，
   已用可插拔抽象 + mock 单测验证），压测/线上数据为验收实测项。
 
@@ -94,3 +105,4 @@ BM25Retriever 改用自研 `src/core/bm25_retriever.py`（基于 `rank-bm25`）�
 - 本机 8080 端口被 `H:\ai-dev-platform` 的 uvicorn 占用，联调前先确认端口。
 - C 盘空间紧张（约 2.6GB），构建产物/模型缓存建议指向 D 盘或 H 盘。
 - 语义缓存命中等性能指标需在真实客服流量下压测验收（Phase 3 验收项）。
+*（内容由AI生成，仅供参考）*
