@@ -306,3 +306,11 @@ TENANT_CHANNELS = tuple(c.strip() for c in os.getenv("TENANT_CHANNELS", "web,wec
 TENANT_QUOTA_DOCS = int(os.getenv("TENANT_QUOTA_DOCS", "10000"))  # 每租户文档数上限
 TENANT_QUOTA_SESSIONS = int(os.getenv("TENANT_QUOTA_SESSIONS", "10000"))  # 每租户会话数上限
 TENANT_QUOTA_REQUESTS_PER_MIN = int(os.getenv("TENANT_QUOTA_REQUESTS_PER_MIN", "600"))  # 每租户每渠道每分钟请求量上限
+
+# ===== T2.6 防滥用（默认开）=====
+ABUSE_IP_RATE_LIMIT = int(os.getenv("ABUSE_IP_RATE_LIMIT", "60"))  # 单 IP 每分钟
+ABUSE_USER_RATE_LIMIT = int(os.getenv("ABUSE_USER_RATE_LIMIT", "600"))  # 单用户每分钟
+ABUSE_CHANNEL_RATE_LIMIT = int(os.getenv("ABUSE_CHANNEL_RATE_LIMIT", "1200"))  # 单渠道每分钟
+ABUSE_RATE_WINDOW_SECONDS = int(os.getenv("ABUSE_RATE_WINDOW_SECONDS", "60"))
+SENSITIVE_QUERY_AUDIT_ENABLED = os.getenv("SENSITIVE_QUERY_AUDIT_ENABLED", "true").lower() == "true"
+CONTENT_REVIEW_ENABLED = os.getenv("CONTENT_REVIEW_ENABLED", "true").lower() == "true"  # 上传内容审核开关
