@@ -290,3 +290,12 @@ RABBITMQ_VHOST = os.getenv("RABBITMQ_VHOST", "/")
 QUEUE_RETRY_MAX_DELIVERY = int(os.getenv("QUEUE_RETRY_MAX_DELIVERY", "3"))  # 消费者失败重投上限
 
 
+
+#
+
+# ===== T2.4 LLM 网关：多 provider 路由 / 限流 / 成本统计 / 故障转移 / 模型分级（灰度开关默认关）=====
+LLM_GATEWAY_ENABLED = os.getenv("LLM_GATEWAY_ENABLED", "false").lower() == "true"  # 切换至 LLM Gateway 的开关，默认关不替换现有调用链
+LLM_GATEWAY_PROVIDERS = os.getenv("LLM_GATEWAY_PROVIDERS", "deepseek,openai,anthropic,mock")  # provider 顺序（主备）
+LLM_GATEWAY_RATE_RPM = int(os.getenv("LLM_GATEWAY_RATE_RPM", "60"))  # 每 provider 令牌桶每分钟限流
+LLM_GATEWAY_SMALL_MODEL = os.getenv("LLM_GATEWAY_SMALL_MODEL", "deepseek-chat")  # 小模型（简单问题，低成本）
+LLM_GATEWAY_LARGE_MODEL = os.getenv("LLM_GATEWAY_LARGE_MODEL", "deepseek-reasoner")  # 大模型（复杂问题）
