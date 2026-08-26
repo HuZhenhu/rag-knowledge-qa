@@ -14,7 +14,7 @@ AIGC:
 > 维护基线文档：**本文件为当前唯一权威状态文档**，与代码保持同步。
 > 历史计划/审计文档已归档至 [docs/archive/](archive/README.md)，决策记录见 [docs/adr/](adr/)。
 > 任务书：《enterprise-rag-scale-plan.md》。
-> 最后更新：2026-08-26（Phase 3 全部完成并收尾校对，全量测试 869 passed）
+> 最后更新：2026-08-26（Phase 3 全部完成 + 前端角色权限 UI 与视觉升级完成，全量测试 869 passed）
 
 ---
 
@@ -100,7 +100,27 @@ BM25Retriever 改用自研 `src/core/bm25_retriever.py`（基于 `rank-bm25`）�
 - 说明：K8s manifests、Prometheus 告警规则、Milvus/Redis 接入为**交付配置**（本机无对应服务，
   已用可插拔抽象 + mock 单测验证），压测/线上数据为验收实测项。
 
-## 7. 已知边界
+## 7. 前端状态（Vue 3 + Vite + TS + Element Plus）
+
+### 角色权限 UI（A 部分，commit 90f959e）
+- **路由权限**：`src/router/index.ts` 按角色收紧 `meta.roles`（/dashboard、/chat 不设；/documents=viewer+；/index=editor+；/logs、/evaluations、/users=admin）；无权限访问重定向 `/dashboard` 并弹 i18n 提示。
+- **菜单过滤**：`AdminLayout.vue` 按 `src/utils/permission.ts`（`ROLE_LEVEL`）过滤 7 项菜单，角色名走 i18n 可读标签（管理员/编辑/只读）。
+- **按钮权限**：Documents 上传/删除=editor+；IndexMonitor 扫描/同步=admin（页面 editor+ 可看）；Evaluations 运行评测=admin；`stores/auth.ts` 提供 `isAdmin` / `canEdit`。
+- **用户管理**：`Users.vue` 角色列改为 `el-select`（viewer/editor/admin），修改调 `PUT /api/v1/users/{id}/role`，当前登录用户所在行禁用并提示。
+- **权限单源**：`src/utils/permission.ts`（ROLE_LEVEL 与判断函数）+ `src/utils/menus.ts`（菜单定义），路由/菜单/按钮同源；403 统一提示；新增文案同步 zh.ts/en.ts。
+
+### 视觉升级（B 部分，commit ffb955b，ADR 0005）
+- **美学方向**：知识工坊/技术编辑部——暖纸感底色 + 琥珀/赭石主导色 + 深墨绿锐利点缀，替换原紫色渐变 + 白卡片 + 系统字体组合。
+- **字体**：中文 Noto Sans SC（`@fontsource-variable/noto-sans-sc`）、西文/数字 JetBrains Mono（`@fontsource/jetbrains-mono`），失败回退系统中文黑体。
+- **设计令牌**：`src/style.css` 重构——亮/暗双主题 CSS 变量、Element Plus `--el-*` 映射、圆角/阴影/间距收敛 3-4 档、细网格纹理、fade-slide / rise-in / caret-blink 动效并尊重 `prefers-reduced-motion`。
+- **页面**：登录页左右分栏（品牌区 + 表单）重绘；AdminLayout 侧栏纸感重绘；Chat（核心）气泡/来源引用卡片/Agent 时间线/流式光标/悬浮输入区；Dashboard 统计卡片数字排版 + 入场动画；表格页行 hover/空态统一。
+- **兼容**：保留 Element Plus、vue-i18n（zh/en）、亮暗主题切换与响应式；未引入新 UI 框架。
+
+### 前端验收（2026-08-26）
+- `npm run build` 通过；`npx vue-tsc --noEmit` 0 类型错误；`npx vitest run` 7 文件 **63 passed**（原 46 + 新增权限测试 17）。
+- 后端接口 `GET /api/v1/users`、`PUT /api/v1/users/{id}/role` 直接对接，未重复造接口；Login 登录/注册逻辑与 auth.ts register 未回退。
+
+## 8. 已知边界
 
 - 本机 8080 端口被 `H:\ai-dev-platform` 的 uvicorn 占用，联调前先确认端口。
 - C 盘空间紧张（约 2.6GB），构建产物/模型缓存建议指向 D 盘或 H 盘。
