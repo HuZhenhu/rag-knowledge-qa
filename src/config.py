@@ -264,4 +264,9 @@ USE_CITATION_VERIFY = os.getenv("USE_CITATION_VERIFY", "false").lower() == "true
 METRICS_LATENCY_ALERT_SECONDS = float(os.getenv("METRICS_LATENCY_ALERT_SECONDS", "3.0"))
 METRICS_COST_USD_PER_1K = float(os.getenv("METRICS_COST_USD_PER_1K", "0.5"))  # 生成 token 估算单价（USD / 1K tokens，用于成本监控近似）
 
+# ===== T2.1 无状态化：会话 / 任务状态存储后端（memory=进程内 fallback，redis=生产多副本共享）=====
+SESSION_BACKEND = os.getenv("SESSION_BACKEND", "memory").lower()  # memory / redis
+SESSION_REDIS_TTL_SECONDS = int(os.getenv("SESSION_REDIS_TTL_SECONDS", "1800"))  # 会话过期（秒）
+TASK_STATE_BACKEND = os.getenv("TASK_STATE_BACKEND", "memory").lower()  # memory / redis
+
 

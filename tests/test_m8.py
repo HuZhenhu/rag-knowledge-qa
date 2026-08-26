@@ -278,6 +278,7 @@ class TestSessionManagerSummary:
         mgr = SessionManager()
         session = mgr.get_or_create_session("s2")
         session.summary = "用户问了关于Python的问题"
+        mgr.save_session(session)  # T2.1 后端化：属性修改需显式落盘
         mgr.add_message("s2", "user", "还有问题")
         mgr.add_message("s2", "assistant", "请说")
 
@@ -302,6 +303,7 @@ class TestSessionManagerSummary:
                     content=f"msg{i}",
                 )
             )
+        mgr.save_session(session)  # T2.1 后端化：直接改对象后需显式落盘
 
         with patch.object(mgr, "_get_summarizer") as mock_get_sum:
             mock_summarizer = Mock()
@@ -613,6 +615,7 @@ class TestExportSessionMarkdown:
         mgr = SessionManager()
         session = mgr.get_or_create_session("s2")
         session.summary = "用户在学习RAG技术"
+        mgr.save_session(session)  # T2.1 后端化：属性修改需显式落盘
         mgr.add_message("s2", "user", "继续")
 
         result = mgr.export_session_markdown("s2")

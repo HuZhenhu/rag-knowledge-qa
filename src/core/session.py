@@ -1,7 +1,13 @@
-"""会话管理"""
+"""会话管理
+
+T2.1 无状态化：会话存储迁出进程内 dict，改为后端抽象
+（MemorySessionBackend 进程内 fallback + RedisSessionBackend 生产多副本共享）。
+任意 API 副本共享同一后端 → 会话不丢失、任意副本可处理任意请求。
+"""
 import time
 import datetime
 from dataclasses import dataclass, field
+from typing import Any
 
 from src.config import (
     MAX_HISTORY_ROUNDS,
@@ -30,13 +36,47 @@ class Session:
 
 
 class SessionManager:
-    """会话管理器"""
+    """会话管理器（后端可插拔，默认进程内 memory）。"""
 
-    def __init__(self, timeout_minutes: int = SESSION_TIMEOUT_MINUTES):
-        self.sessions: dict[str, Session] = {}
+    def __init__(self, timeout_minutes: int = SESSION_TIMEOUT_MINUTES,
+                 backend: Any = None):
+        from src.config import SESSION_BACKEND
+        from src.core.session_backend import make_session_backend
+        # T2.1: backend 可注入（测试用）；未传则按配置创建（memory|redis）
+        self.backend = backend if backend is not None else make_session_backend(SESSION_BACKEND)
         self.timeout_seconds = timeout_minutes * 60
         self._last_cleanup = time.time()
         self._summarizer = None  # 懒加载
+
+    # ---------------- T2.1 序列化 ----------------
+
+    @staticmethod
+    def _session_to_dict(s: Session) -> dict[str, Any]:
+        return {
+            "session_id": s.session_id,
+            "messages": [
+                {"role": m.role, "content": m.content, "timestamp": m.timestamp}
+                for m in s.messages
+            ],
+            "created_at": s.created_at,
+            "last_active": s.last_active,
+            "summary": s.summary,
+        }
+
+    @staticmethod
+    def _session_from_dict(d: dict[str, Any]) -> Session:
+        s = Session(
+            session_id=d["session_id"],
+            created_at=d.get("created_at", time.time()),
+            last_active=d.get("last_active", time.time()),
+            summary=d.get("summary", ""),
+        )
+        s.messages = [
+            Message(role=m["role"], content=m["content"],
+                    timestamp=m.get("timestamp", time.time()))
+            for m in d.get("messages", [])
+        ]
+        return s
 
     def _get_summarizer(self):
         """懒加载对话摘要器"""
@@ -46,18 +86,25 @@ class SessionManager:
         return self._summarizer
 
     def get_or_create_session(self, session_id: str) -> Session:
-        """获取或创建会话"""
+        """获取或创建会话（从后端加载，不存在则新建并持久化）"""
         # 每5分钟自动清理一次过期会话
         if time.time() - self._last_cleanup > 300:
             self.cleanup_expired()
             self._last_cleanup = time.time()
 
-        if session_id not in self.sessions:
-            self.sessions[session_id] = Session(session_id=session_id)
+        data = self.backend.get(session_id)
+        if data is None:
+            session = Session(session_id=session_id)
+        else:
+            session = self._session_from_dict(data)
 
-        session = self.sessions[session_id]
         session.last_active = time.time()
+        self.save_session(session)
         return session
+
+    def save_session(self, session: Session) -> None:
+        """将会话写回后端（T2.1：持久化到可插拔存储）。"""
+        self.backend.set(session.session_id, self._session_to_dict(session))
 
     def add_message(self, session_id: str, role: str, content: str) -> None:
         """添加消息到会话"""
@@ -73,6 +120,8 @@ class SessionManager:
         max_messages = MAX_HISTORY_ROUNDS * 2
         if len(session.messages) > max_messages:
             session.messages = session.messages[-max_messages:]
+
+        self.save_session(session)
 
     def _maybe_summarize(self, session: Session) -> None:
         """如果对话超过阈值，压缩早期消息为摘要"""
@@ -164,11 +213,11 @@ class SessionManager:
         return "\n".join(lines)
 
     def cleanup_expired(self) -> None:
-        """清理过期会话"""
+        """清理过期会话（经后端扫描删除）"""
         current_time = time.time()
         expired_ids = [
-            sid for sid, session in self.sessions.items()
-            if current_time - session.last_active > self.timeout_seconds
+            sid for sid, data in self.backend.scan()
+            if current_time - data.get("last_active", current_time) > self.timeout_seconds
         ]
         for sid in expired_ids:
-            del self.sessions[sid]
+            self.backend.delete(sid)
