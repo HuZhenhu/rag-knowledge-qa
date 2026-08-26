@@ -1,0 +1,25 @@
+# T2.7 PodDisruptionBudget：保证滚动发布/节点维护期间最少可用副本
+# 说明：本机无 K8s，此文件为生产交付配置（未实测）。
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: rag-api-pdb
+  namespace: rag
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: rag
+      component: api
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: rag-worker-pdb
+  namespace: rag
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: rag
+      component: worker

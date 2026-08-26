@@ -289,6 +289,10 @@ RABBITMQ_PASSWORD = os.getenv("RABBITMQ_PASSWORD", "guest")
 RABBITMQ_VHOST = os.getenv("RABBITMQ_VHOST", "/")
 QUEUE_RETRY_MAX_DELIVERY = int(os.getenv("QUEUE_RETRY_MAX_DELIVERY", "3"))  # 消费者失败重投上限
 
+# ===== T2.7 部署平台化：worker 消费 topic 与健康检查端口（K8s Deployment 探针/Service 使用）=====
+TASK_QUEUE_TOPIC = os.getenv("TASK_QUEUE_TOPIC", "tasks")  # worker 消费的队列 topic
+HEALTH_PORT = int(os.getenv("HEALTH_PORT", "8081"))  # worker 内置健康检查端口（API 侧用 API_PORT）
+
 
 
 #

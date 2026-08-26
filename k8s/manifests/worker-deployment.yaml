@@ -1,0 +1,86 @@
+# T2.7 Worker Deployment：队列任务消费者（消费 TASK_QUEUE_TOPIC）
+# 说明：本机无 K8s，此文件为生产交付配置（未实测）；探针指向 worker 内置健康端口 8081。
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-worker
+  namespace: rag
+  labels:
+    app: rag
+    component: worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rag
+      component: worker
+  template:
+    metadata:
+      labels:
+        app: rag
+        component: worker
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: worker
+          image: rag-knowledge-qa:latest   # 与 API 同镜像，命令差异入场
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m"]
+          args: ["worker"]
+          ports:
+            - name: health
+              containerPort: 8081
+          env:
+            - name: QUEUE_BACKEND
+              value: "file"               # 多副本生产建议 file/kafka/rabbitmq，避免 memory 单机丢失
+            - name: FILE_QUEUE_DIR
+              value: "/app/data/queue"
+            - name: TASK_QUEUE_TOPIC
+              value: "tasks"
+            - name: HEALTH_PORT
+              value: "8081"
+            - name: QUEUE_RETRY_MAX_DELIVERY
+              value: "3"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "2Gi"
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: health
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: health
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rag-worker
+  namespace: rag
+  labels:
+    app: rag
+    component: worker
+spec:
+  selector:
+    app: rag
+    component: worker
+  ports:
+    - name: health
+      port: 8081
+      targetPort: health

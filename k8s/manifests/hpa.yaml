@@ -1,0 +1,82 @@
+# T2.7 HPA：按 CPU / 内存自动扩缩 API 与 Worker
+# 说明：本机无 K8s，此文件为生产交付配置（未实测）；配合 metric-server 使用。
+# 自定义指标（队列深度 / QPS / P95 延迟，T2.8 Prometheus 暴露）可扩展为 external/object metric。
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: rag-api-hpa
+  namespace: rag
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: rag-api
+  minReplicas: 2
+  maxReplicas: 8
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 20
+          periodSeconds: 120
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: rag-worker-hpa
+  namespace: rag
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: rag-worker
+  minReplicas: 2
+  maxReplicas: 6
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 20
+          periodSeconds: 120
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
+    # 生产可启用：队列积压自定义指标（Prometheus Adapter + T2.8 指标暴露）
+    # - type: External
+    #   external:
+    #     metric:
+    #       name: rag_queue_backlog
+    #     target:
+    #       type: AverageValue
+    #       averageValue: 100

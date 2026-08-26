@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from src.api.routes import router, ws_router
+from src.api.health import health_router
 from src.api.rate_limit import RateLimitMiddleware
 from src.api.jwt_auth import register_legacy_key_from_env
 from src.api.logging_config import log_request, request_id_ctx, logger
@@ -132,6 +133,9 @@ app.add_middleware(RateLimitMiddleware)
 
 # 路由
 app.include_router(router)
+
+# T2.7: 健康检查端点（K8s liveness/readiness 探针）
+app.include_router(health_router)
 
 # T1.6: 提交-推送 WebSocket 通道（/ws/tasks）
 app.include_router(ws_router)

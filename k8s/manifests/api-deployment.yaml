@@ -1,0 +1,95 @@
+# T2.7 API Deployment：RAG 问答 API 服务
+# 说明：本机无 K8s，此文件为生产交付配置（未实测）；探针指向 /health/live 与 /health/ready。
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-api
+  namespace: rag
+  labels:
+    app: rag
+    component: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rag
+      component: api
+  template:
+    metadata:
+      labels:
+        app: rag
+        component: api
+    spec:
+      securityContext:
+        runAsNonRoot: true        # 镜像内以 app 非 root 用户运行
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: api
+          image: rag-knowledge-qa:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: API_HOST
+              value: "0.0.0.0"
+            - name: API_PORT
+              value: "8080"
+            - name: UVICORN_WORKERS
+              value: "4"
+            - name: APP_ENV
+              value: "production"
+            # 生产必须显式注入强 JWT 密钥（缺失或默认值会被启动安全校验拒绝）
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: rag-secrets
+                  key: jwt-secret
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /health/live
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rag-api
+  namespace: rag
+  labels:
+    app: rag
+    component: api
+spec:
+  selector:
+    app: rag
+    component: api
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
