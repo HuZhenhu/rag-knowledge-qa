@@ -27,10 +27,11 @@ from src.storage.database import (
     create_knowledge_base, get_knowledge_base, list_knowledge_bases,
     get_user_readable_doc_ids,
 )
-from src.config import USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, ALLOW_REGISTRATION, USE_CONVERSATION_SUMMARY, RAG_ENGINE, ACL_ENFORCE, ACL_ADMIN_ROLES
+from src.config import USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER, ALLOW_REGISTRATION, USE_CONVERSATION_SUMMARY, RAG_ENGINE, ACL_ENFORCE, ACL_ADMIN_ROLES, LLM_GUARD_ENABLED
 from src.core.acl import build_acl_filter
 from src.core.async_util import run_in_thread
 from src.core.engine_factory import get_engine, get_vector_store
+from src.core.llm_guard import get_llm_guard
 from src.core.session import SessionManager
 from src.core.metrics import metrics
 from src.core.tracer import get_trace, list_recent_traces
@@ -211,6 +212,11 @@ async def query(
     if ACL_ENFORCE:
         readable_ids = get_user_readable_doc_ids(user["id"])
         acl_filter = build_acl_filter(readable_ids, role=user.get("role"), admin_roles=ACL_ADMIN_ROLES)
+
+    # T1.5: 有界任务队列准入——队列已满则返回"排队中"（503），避免请求挂死
+    llm_guard = get_llm_guard(LLM_GUARD_ENABLED)
+    if llm_guard is not None and llm_guard.queue.full():
+        raise HTTPException(status_code=503, detail="系统繁忙，正在排队处理中，请稍后重试")
 
     response = await run_in_thread(
         rag_engine.query, req.question,

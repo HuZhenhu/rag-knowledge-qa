@@ -240,6 +240,16 @@ HYDE_SKIP_SIMPLE = os.getenv("HYDE_SKIP_SIMPLE", "true").lower() == "true"  # �
 ENABLE_CONFIDENCE_REFUSE = os.getenv("ENABLE_CONFIDENCE_REFUSE", "false").lower() == "true"
 CONFIDENCE_REFUSE_THRESHOLD = float(os.getenv("CONFIDENCE_REFUSE_THRESHOLD", "0.35"))
 
+# ===== T1.5 队列 + 限流 + 重试 + 熔断（默认关，灰度开关）=====
+LLM_GUARD_ENABLED = os.getenv("LLM_GUARD_ENABLED", "false").lower() == "true"  # 总开关
+LLM_RATE_LIMIT_RPM = int(os.getenv("LLM_RATE_LIMIT_RPM", "60"))  # DeepSeek 每分钟请求上限（令牌补充速率）
+LLM_RATE_LIMIT_CAPACITY = int(os.getenv("LLM_RATE_LIMIT_CAPACITY", "20"))  # 令牌桶突发容量
+LLM_RETRY_MAX = int(os.getenv("LLM_RETRY_MAX", "3"))  # 指数退避最大重试次数
+LLM_RETRY_BASE_DELAY = float(os.getenv("LLM_RETRY_BASE_DELAY", "0.5"))  # 重试基础延迟（秒）
+LLM_CIRCUIT_FAILURE_THRESHOLD = int(os.getenv("LLM_CIRCUIT_FAILURE_THRESHOLD", "5"))  # 连续失败熔断阈值
+LLM_CIRCUIT_RESET_TIMEOUT = float(os.getenv("LLM_CIRCUIT_RESET_TIMEOUT", "30.0"))  # 熔断重置窗口（秒）
+LLM_QUEUE_MAXSIZE = int(os.getenv("LLM_QUEUE_MAXSIZE", "100"))  # 有界任务队列容量
+
 # ===== P2 企业级增强配置 =====
 # P2-7 引用真实性校验（默认关；开启时若模型答案中所有引用均为幻觉引用则拒答）
 USE_CITATION_VERIFY = os.getenv("USE_CITATION_VERIFY", "false").lower() == "true"

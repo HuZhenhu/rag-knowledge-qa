@@ -11,7 +11,9 @@ from src.config import (
     ANTHROPIC_MODEL,
     LLM_TEMPERATURE,
     LLM_MAX_TOKENS,
+    LLM_GUARD_ENABLED,
 )
+from src.core.llm_guard import guarded_llm_invoke, get_llm_guard
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +33,8 @@ class Generator:
 
     def __init__(self):
         self.client = None
+        # T1.5: LLM 限流/重试/熔断防护（LLM_GUARD_ENABLED 时启用，默认 None 保持现行为）
+        self.llm_guard = get_llm_guard(LLM_GUARD_ENABLED)
 
     def _init_client(self):
         """初始化LLM客户端"""
@@ -76,10 +80,20 @@ class Generator:
         messages.append({"role": "user", "content": prompt})
 
         try:
+            # T1.5: LLM 调用受限流/重试/熔断保护；限流排队或熔断降级时返回降级文案
+            degraded = {"answer": "知识库中未找到相关信息", "usage": {}}
             if LLM_PROVIDER == "anthropic":
-                return self._call_anthropic(system_content, messages)
+                return guarded_llm_invoke(
+                    self.llm_guard,
+                    lambda: self._call_anthropic(system_content, messages),
+                    fallback=degraded,
+                )
             else:
-                return self._call_openai(system_content, messages)
+                return guarded_llm_invoke(
+                    self.llm_guard,
+                    lambda: self._call_openai(system_content, messages),
+                    fallback=degraded,
+                )
 
         except Exception as e:
             logger.error("LLM调用失败: %s", e)

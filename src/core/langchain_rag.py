@@ -66,7 +66,9 @@ from src.config import (
     ENABLE_CONFIDENCE_REFUSE,
     CONFIDENCE_REFUSE_THRESHOLD,
     USE_CITATION_VERIFY,
+    LLM_GUARD_ENABLED,
 )
+from src.core.llm_guard import guarded_llm_invoke, get_llm_guard
 
 logger = logging.getLogger(__name__)
 
@@ -177,6 +179,9 @@ class LangChainRAGEngine:
 
         # 构建RAG Chain
         self._build_chain()
+
+        # T1.5: LLM 限流/重试/熔断防护（LLM_GUARD_ENABLED 时启用，默认 None 保持现行为）
+        self.llm_guard = get_llm_guard(LLM_GUARD_ENABLED)
 
     def _setup_bm25_index(self):
         """构建 BM25 检索索引（大召回 candidate_k，供 RRF 融合）"""
@@ -598,7 +603,8 @@ class LangChainRAGEngine:
                     {"context": lambda _: context, "question": RunnablePassthrough()}
                     | self.prompt | self.llm | StrOutputParser()
                 )
-                answer = chain_out.invoke(question)
+                # T1.5: LLM 调用受限流/重试/熔断保护；限流排队或熔断降级时返回降级文案
+                answer = guarded_llm_invoke(self.llm_guard, lambda: chain_out.invoke(question))
                 usage = {}  # LangChain不直接暴露token使用量
                 # P2-7: 解析引用编号 → 校验真实性（仅真实检索 ID 集合内的来源有效）→ 构建 span
                 citation_spans = self._build_citation_spans(answer, cit_index, sources)
