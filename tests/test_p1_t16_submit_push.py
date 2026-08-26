@@ -173,7 +173,11 @@ class _AuthClient:
 
 @pytest.fixture()
 def client(routes_module):
-    """构造只含本模块路由的 TestClient（不 import main，避免启动副作用）。"""
+    """构造只含本模块路由的同步 TestClient（不 import main，避免启动副作用）。
+
+    注意：TestClient 的 anyio portal 不驱动后台 asyncio.create_task 任务，
+    因此异步后台任务相关验收改用 async_client（ASGITransport 同事件循环）。
+    """
     from fastapi import FastAPI
     from fastapi.testclient import TestClient
     app = FastAPI()
@@ -182,18 +186,37 @@ def client(routes_module):
     return _AuthClient(TestClient(app, raise_server_exceptions=False), routes_module._test_token)
 
 
+def _build_app(routes_module):
+    from fastapi import FastAPI
+    app = FastAPI()
+    app.include_router(routes_module.router)
+    app.include_router(routes_module.ws_router)
+    return app
+
+
+@pytest.fixture()
+def async_client(routes_module):
+    """纯 async 客户端：与测试共享同一事件循环，后台任务可被 sleep 驱动。"""
+    from httpx import ASGITransport, AsyncClient
+    transport = ASGITransport(app=_build_app(routes_module))
+    return AsyncClient(
+        transport=transport,
+        base_url="http://testserver",
+        headers={"Authorization": f"Bearer {routes_module._test_token}"},
+    )
+
+
 # ======================================================================
 # /query 异步模式：立即返回 task_id
 # ======================================================================
 
-def test_query_async_mode_returns_task_id_immediately(client, routes_module,
-                                                      monkeypatch, fake_engine):
-    """异步模式下 /query 返回 task_id + pending，而非同步答案。
+@pytest.mark.anyio
+async def test_query_async_mode_returns_task_id_immediately(async_client, routes_module,
+                                                            monkeypatch, fake_engine):
+    """异步模式下 /query 立即返回 task_id + pending，不等待引擎慢查询。
 
-    注意：TestClient 的同步 portal 会把 asyncio.create_task 的后台任务带到完成，
-    因此无法在单测层直接断言"耗时 < 引擎耗时"（真实 uvicorn 下 create_task 立即
-    返回、不阻塞响应）。此处验证语义契约：响应携带 task_id、status=pending、
-    answer 为空，且引擎查询确实被提交到后台执行。
+    用 ASGITransport + AsyncClient：与后台任务共享同一事件循环，可真实度量
+    "响应先于引擎完成返回"这一验收语义。
     """
     monkeypatch.setattr(routes_module, "QUERY_ASYNC_MODE", True)
 
@@ -206,48 +229,55 @@ def test_query_async_mode_returns_task_id_immediately(client, routes_module,
         )
 
     fake_engine.query.side_effect = slow_query
-    resp = client.post("/api/v1/query", json={"question": "什么是RAG", "top_k": 5})
+    start = time.time()
+    resp = await async_client.post("/api/v1/query", json={"question": "什么是RAG", "top_k": 5})
+    elapsed = time.time() - start
     assert resp.status_code == 200
     data = resp.json()
     assert data.get("task_id")  # 拿到 task_id（而非同步答案）
     assert data.get("status") == "pending"
     assert data.get("answer") == ""  # 答案走后端任务，不经响应体返回
-    assert fake_engine.query.called  # 引擎查询已在后台被调用
+    assert elapsed < 0.4  # 未等引擎 0.5s 慢查询即返回
 
 
-def test_query_async_mode_task_reaches_done(client, routes_module, monkeypatch):
+@pytest.mark.anyio
+async def test_query_async_mode_task_reaches_done(async_client, routes_module,
+                                                  monkeypatch):
     """异步提交后，/tasks/{task_id} 可轮询到 done + result。"""
     monkeypatch.setattr(routes_module, "QUERY_ASYNC_MODE", True)
-    resp = client.post("/api/v1/query", json={"question": "q", "top_k": 5})
+    resp = await async_client.post("/api/v1/query", json={"question": "q", "top_k": 5})
+    assert resp.status_code == 200
     tid = resp.json()["task_id"]
 
     status = None
     for _ in range(100):
-        r = client.get(f"/api/v1/tasks/{tid}")
+        r = await async_client.get(f"/api/v1/tasks/{tid}")
         assert r.status_code == 200
         status = r.json()["status"]
         if status in ("done", "error"):
             break
-        time.sleep(0.05)
+        await asyncio.sleep(0.05)
     assert status == "done"
     assert r.json()["result"]["answer"] == "mock answer"
 
 
-def test_query_async_mode_task_error_records_error(client, routes_module,
-                                                   monkeypatch, fake_engine):
+@pytest.mark.anyio
+async def test_query_async_mode_task_error_records_error(async_client, routes_module,
+                                                         monkeypatch, fake_engine):
     """后台查询抛错 -> 任务状态为 error 并记录错误信息。"""
     monkeypatch.setattr(routes_module, "QUERY_ASYNC_MODE", True)
     fake_engine.query.side_effect = RuntimeError("engine down")
-    resp = client.post("/api/v1/query", json={"question": "q", "top_k": 5})
+    resp = await async_client.post("/api/v1/query", json={"question": "q", "top_k": 5})
+    assert resp.status_code == 200
     tid = resp.json()["task_id"]
 
     status = None
     for _ in range(100):
-        r = client.get(f"/api/v1/tasks/{tid}")
+        r = await async_client.get(f"/api/v1/tasks/{tid}")
         status = r.json()["status"]
         if status in ("done", "error"):
             break
-        time.sleep(0.05)
+        await asyncio.sleep(0.05)
     assert status == "error"
     assert "engine down" in r.json()["error"]
 
