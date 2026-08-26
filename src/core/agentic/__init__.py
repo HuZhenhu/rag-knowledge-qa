@@ -17,6 +17,8 @@ from src.core.retriever import Retriever, HybridRetriever
 from src.core.generator import Generator
 from src.core.reranker import Reranker
 
+from src.core.base_engine import BaseRAGEngine
+
 from src.core.agentic.state import build_initial_state
 from src.core.agentic.supervisor import Supervisor
 from src.core.agentic.planner import Planner
@@ -47,8 +49,10 @@ class AgenticRAGResponse:
     agent_trace: list[dict] = field(default_factory=list)  # 推理过程（前端可视化，M5 使用）
 
 
-class AgenticEngine:
+class AgenticEngine(BaseRAGEngine):
     """基于 LangGraph 的 Agentic RAG 引擎。"""
+
+    engine_name = "agentic"
 
     def __init__(self, use_hybrid: bool = USE_HYBRID_RETRIEVAL,
                  use_reranker: bool = True,

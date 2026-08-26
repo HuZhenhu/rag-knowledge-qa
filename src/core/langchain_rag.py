@@ -12,13 +12,15 @@ import time
 from dataclasses import dataclass, field
 
 from langchain_openai import ChatOpenAI
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
-from langchain_community.retrievers import BM25Retriever
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+from src.core.base_engine import BaseRAGEngine
+from src.core.bm25_retriever import BM25Retriever
 
 from src.core.tracer import Trace
 from src.core.acl import enrich_acl_metadata, assert_sources_allowed, allowed_doc_ids_from_filter
@@ -88,7 +90,7 @@ class LangChainRAGResponse:
     citation_spans: list = field(default_factory=list)  # P2-7: 引用 span 列表
 
 
-class LangChainRAGEngine:
+class LangChainRAGEngine(BaseRAGEngine):
     """基于LangChain的RAG引擎
 
     检索链路（优化后）：
@@ -96,6 +98,7 @@ class LangChainRAGEngine:
         → [可选] HyDE 双路融合(原始query + HyDE向量路) → [可选] bge-reranker 精排 → Top-5 进 LLM
     说明：RELEVANCE_THRESHOLD 由硬过滤降级为参考阈值（仅记录，不截断候选）。
     """
+    engine_name = "langchain"
 
     def __init__(
         self,

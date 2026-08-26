@@ -1,38 +1,55 @@
-"""T1.2 进程内引擎单例工厂。
+"""T1.2 进程内引擎单例工厂（T3.4 架构收敛）。
 
 消除 main.py 与 routes.py 各自初始化引擎造成的双实例问题：
 HTTP 与 WebSocket 共享同一引擎实例，缓存 / BM25 索引只构建一次。
-三引擎（langchain / agentic / original）统一在此初始化，按 RAG_ENGINE 配置切换。
+
+T3.4 收敛：三引擎（langchain / agentic / original）收敛为两引擎（langchain / agentic），
+统一接口 BaseRAGEngine，original 已删除 —— RAG_ENGINE 仅支持 langchain / agentic，
+传入 original 或未知值抛 ValueError（禁止静默回退到旧实现）。
+引擎切换只改配置 src.config.RAG_ENGINE。
 """
 from __future__ import annotations
 
 from typing import Any
 
-from src.config import RAG_ENGINE, USE_QUERY_EXPANSION, USE_HYDE, USE_RERANKER
+from src.config import RAG_ENGINE
 
 _engine: Any = None
 _vector_store: Any = None
 
 
-def _build_engine() -> Any:
-    """根据 RAG_ENGINE 配置构建引擎实例（仅在首次调用时执行）。"""
-    if RAG_ENGINE == "langchain":
+def _get_engine_class(name: str):
+    """按配置返回引擎类（langchain / agentic）。
+
+    Raises:
+        ValueError: 引擎名不在支持集合内（含已删除的 original）。
+    """
+    if name == "langchain":
         from src.core.langchain_rag import LangChainRAGEngine
-        return LangChainRAGEngine()
-    if RAG_ENGINE == "agentic":
+        return LangChainRAGEngine
+    if name == "agentic":
         from src.core.agentic import AgenticEngine
-        return AgenticEngine()
-    from src.core.rag_engine import RAGEngine
-    return RAGEngine(
-        use_query_expansion=USE_QUERY_EXPANSION,
-        use_hyde=USE_HYDE,
-        use_reranker=USE_RERANKER,
+        return AgenticEngine
+    raise ValueError(
+        f"未知 RAG 引擎: {name!r}；仅支持 langchain / agentic（original 已并入 langchain 收敛）"
     )
 
 
+def _build_engine() -> Any:
+    """根据 RAG_ENGINE 配置构建引擎实例（仅在首次调用时执行）。"""
+    return _get_engine_class(RAG_ENGINE)()
+
+
 def _resolve_vector_store(engine: Any) -> Any:
-    """从引擎实例解析向量库后端（三引擎属性名不同）。"""
-    if RAG_ENGINE == "langchain":
+    """从引擎实例解析向量库后端（按统一 engine_name 属性路由）。
+
+    仅接受合法引擎名（langchain/agentic）；MagicMock 或未实现
+    engine_name 的对象回退到配置 RAG_ENGINE，保证单测兼容。
+    """
+    name = getattr(engine, "engine_name", None)
+    if name not in ("langchain", "agentic"):
+        name = RAG_ENGINE
+    if name == "langchain":
         return engine.vectorstore
     return engine.vector_store
 
