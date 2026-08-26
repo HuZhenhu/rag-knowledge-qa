@@ -4,7 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 import { useI18n } from 'vue-i18n'
-import { MENU_ITEMS, filterMenusByRole } from '@/utils/menus'
+import { filterMenusByRole } from '@/utils/menus'
 
 const router = useRouter()
 const route = useRoute()
@@ -48,10 +48,10 @@ function handleLogout() {
 <template>
   <div class="admin-layout">
     <!-- 侧栏 -->
-    <aside class="sidebar" :class="{ collapsed: isCollapse }">
+    <aside class="sidebar bg-grid" :class="{ collapsed: isCollapse }">
       <div class="logo">
-        <div class="logo-icon">R</div>
-        <span v-if="!isCollapse" class="logo-text">RAG Admin</span>
+        <div class="logo-icon mono">R</div>
+        <span v-if="!isCollapse" class="logo-text">Knowledge Works</span>
       </div>
 
       <el-menu
@@ -68,7 +68,7 @@ function handleLogout() {
 
       <div class="sidebar-footer">
         <div class="user-info">
-          <el-avatar :size="28">{{ authStore.user?.username?.[0]?.toUpperCase() }}</el-avatar>
+          <el-avatar :size="28" class="user-avatar">{{ authStore.user?.username?.[0]?.toUpperCase() }}</el-avatar>
           <div v-if="!isCollapse">
             <div class="user-name">{{ authStore.user?.username }}</div>
             <div class="user-role">{{ roleLabel }}</div>
@@ -103,9 +103,13 @@ function handleLogout() {
         </div>
       </header>
 
-      <!-- 内容区 -->
+      <!-- 内容区（全局页面切换过渡） -->
       <main class="content">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <transition name="fade-slide" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </main>
     </div>
   </div>
@@ -124,6 +128,9 @@ function handleLogout() {
   display: flex;
   flex-direction: column;
   transition: width 0.3s;
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
 
 .sidebar.collapsed {
@@ -135,30 +142,41 @@ function handleLogout() {
   align-items: center;
   gap: 10px;
   padding: 20px 16px;
+  border-bottom: 1px solid var(--border);
 }
 
 .logo-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent), #6D28D9);
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  font-weight: 800;
-  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--bg-surface);
   flex-shrink: 0;
+  letter-spacing: 0.02em;
 }
 
 .logo-text {
   font-size: 14px;
   font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .sidebar-menu {
   flex: 1;
   border-right: none;
+  padding: 10px 8px;
+  --el-menu-bg-color: transparent;
+  --el-menu-text-color: var(--text-2);
+  --el-menu-hover-bg-color: var(--bg-hover);
+  --el-menu-active-color: var(--accent);
+  --el-menu-item-height: 44px;
 }
 
 .sidebar-footer {
@@ -169,17 +187,24 @@ function handleLogout() {
 .user-info {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+}
+
+.user-avatar {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
 }
 
 .user-name {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 600;
 }
 
 .user-role {
-  font-size: 10px;
+  font-size: 10.5px;
   color: var(--text-3);
+  margin-top: 1px;
 }
 
 .main-wrapper {
@@ -187,6 +212,7 @@ function handleLogout() {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-width: 0;
 }
 
 .header {
@@ -216,11 +242,13 @@ function handleLogout() {
   gap: 4px;
   cursor: pointer;
   font-size: 13px;
+  color: var(--text-2);
 }
 
 .content {
   flex: 1;
   padding: 24px;
   overflow-y: auto;
+  background: var(--bg);
 }
 </style>

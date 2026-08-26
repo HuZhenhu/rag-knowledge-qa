@@ -171,7 +171,7 @@ const historyCollapsed = ref(false)
     <!-- 侧边栏：对话历史 -->
     <aside class="chat-sidebar" :class="{ collapsed: historyCollapsed }">
       <div class="sidebar-header">
-        <span v-if="!historyCollapsed">对话历史</span>
+        <span v-if="!historyCollapsed" class="sidebar-title">对话历史</span>
         <el-button text size="small" @click="historyCollapsed = !historyCollapsed">
           <el-icon><Fold v-if="!historyCollapsed" /><Expand v-else /></el-icon>
         </el-button>
@@ -208,25 +208,26 @@ const historyCollapsed = ref(false)
 
     <!-- 主聊天区域 -->
     <div class="chat-view">
-      <div v-if="dataMonitorMessage" class="monitor-toast">
+      <div v-if="dataMonitorMessage" class="monitor-toast mono">
         {{ dataMonitorMessage }}
       </div>
 
-      <div v-if="monitor.indexProgress.value" class="monitor-progress">
+      <div v-if="monitor.indexProgress.value" class="monitor-progress mono">
         索引进度: {{ monitor.indexProgress.value.current }}/{{ monitor.indexProgress.value.total }}
         {{ monitor.indexProgress.value.filename ? `— ${monitor.indexProgress.value.filename}` : '' }}
       </div>
 
       <main class="chat-container" ref="chatContainer">
         <div v-if="messages.length === 0" class="empty-state">
-          <div class="icon">🤖</div>
-          <p>有什么问题？问我吧！</p>
+          <div class="icon mono">R</div>
+          <p class="empty-title">有什么问题？问我吧！</p>
+          <p class="empty-sub">按领域调用知识库检索与联网搜索，附引用来源与推理时间线</p>
           <div class="status-bar">
-            <div class="status" :class="{ connected: monitor.isConnected.value }">
-              数据监控: {{ monitor.isConnected.value ? '已连接' : '未连接' }}
+            <div class="status mono" :class="{ connected: monitor.isConnected.value }">
+              DATA: {{ monitor.isConnected.value ? 'ON' : 'OFF' }}
             </div>
-            <div class="status" :class="{ connected: ws.isConnected.value }">
-              对话服务: {{ ws.isConnected.value ? '已连接' : '未连接' }}
+            <div class="status mono" :class="{ connected: ws.isConnected.value }">
+              WS: {{ ws.isConnected.value ? 'ON' : 'OFF' }}
             </div>
           </div>
         </div>
@@ -252,44 +253,45 @@ const historyCollapsed = ref(false)
   display: flex;
   height: 100%;
   margin: 0;
-  background: var(--bg-surface);
-  border-radius: 8px;
   overflow: hidden;
+  background: var(--bg);
 }
 
 /* 侧边栏 */
 .chat-sidebar {
-  width: 240px;
-  min-width: 240px;
+  width: 252px;
+  min-width: 252px;
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  background: var(--bg-card);
+  background: var(--bg-surface);
   transition: width 0.2s, min-width 0.2s;
 }
 .chat-sidebar.collapsed {
-  width: 48px;
-  min-width: 48px;
+  width: 52px;
+  min-width: 52px;
 }
 .sidebar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
+  padding: 14px 12px;
   border-bottom: 1px solid var(--border);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
 }
 .sidebar-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: 8px;
+  padding: 10px;
 }
 .new-chat-btn {
   width: 100%;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 .session-list {
   flex: 1;
@@ -299,12 +301,12 @@ const historyCollapsed = ref(false)
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 10px;
-  border-radius: 6px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: 13px;
-  margin-bottom: 2px;
-  transition: background 0.15s;
+  margin-bottom: 3px;
+  transition: background 0.15s ease;
 }
 .session-item:hover {
   background: var(--bg-hover);
@@ -312,6 +314,7 @@ const historyCollapsed = ref(false)
 .session-item.active {
   background: var(--accent-soft);
   color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 .session-title {
   flex: 1;
@@ -330,7 +333,7 @@ const historyCollapsed = ref(false)
   text-align: center;
   color: var(--text-3);
   font-size: 13px;
-  padding: 24px 0;
+  padding: 28px 0;
 }
 
 /* 主聊天区域 */
@@ -345,7 +348,8 @@ const historyCollapsed = ref(false)
   padding: 8px 16px;
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
   text-align: center;
   animation: fadeIn 0.3s ease;
 }
@@ -354,6 +358,7 @@ const historyCollapsed = ref(false)
   padding: 6px 16px;
   background: var(--warning-bg);
   color: var(--warning);
+  border-bottom: 1px solid var(--border);
   font-size: 12px;
   text-align: center;
 }
@@ -366,7 +371,7 @@ const historyCollapsed = ref(false)
 .chat-container {
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
+  padding: 28px 20px 20px;
 }
 
 .empty-state {
@@ -376,25 +381,51 @@ const historyCollapsed = ref(false)
   justify-content: center;
   height: 100%;
   color: var(--text-2);
+  text-align: center;
 }
 
 .empty-state .icon {
-  font-size: 64px;
-  margin-bottom: 16px;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-lg);
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.empty-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.empty-sub {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-3);
 }
 
 .status-bar {
   display: flex;
-  gap: 12px;
-  margin-top: 24px;
+  gap: 10px;
+  margin-top: 28px;
 }
 
 .status {
-  font-size: 12px;
+  font-size: 11px;
   padding: 4px 12px;
-  border-radius: 12px;
+  border-radius: var(--radius-full);
   background: var(--error-bg);
   color: var(--error);
+  letter-spacing: 0.04em;
+  border: 1px solid var(--border);
 }
 
 .status.connected {
@@ -407,6 +438,7 @@ const historyCollapsed = ref(false)
   margin: 8px 0;
   background: var(--error-bg);
   color: var(--error);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--error-bg);
 }
 </style>

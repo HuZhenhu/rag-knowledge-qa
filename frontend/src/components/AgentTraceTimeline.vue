@@ -296,10 +296,10 @@ function citationText(c: any): string {
   background: #909399;
 }
 
-.node-dot.agent_plan { background: #409eff; }
-.node-dot.agent_tool_call { background: #e6a23c; }
-.node-dot.agent_evidence { background: #67c23a; }
-.node-dot.agent_reflect { background: #f56c6c; }
+.node-dot.agent_plan { background: var(--el-color-primary, var(--accent)); }
+.node-dot.agent_tool_call { background: var(--el-color-warning, var(--warning)); }
+.node-dot.agent_evidence { background: var(--el-color-success, var(--success)); }
+.node-dot.agent_reflect { background: var(--el-color-danger, var(--error)); }
 .node-dot.agent_final { background: #909399; }
 .node-dot.user_question { background: #909399; }
 

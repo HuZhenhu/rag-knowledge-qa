@@ -43,43 +43,63 @@ function handleKeyup(e: KeyboardEvent): void {
 <style scoped>
 .chat-input {
   display: flex;
-  gap: 8px;
-  padding: 16px;
-  background: var(--el-bg-color);
-  border-top: 1px solid var(--el-border-color-lighter);
+  gap: 10px;
+  align-items: center;
+  margin: 0 20px 20px;
+  padding: 8px 10px 8px 18px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chat-input:focus-within {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md), 0 0 0 3px var(--accent-soft);
 }
 
 input {
   flex: 1;
-  padding: 12px 16px;
-  border: 1px solid var(--el-border-color);
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-input:focus {
-  border-color: var(--el-color-primary);
-}
-
-button {
-  padding: 12px 24px;
-  background: var(--el-color-primary);
-  color: white;
+  min-width: 0;
+  padding: 10px 0;
+  background: transparent;
   border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: opacity 0.2s;
+  outline: none;
+  font-size: 15px;
+  color: var(--text-1);
+  font-family: var(--font-sans);
 }
 
-button:disabled {
-  opacity: 0.5;
+input::placeholder {
+  color: var(--text-3);
+  font-style: italic;
+}
+
+input:disabled {
   cursor: not-allowed;
 }
 
+button {
+  padding: 9px 20px;
+  background: var(--accent);
+  color: var(--bg-surface);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
 button:hover:not(:disabled) {
-  opacity: 0.9;
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 </style>

@@ -28,8 +28,8 @@ function formatContent(content: string): string {
     class="message"
     :class="message.role === 'user' ? 'message-user' : 'message-assistant'"
   >
-    <div class="message-avatar">
-      {{ message.role === 'user' ? '👤' : '🤖' }}
+    <div class="message-avatar mono">
+      {{ message.role === 'user' ? 'U' : 'A' }}
     </div>
 
     <div class="message-content" @click="toggleSources">
@@ -39,17 +39,22 @@ function formatContent(content: string): string {
 
       <div v-else class="message-text" v-html="formatContent(message.content)"></div>
 
+      <!-- 流式输出光标：timing 在 done 时写入，未 done 且有内容即视为流式中 -->
+      <span
+        v-if="message.role === 'assistant' && message.content && !message.timing"
+        class="stream-caret"
+      ></span>
+
       <div v-if="showSources && message.sources" class="sources-panel">
         <div class="sources-header">
-          参考来源
-          <span v-if="message.timing" class="timing">
-            {{ message.timing.total_ms }}ms
-          </span>
+          <span class="sources-title">参考来源</span>
+          <span v-if="message.sources" class="sources-count mono">{{ message.sources.length }} 条</span>
+          <span v-if="message.timing" class="timing mono">{{ message.timing.total_ms }}ms</span>
         </div>
         <div v-for="(source, idx) in message.sources" :key="idx" class="source-item">
-          <div class="source-file">{{ source.file }} - {{ source.section }}</div>
+          <div class="source-file mono">{{ source.file }} - {{ source.section }}</div>
           <div class="source-chunk">{{ source.chunk }}</div>
-          <div class="source-score">相关度: {{ (source.score * 100).toFixed(0) }}%</div>
+          <div class="source-score mono">相关度: {{ (source.score * 100).toFixed(0) }}%</div>
         </div>
       </div>
 
@@ -67,52 +72,80 @@ function formatContent(content: string): string {
 .message {
   display: flex;
   gap: 12px;
-  margin-bottom: 16px;
-  padding: 8px;
+  margin-bottom: 18px;
+  padding: 6px 0;
+  animation: rise-in 0.3s ease both;
 }
 
 .message-user {
   flex-direction: row-reverse;
 }
 
-.message-user .message-content {
-  background: var(--el-color-primary);
-  color: white;
-  border-radius: 16px 16px 4px 16px;
-}
-
-.message-assistant .message-content {
-  background: var(--el-fill-color-light);
-  border-radius: 16px 16px 16px 4px;
-}
-
 .message-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 13px;
+  font-weight: 700;
   flex-shrink: 0;
 }
 
+.message-user .message-avatar {
+  background: var(--text-1);
+  color: var(--bg-surface);
+}
+
+.message-assistant .message-avatar {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--border);
+}
+
 .message-content {
-  max-width: 70%;
+  max-width: min(76%, 720px);
   padding: 12px 16px;
+  font-size: 15px;
+}
+
+.message-user .message-content {
+  background: var(--accent);
+  color: var(--bg-surface);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-sm) var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.message-user .message-content :deep(.citation) {
+  color: var(--bg-surface);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.message-assistant .message-content {
+  background: var(--bg-surface);
+  color: var(--text-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  line-height: 1.75;
+}
+
+.message-text {
+  word-break: break-word;
 }
 
 .loading {
   display: flex;
-  gap: 4px;
+  gap: 5px;
   padding: 8px 0;
 }
 
 .loading span {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: var(--el-text-color-secondary);
+  background: var(--accent);
   animation: bounce 1.4s infinite ease-in-out both;
 }
 
@@ -124,54 +157,84 @@ function formatContent(content: string): string {
   40% { transform: scale(1); }
 }
 
+.stream-caret {
+  display: inline-block;
+  width: 9px;
+  height: 1.15em;
+  margin-left: 3px;
+  vertical-align: text-bottom;
+  background: var(--accent);
+  border-radius: 1px;
+  animation: caret-blink 1s steps(1) infinite;
+}
+
 .sources-panel {
-  margin-top: 12px;
-  padding: 12px;
-  background: var(--el-bg-color);
-  border-radius: 8px;
-  border: 1px solid var(--el-border-color-lighter);
+  margin-top: 14px;
+  padding: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-2);
+  border-radius: var(--radius-sm);
 }
 
 .sources-header {
-  font-weight: 600;
-  margin-bottom: 8px;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.sources-count {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
 }
 
 .timing {
   font-size: 12px;
-  color: var(--el-text-color-secondary);
+  font-weight: 500;
+  color: var(--text-3);
 }
 
 .source-item {
-  padding: 8px 0;
-  border-bottom: 1px solid var(--el-border-color-lighter);
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border);
 }
 
 .source-item:last-child {
   border-bottom: none;
+  padding-bottom: 0;
 }
 
 .source-file {
-  font-size: 12px;
-  color: var(--el-color-primary);
-  font-weight: 500;
+  font-size: 12.5px;
+  color: var(--accent-2);
+  font-weight: 600;
 }
 
 .source-chunk {
   font-size: 13px;
-  margin: 4px 0;
+  margin: 5px 0;
+  line-height: 1.65;
+  color: var(--text-2);
 }
 
 .source-score {
   font-size: 11px;
-  color: var(--el-text-color-secondary);
+  color: var(--text-3);
 }
 
 .citation {
-  color: var(--el-color-primary);
+  color: var(--accent-2);
   cursor: pointer;
   font-weight: 600;
+  background: var(--accent-2-soft);
+  border-radius: var(--radius-sm);
+  padding: 0 4px;
+  font-size: 0.88em;
+  line-height: 1.4;
 }
 </style>

@@ -3,8 +3,10 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { authClient } from '@/api/client'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '@/stores/auth'
 
 const { t } = useI18n()
+const authStore = useAuthStore()
 
 const watcherStatus = ref({ running: false })
 const indexStatus = ref({ pending: 0, indexed: 0, error: 0 })
