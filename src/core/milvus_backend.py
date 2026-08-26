@@ -18,15 +18,20 @@ import logging
 from typing import Any
 
 from src.config import (
-    DEFAULT_COLLECTION,
+    MILVUS_CONSISTENCY_LEVEL,
+    MILVUS_CONNECT_RETRIES,
     MILVUS_INDEX_NLIST,
     MILVUS_INDEX_NPROBE,
     MILVUS_INDEX_TYPE,
     MILVUS_METRIC_TYPE,
+    MILVUS_PASSWORD,
     MILVUS_QUANTIZER,
+    MILVUS_SECURE,
+    MILVUS_TIMEOUT_SECONDS,
     MILVUS_URI,
+    MILVUS_USER,
 )
-from src.core.vector_store import VectorStoreBackend
+from src.core.vector_store import DEFAULT_COLLECTION, VectorStoreBackend
 
 logger = logging.getLogger(__name__)
 
@@ -50,14 +55,41 @@ class MilvusBackend(VectorStoreBackend):
         self._connections = connections
         self._utility = utility
         self._metric = _METRIC_MAP.get(MILVUS_METRIC_TYPE.lower(), "COSINE")
+        self._consistency_level = MILVUS_CONSISTENCY_LEVEL
         self._dim: int | None = None
-        try:
-            connections.connect(alias="default", uri=str(MILVUS_URI))
-        except Exception as exc:
-            raise RuntimeError(
-                f"Milvus 连接失败（MILVUS_URI={MILVUS_URI}）：{exc}"
-            ) from exc
-        logger.info("Milvus 已连接: %s", MILVUS_URI)
+        self._connect_with_retry()
+        logger.info("Milvus 已连接: %s（consistency=%s）", MILVUS_URI, self._consistency_level)
+
+    def _connect_with_retry(self) -> None:
+        """连接 Milvus，失败按 MILVUS_CONNECT_RETRIES 重试（生产集群冷启动慢）"""
+        connect_kwargs: dict[str, Any] = {"alias": "default", "uri": str(MILVUS_URI)}
+        if MILVUS_USER:
+            connect_kwargs["user"] = MILVUS_USER
+        if MILVUS_PASSWORD:
+            connect_kwargs["password"] = MILVUS_PASSWORD
+        if MILVUS_TIMEOUT_SECONDS > 0:
+            connect_kwargs["timeout"] = MILVUS_TIMEOUT_SECONDS
+        if MILVUS_SECURE:
+            connect_kwargs["secure"] = True
+
+        last_exc: Exception | None = None
+        for attempt in range(1, max(MILVUS_CONNECT_RETRIES, 1) + 1):
+            try:
+                self._connections.connect(**connect_kwargs)
+                return
+            except Exception as exc:  # noqa: BLE001
+                last_exc = exc
+                logger.warning(
+                    "Milvus 连接失败（第 %d/%d 次，uri=%s）：%s",
+                    attempt, max(MILVUS_CONNECT_RETRIES, 1), MILVUS_URI, exc,
+                )
+                if attempt < max(MILVUS_CONNECT_RETRIES, 1):
+                    import time
+
+                    time.sleep(min(0.5 * (2 ** (attempt - 1)), 5.0))
+        raise RuntimeError(
+            f"Milvus 连接失败（MILVUS_URI={MILVUS_URI}，重试 {MILVUS_CONNECT_RETRIES} 次）：{last_exc}"
+        ) from last_exc
 
     # ------------------------------------------------------------------
     # 内部工具
@@ -169,6 +201,7 @@ class MilvusBackend(VectorStoreBackend):
                 param=self._search_params(),
                 limit=int(n_results),
                 output_fields=["document", "metadata"],
+                consistency_level=self._consistency_level,
             )
         except Exception as exc:
             logger.warning("Milvus 检索失败: %s", exc)
@@ -240,3 +273,23 @@ class MilvusBackend(VectorStoreBackend):
         name = collection_name or DEFAULT_COLLECTION
         if self._utility.has_collection(name, using="default"):
             self._utility.drop_collection(name, using="default")
+
+    # ------------------------------------------------------------------
+    # collection 别名 — 索引重建与查询互不影响（零停机切换）
+    # ------------------------------------------------------------------
+
+    def create_alias(self, collection_name: str, alias: str) -> None:
+        """为 collection 创建别名。
+
+        生产流程：新 collection 建好索引后 create_alias 指向它，
+        应用查询走 alias，重建期间旧 collection 查询不中断。
+        """
+        self._utility.create_alias(
+            collection_name=collection_name, alias=alias, using="default"
+        )
+
+    def switch_alias(self, collection_name: str, alias: str) -> None:
+        """将别名切换指向另一个 collection（索引重建完成后的原子切换）。"""
+        self._utility.alter_alias(
+            collection_name=collection_name, alias=alias, using="default"
+        )

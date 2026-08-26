@@ -205,6 +205,14 @@ MILVUS_METRIC_TYPE = os.getenv("MILVUS_METRIC_TYPE", "COSINE")
 MILVUS_INDEX_NLIST = int(os.getenv("MILVUS_INDEX_NLIST", "128"))
 MILVUS_INDEX_NPROBE = int(os.getenv("MILVUS_INDEX_NPROBE", "10"))
 MILVUS_QUANTIZER = os.getenv("MILVUS_QUANTIZER", "")  # 空 / SCALAR（SQ8风格）/ QUANTIZE_BIT（2.4+）
+# 生产集群连接参数（T2.2）
+MILVUS_USER = os.getenv("MILVUS_USER", "")
+MILVUS_PASSWORD = os.getenv("MILVUS_PASSWORD", "")
+MILVUS_SECURE = os.getenv("MILVUS_SECURE", "").lower() in ("1", "true", "yes")
+MILVUS_TIMEOUT_SECONDS = int(os.getenv("MILVUS_TIMEOUT_SECONDS", "10"))
+MILVUS_CONNECT_RETRIES = int(os.getenv("MILVUS_CONNECT_RETRIES", "3"))
+# 一致性级别：Strong / Bounded / Eventually / Session（生产建议 Bounded 平衡一致性与性能）
+MILVUS_CONSISTENCY_LEVEL = os.getenv("MILVUS_CONSISTENCY_LEVEL", "Bounded")
 
 # ===== P0 安全合规配置 =====
 # P0-1 检索链路 ACL/租户隔离（默认关，灰度开启）
