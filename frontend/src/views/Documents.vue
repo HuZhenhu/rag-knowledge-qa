@@ -3,11 +3,15 @@ import { ref, onMounted } from 'vue'
 import { authClient } from '@/api/client'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '@/stores/auth'
 
 const { t } = useI18n()
+const authStore = useAuthStore()
 
 const documents = ref<any[]>([])
 const loading = ref(true)
+const uploading = ref(false)
+const fileInput = ref<HTMLInputElement | null>(null)
 
 // Chunk Drawer
 const drawerVisible = ref(false)
@@ -28,6 +32,32 @@ async function fetchDocuments() {
     ElMessage.error('获取文档列表失败')
   } finally {
     loading.value = false
+  }
+}
+
+/** A3：上传文档 = editor+（仅对 canEdit 显示入口） */
+function triggerUpload() {
+  fileInput.value?.click()
+}
+
+async function handleFileChange(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+  uploading.value = true
+  const formData = new FormData()
+  formData.append('file', file)
+  try {
+    await authClient.post('/documents/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    ElMessage.success(`「${file.name}」上传成功`)
+    await fetchDocuments()
+  } catch (e: any) {
+    ElMessage.error(e.response?.data?.detail || '上传失败')
+  } finally {
+    uploading.value = false
+    input.value = ''
   }
 }
 
@@ -97,10 +127,28 @@ function getStatusType(status: string) {
   <div class="documents-page">
     <div class="page-header">
       <h1>{{ t('menu.documents') }}</h1>
-      <el-button type="primary" @click="fetchDocuments">
-        <el-icon><Refresh /></el-icon>
-        {{ t('common.refresh') }}
-      </el-button>
+      <div class="header-actions">
+        <el-button
+          v-if="authStore.canEdit"
+          type="primary"
+          :loading="uploading"
+          @click="triggerUpload"
+        >
+          <el-icon><Upload /></el-icon>
+          {{ t('documents.upload') }}
+        </el-button>
+        <el-button @click="fetchDocuments">
+          <el-icon><Refresh /></el-icon>
+          {{ t('common.refresh') }}
+        </el-button>
+      </div>
+      <input
+        ref="fileInput"
+        type="file"
+        hidden
+        accept=".txt,.md,.pdf,.doc,.docx"
+        @change="handleFileChange"
+      />
     </div>
 
     <div class="card">
@@ -125,7 +173,14 @@ function getStatusType(status: string) {
         <el-table-column :label="'操作'" width="180" fixed="right">
           <template #default="{ row }">
             <el-button size="small" @click="viewChunks(row)">查看 Chunks</el-button>
-            <el-button size="small" type="danger" @click="deleteDocument(row)">删除</el-button>
+            <el-button
+              v-if="authStore.canEdit"
+              size="small"
+              type="danger"
+              @click="deleteDocument(row)"
+            >
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -80,14 +80,15 @@ async function triggerSync() {
       <div class="card-body">
         <p class="description">监听 data/ 目录变化，自动触发增量索引</p>
         <div class="actions">
-          <el-button @click="toggleWatcher">
+          <el-button v-if="authStore.isAdmin" @click="toggleWatcher">
             <el-icon><component :is="watcherStatus.running ? 'VideoPause' : 'VideoPlay'" /></el-icon>
             {{ watcherStatus.running ? '停止监听' : '启动监听' }}
           </el-button>
-          <el-button @click="triggerSync">
+          <el-button v-if="authStore.isAdmin" @click="triggerSync">
             <el-icon><Refresh /></el-icon>
             手动同步
           </el-button>
+          <span v-if="!authStore.isAdmin" class="readonly-hint">只读：扫描 / 同步操作仅管理员可用</span>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 import { useI18n } from 'vue-i18n'
+import { MENU_ITEMS, filterMenusByRole } from '@/utils/menus'
 
 const router = useRouter()
 const route = useRoute()
@@ -13,15 +14,20 @@ const { t, locale } = useI18n()
 
 const isCollapse = ref(false)
 
-const menuItems = computed(() => [
-  { path: '/dashboard', icon: 'Grid', label: t('menu.dashboard') },
-  { path: '/documents', icon: 'Document', label: t('menu.documents') },
-  { path: '/index', icon: 'Connection', label: t('menu.indexMonitor') },
-  { path: '/logs', icon: 'TrendCharts', label: t('menu.queryLogs') },
-  { path: '/evaluations', icon: 'DataAnalysis', label: t('menu.evaluations') },
-  { path: '/users', icon: 'User', label: t('menu.users') },
-  { path: '/chat', icon: 'ChatDotRound', label: t('menu.chat') },
-])
+/** A2：菜单按角色过滤（minRole 与路由 meta.roles 同源） */
+const menuItems = computed(() =>
+  filterMenusByRole(authStore.user?.role).map((item) => ({
+    path: item.path,
+    icon: item.icon,
+    label: t(item.labelKey),
+  }))
+)
+
+/** 角色可读标签（如 管理员 / 编辑 / 只读） */
+const roleLabel = computed(() => {
+  const role = authStore.user?.role ?? 'viewer'
+  return (t(`common.roles.${role}`) as string) || role
+})
 
 const activeMenu = computed(() => {
   const path = route.path
@@ -65,7 +71,7 @@ function handleLogout() {
           <el-avatar :size="28">{{ authStore.user?.username?.[0]?.toUpperCase() }}</el-avatar>
           <div v-if="!isCollapse">
             <div class="user-name">{{ authStore.user?.username }}</div>
-            <div class="user-role">{{ authStore.user?.role }}</div>
+            <div class="user-role">{{ roleLabel }}</div>
           </div>
         </div>
       </div>

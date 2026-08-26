@@ -64,6 +64,10 @@ export default {
     admin: 'Admin',
     user: 'User',
     apiKey: 'API Key',
+    roleUpdated: 'Role updated',
+    roleUpdateFailed: 'Failed to update role',
+    cannotModifySelfRole: 'You cannot change your own role',
+    self: ' (me)',
   },
   chat: {
     title: 'Chat',

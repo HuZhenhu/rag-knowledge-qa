@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { publicClient } from '@/api/client'
+import { canEdit as canEditByRole, isAdmin as isAdminByRole } from '@/utils/permission'
 
 interface User {
   id: string
@@ -16,7 +17,9 @@ export const useAuthStore = defineStore('auth', () => {
   )
 
   const isLoggedIn = computed(() => !!token.value)
-  const isAdmin = computed(() => user.value?.role === 'admin')
+  const isAdmin = computed(() => isAdminByRole(user.value?.role))
+  /** A3：是否至少可编辑（editor+）——上传/删除文档等操作 */
+  const canEdit = computed(() => canEditByRole(user.value?.role))
 
   async function login(username: string, password: string) {
     const { data } = await publicClient.post('/auth/login', { username, password })
@@ -26,6 +29,12 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.setItem('user', JSON.stringify(data.user))
   }
 
+  async function register(username: string, password: string) {
+    // 注册接口返回的 TokenResponse 不含 user 信息，注册成功后走一次登录拿完整用户
+    await publicClient.post('/auth/register', { username, password })
+    await login(username, password)
+  }
+
   function logout() {
     token.value = null
     user.value = null
@@ -33,5 +42,5 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem('user')
   }
 
-  return { token, user, isLoggedIn, isAdmin, login, logout }
+  return { token, user, isLoggedIn, isAdmin, canEdit, login, register, logout }
 })

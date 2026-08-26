@@ -3,8 +3,10 @@ import { ref, onMounted } from 'vue'
 import { authClient } from '@/api/client'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '@/stores/auth'
 
 const { t } = useI18n()
+const authStore = useAuthStore()
 
 const evaluations = ref<any[]>([])
 const loading = ref(true)
@@ -42,7 +44,7 @@ async function runEvaluation() {
   <div class="evaluations">
     <div class="page-header">
       <h1>{{ t('menu.evaluations') }}</h1>
-      <el-button type="primary" :loading="running" @click="runEvaluation">
+      <el-button v-if="authStore.isAdmin" type="primary" :loading="running" @click="runEvaluation">
         <el-icon><VideoPlay /></el-icon>
         运行评测
       </el-button>

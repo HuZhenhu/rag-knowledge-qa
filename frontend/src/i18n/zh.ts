@@ -64,6 +64,10 @@ export default {
     admin: '管理员',
     user: '普通用户',
     apiKey: 'API Key',
+    roleUpdated: '角色已更新',
+    roleUpdateFailed: '更新角色失败',
+    cannotModifySelfRole: '不能修改自己的角色',
+    self: '（当前账号）',
   },
   chat: {
     title: '聊天',
@@ -76,6 +80,13 @@ export default {
   },
   common: {
     logout: '退出登录',
+    noPermission: '无权限访问',
+    roles: {
+      viewer: '只读',
+      editor: '编辑',
+      admin: '管理员',
+      writer: '编辑',
+    },
     copy: '复制',
     copyAll: '复制全部',
     delete: '删除',
