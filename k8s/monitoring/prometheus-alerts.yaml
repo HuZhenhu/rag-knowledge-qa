@@ -1,0 +1,63 @@
+# T2.8 Prometheus 告警规则（Alertmanager rules）
+# 说明：本机无 Prometheus，此文件为生产交付配置（未实测）；指标名对齐 T2.8 metrics_exporter / MetricsCollector 导出。
+# 部署：作为 Prometheus PrometheusRule 挂载（kubectl apply 或 CompatibleRule CRD）。
+groups:
+  - name: rag-sli-availability
+    rules:
+      # 1) P95 生成延迟 > 3s（任务书基线）
+      - alert: HighP95Latency
+        expr: histogram_quantile(0.95, sum(rate(rag_llm_latency_ms_bucket[5m])) by (le)) > 3000
+        for: 5m
+        labels:
+          severity: critical
+          component: api
+        annotations:
+          summary: "生成延迟 P95 超过 3s"
+          description: "过去 5 分钟 RAG 生成调用 P95 延迟达 {{ $value | humanize }}ms，超出 3000ms 阈值。"
+
+      # 2) 错误率 > 2%（5 分钟窗口）
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(rag_errors_total[5m])) by (component)
+            /
+          max(1, sum(rate(rag_requests_total[5m])) by (component)) > 0.02
+        for: 5m
+        labels:
+          severity: critical
+          component: any
+        annotations:
+          summary: "API 错误率超过 2%"
+          description: "{{ $labels.component }} 错误率 {{ $value | humanizePercentage }} 超过 2% 阈值。"
+
+      # 3) 队列积压阈值：任务吊起/worker 扩容失效预警
+      - alert: QueueBacklogHigh
+        expr: rag_queue_depth{topic="tasks"} > 100
+        for: 10m
+        labels:
+          severity: warning
+          component: worker
+        annotations:
+          summary: "任务队列积压超过 100"
+          description: "队列 {{ $labels.topic }} 当前积压 {{ $value }} 条，超过 100 阈值，请检查 worker 吞吐与 HPA。"
+
+      # 4) 缓存命中率骤降（兜底：命中率低于 30% 提示）
+      - alert: CacheHitRateLow
+        expr: rag_cache_hit_rate < 0.3
+        for: 15m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "缓存命中率低于 30%"
+          description: "当前缓存命中率 {{ $value | humanizePercentage }}，低于 30%，检查缓存后端与语义检索阈值。"
+
+      # 5) 限流拒绝计数突增（疑似攻击/配额异常）
+      - alert: RateLimitSpike
+        expr: sum(rate(rag_rate_limited_total[5m])) > 50
+        for: 5m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "限流拒绝次数突增"
+          description: "5 分钟限流拒绝速率 {{ $value }} req/s，疑似攻击或配额配置异常。"

@@ -19,6 +19,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from src.config import TASK_QUEUE_TOPIC, HEALTH_PORT, QUEUE_BACKEND
 from src.core.queue_backend import get_queue_backend, ConsumerWorker
+from src.core.metrics_exporter import set_queue_depth
 
 
 # ---------------------------------------------------------------------------
@@ -103,6 +104,7 @@ def run_worker(topic: str = TASK_QUEUE_TOPIC, health_port: int = HEALTH_PORT,
     while True:
         try:
             worker.process_one()
+            set_queue_depth(topic, backend.get_backlog(topic))  # T2.8 队列深度上报
         except KeyboardInterrupt:
             break
         except Exception:  # noqa: BLE001

@@ -11,6 +11,8 @@ import time
 from collections import defaultdict, deque
 from typing import Any
 
+from src.core.metrics_exporter import inc_rate_limited
+
 # 敏感查询模式（命中即审计标记）
 SENSITIVE_PATTERNS: tuple[str, ...] = (
     r"密码",
@@ -64,12 +66,15 @@ class TieredRateLimiter:
         now = time.time()
         if ip:
             if not self._check("ip", ip, self.ip_limit, now):
+                inc_rate_limited("ip")  # T2.8 限流次数指标
                 return False, f"ip rate limit exceeded: {ip}"
         if user:
             if not self._check("user", user, self.user_limit, now):
+                inc_rate_limited("user")  # T2.8 限流次数指标
                 return False, f"user rate limit exceeded: {user}"
         if channel:
             if not self._check("channel", channel, self.channel_limit, now):
+                inc_rate_limited("channel")  # T2.8 限流次数指标
                 return False, f"channel rate limit exceeded: {channel}"
         return True, ""
 

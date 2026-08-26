@@ -10,6 +10,7 @@ import json
 from cachetools import TTLCache
 
 from src.config import QUERY_CACHE_BACKEND, QUERY_CACHE_ENABLED
+from src.core.metrics_exporter import record_cache_access
 
 
 class QueryCache:
@@ -41,12 +42,17 @@ class QueryCache:
         if self._backend is not None:
             raw = self._backend.get(key)
             if raw is None:
+                record_cache_access(hit=False)  # T2.8 缓存命中率
                 return None
             try:
+                record_cache_access(hit=True)  # T2.8 缓存命中率
                 return json.loads(raw)
             except Exception:
+                record_cache_access(hit=False)  # T2.8 缓存命中率
                 return None
-        return self.cache.get(key)
+        value = self.cache.get(key)
+        record_cache_access(hit=value is not None)  # T2.8 缓存命中率
+        return value
 
     def set(self, query: str, top_k: int, value, acl_fp: str | None = None) -> None:
         """写入缓存"""
