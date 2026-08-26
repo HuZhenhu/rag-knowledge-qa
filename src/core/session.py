@@ -33,6 +33,8 @@ class Session:
     created_at: float = field(default_factory=time.time)
     last_active: float = field(default_factory=time.time)
     summary: str = ""  # M8: 对话摘要
+    tenant_id: str = ""  # T2.5: 会话归属租户（按租户隔离）
+    channel: str = ""    # T2.5: 来源渠道（web/wechat/app/ivr）
 
 
 class SessionManager:
@@ -61,6 +63,8 @@ class SessionManager:
             "created_at": s.created_at,
             "last_active": s.last_active,
             "summary": s.summary,
+            "tenant_id": s.tenant_id,
+            "channel": s.channel,
         }
 
     @staticmethod
@@ -70,6 +74,8 @@ class SessionManager:
             created_at=d.get("created_at", time.time()),
             last_active=d.get("last_active", time.time()),
             summary=d.get("summary", ""),
+            tenant_id=d.get("tenant_id", ""),
+            channel=d.get("channel", ""),
         )
         s.messages = [
             Message(role=m["role"], content=m["content"],
@@ -85,8 +91,12 @@ class SessionManager:
             self._summarizer = ConversationSummarizer()
         return self._summarizer
 
-    def get_or_create_session(self, session_id: str) -> Session:
-        """获取或创建会话（从后端加载，不存在则新建并持久化）"""
+    def get_or_create_session(self, session_id: str, tenant_id: str = "",
+                              channel: str = "") -> Session:
+        """获取或创建会话（从后端加载，不存在则新建并持久化）
+
+        T2.5: 新会话写入租户/渠道归属；已存在会话保留原归属。
+        """
         # 每5分钟自动清理一次过期会话
         if time.time() - self._last_cleanup > 300:
             self.cleanup_expired()
@@ -94,7 +104,7 @@ class SessionManager:
 
         data = self.backend.get(session_id)
         if data is None:
-            session = Session(session_id=session_id)
+            session = Session(session_id=session_id, tenant_id=tenant_id, channel=channel)
         else:
             session = self._session_from_dict(data)
 
@@ -106,9 +116,10 @@ class SessionManager:
         """将会话写回后端（T2.1：持久化到可插拔存储）。"""
         self.backend.set(session.session_id, self._session_to_dict(session))
 
-    def add_message(self, session_id: str, role: str, content: str) -> None:
+    def add_message(self, session_id: str, role: str, content: str,
+                    tenant_id: str = "", channel: str = "") -> None:
         """添加消息到会话"""
-        session = self.get_or_create_session(session_id)
+        session = self.get_or_create_session(session_id, tenant_id=tenant_id, channel=channel)
         session.messages.append(Message(role=role, content=content))
         session.last_active = time.time()
 

@@ -1,9 +1,10 @@
-"""检索链路 ACL / 租户隔离 辅助模块（P0-1）
+"""检索链路 ACL / 租户隔离 辅助模块（P0-1 / T2.5）
 
 设计要点（与 src/core/document_scanner.update_registry 保持一致）：
-- chunk 级元数据携带 ACL 字段：doc_id / owner_user_id / allowed_roles / kb_id
+- chunk 级元数据携带 ACL 字段：doc_id / owner_user_id / allowed_roles / kb_id / tenant_id
 - doc_id 采用 md5(相对路径) 生成，与 document_scanner 的文档注册 ID 同源，供权限表关联
 - 查询侧：build_acl_filter 构造 Chroma where（检索前过滤）；assert_sources_allowed 做运行时归属断言（防绕过）
+- T2.5 租户级：build_tenant_filter 按租户可见 kb 集合构造过滤；assert_sources_tenant_allowed 运行时剔除跨租户来源
 - 默认由 config.ACL_ENFORCE 控制关闭，不影响现有功能
 """
 import hashlib
@@ -24,6 +25,7 @@ def enrich_acl_metadata(
     *,
     owner_user_id: str = "",
     kb_id: str = "",
+    tenant_id: str = "",
 ) -> dict:
     """为 chunk metadata 补齐 ACL 字段（缺失才补，不覆盖已存在值）"""
     meta = dict(meta or {})
@@ -36,6 +38,8 @@ def enrich_acl_metadata(
         meta["allowed_roles"] = ",".join(PUBLIC_ALLOWED_ROLES)
     if not meta.get("kb_id"):
         meta["kb_id"] = kb_id
+    if not meta.get("tenant_id"):
+        meta["tenant_id"] = tenant_id
     return meta
 
 
@@ -58,6 +62,30 @@ def build_acl_filter(
     if not readable_ids:
         return {"doc_id": {"$eq": "__no_access__"}}
     return {"doc_id": {"$in": readable_ids}}
+
+
+def build_tenant_filter(
+    tenant_id: str | None,
+    kb_ids: set[str] | list[str] | None,
+    *,
+    role: str | None = None,
+    admin_roles: tuple[str, ...] = ("admin",),
+) -> dict | None:
+    """构造租户级检索前过滤条件（按 kb_id 维度）
+
+    - role 命中 admin_roles → 返回 None（管理角色豁免）
+    - kb_ids is None → 返回 None（未配置租户权限，不过滤）
+    - kb_ids 为空集合 → 恒不匹配过滤，检索结果必为空
+    - 否则 → {"kb_id": {"$in": list(kb_ids)}}
+    """
+    if role and role in admin_roles:
+        return None
+    if kb_ids is None:
+        return None
+    kbs = sorted(kb_ids)
+    if not kbs:
+        return {"kb_id": {"$eq": "__no_access__"}}
+    return {"kb_id": {"$in": kbs}}
 
 
 def allowed_doc_ids_from_filter(acl_filter: dict | None) -> set[str] | None:
@@ -87,6 +115,35 @@ def assert_sources_allowed(sources: list[dict], allowed_ids: set[str] | None) ->
     for s in sources:
         doc_id = (s.get("metadata") or {}).get("doc_id", "")
         if doc_id in allowed_ids:
+            kept.append(s)
+        else:
+            removed += 1
+    return kept, removed
+
+
+def assert_sources_tenant_allowed(
+    sources: list[dict],
+    tenant_id: str | None,
+    allowed_kb_ids: set[str] | list[str] | None,
+) -> tuple[list[dict], int]:
+    """运行时租户归属断言：剔除来源 kb 不在租户可见集合内的跨租户数据
+
+    - allowed_kb_ids is None（未配置租户权限）→ 不校验，原样返回 (sources, 0)
+    - 返回 (过滤后的 sources, 剔除条数)
+    """
+    if allowed_kb_ids is None:
+        return sources, 0
+    allowed = set(allowed_kb_ids)
+    kept: list[dict] = []
+    removed = 0
+    for s in sources:
+        kb = (s.get("metadata") or {}).get("kb_id", "")
+        src_tenant = (s.get("metadata") or {}).get("tenant_id", "")
+        # 显式 tenant_id 不匹配视为跨租户越权
+        if tenant_id and src_tenant and src_tenant != tenant_id:
+            removed += 1
+            continue
+        if kb in allowed:
             kept.append(s)
         else:
             removed += 1

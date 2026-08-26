@@ -299,3 +299,10 @@ LLM_GATEWAY_PROVIDERS = os.getenv("LLM_GATEWAY_PROVIDERS", "deepseek,openai,anth
 LLM_GATEWAY_RATE_RPM = int(os.getenv("LLM_GATEWAY_RATE_RPM", "60"))  # 每 provider 令牌桶每分钟限流
 LLM_GATEWAY_SMALL_MODEL = os.getenv("LLM_GATEWAY_SMALL_MODEL", "deepseek-chat")  # 小模型（简单问题，低成本）
 LLM_GATEWAY_LARGE_MODEL = os.getenv("LLM_GATEWAY_LARGE_MODEL", "deepseek-reasoner")  # 大模型（复杂问题）
+
+# ===== T2.5 多租户与渠道隔离（默认关，灰度开启）=====
+TENANT_ISOLATION_ENABLED = os.getenv("TENANT_ISOLATION_ENABLED", "false").lower() == "true"  # 租户级隔离总开关
+TENANT_CHANNELS = tuple(c.strip() for c in os.getenv("TENANT_CHANNELS", "web,wechat,app,ivr").split(",") if c.strip())
+TENANT_QUOTA_DOCS = int(os.getenv("TENANT_QUOTA_DOCS", "10000"))  # 每租户文档数上限
+TENANT_QUOTA_SESSIONS = int(os.getenv("TENANT_QUOTA_SESSIONS", "10000"))  # 每租户会话数上限
+TENANT_QUOTA_REQUESTS_PER_MIN = int(os.getenv("TENANT_QUOTA_REQUESTS_PER_MIN", "600"))  # 每租户每渠道每分钟请求量上限
