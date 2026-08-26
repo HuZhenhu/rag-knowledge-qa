@@ -10,6 +10,9 @@ on:
     branches: [master, main]
   push:
     branches: [master, main]
+  # T3.3: 每周一 03:00 UTC 自动跑全量评测（质量门禁，失败即阻断发布）
+  schedule:
+    - cron: "0 3 * * 1"
   workflow_dispatch:
 
 jobs:
@@ -64,11 +67,12 @@ jobs:
           assert agg["context_recall"] >= 0.8, f"context_recall {agg['context_recall']} < 0.8"
           EOF
 
-  full-regression:
-    name: Full golden eval regression (manual)
+  # T3.3: weekly (schedule) / manual 触发全量 golden 评测；质量门禁失败 → job 红 → 阻断发布
+  weekly-full-regression:
+    name: Weekly full golden eval + quality gate
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -108,3 +112,14 @@ jobs:
           latest=$(ls evaluation/baseline_*.json | sort | tail -n 1)
           echo "Comparing against: $latest"
           python evaluation/check_regression.py --current "$latest" --golden evaluation/golden_baseline.json --metric-tol 0.02
+
+      # T3.3: 发布质量门禁 — 检索质量低于硬门槛或较上次回退即退出码 1，阻断发布
+      - name: Quality gate (block release on regression)
+        run: |
+          latest=$(ls evaluation/baseline_*.json | sort | tail -n 1)
+          python evaluation/check_quality_gate.py \
+            --current "$latest" \
+            --baseline evaluation/golden_baseline.json \
+            --min-accuracy 0.8 \
+            --drop-threshold 0.02 \
+            --feedback-bad-ratio 0.5

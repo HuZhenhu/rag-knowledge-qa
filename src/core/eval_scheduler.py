@@ -1,4 +1,9 @@
-"""M9: 评测定时任务 — APScheduler 定时运行评测 + 质量下降告警"""
+"""M9: 评测定时任务 — APScheduler 定时运行评测 + 质量下降告警
+
+T3.3 扩展：
+- 每日评测（既有）：常规质量告警
+- 每周全量评测（新增）：反馈回流 + 全量评测 + 质量门禁（阻断发布）
+"""
 import json
 import logging
 from datetime import datetime
@@ -7,6 +12,11 @@ from src.config import (
     EVAL_SCHEDULE_HOUR,
     EVAL_SCHEDULE_MINUTE,
     EVAL_ALERT_DROP_THRESHOLD,
+    EVAL_FEEDBACK_ENABLED,
+    EVAL_MIN_ACCURACY,
+    EVAL_FEEDBACK_BAD_RATIO,
+    EVAL_WEEKLY_HOUR,
+    EVAL_WEEKLY_MINUTE,
 )
 
 logger = logging.getLogger(__name__)
@@ -92,6 +102,82 @@ def _send_alert(message: str) -> None:
     #     requests.post(webhook_url, json={"text": message})
 
 
+def run_weekly_evaluation() -> dict:
+    """每周全量评测 + 反馈回流 + 质量门禁（阻断发布）
+
+    Returns:
+        评测汇总（含 feedback_probe / quality_gate / blocked 字段）。
+        blocked=True 表示质量回退被门禁拦截，发布流程应停止。
+    """
+    logger.info("每周全量评测开始执行")
+
+    from evaluate import run_evaluation, save_to_database
+    from src.core import eval_feedback
+
+    # 1) 线上反馈回流为评测用例
+    extra_cases: list[dict] = []
+    if EVAL_FEEDBACK_ENABLED:
+        try:
+            extra_cases = eval_feedback.export_feedback_cases()
+        except Exception as exc:
+            logger.warning("反馈回流失败，继续执行基础评测: %s", exc)
+
+    # 2) 全量评测（基础用例 + 反馈回流用例）
+    from evaluate import load_test_cases
+    test_cases = load_test_cases() + extra_cases
+    version = datetime.now().strftime("weekly_%Y%m%d_%H%M%S")
+    summary = run_evaluation(test_cases=test_cases, version=version)
+
+    if "error" in summary:
+        logger.error("每周评测执行失败: %s", summary["error"])
+        summary["blocked"] = True
+        return summary
+
+    # 3) 反馈探针统计并入汇总
+    summary["feedback_probe"] = eval_feedback.feedback_probe_summary(
+        summary.get("results", [])
+    )
+
+    # 4) 保存本次评测 → 获取上一次评测作为基线
+    try:
+        save_to_database(summary)
+    except Exception as exc:
+        logger.warning("评测结果入库失败: %s", exc)
+
+    try:
+        from src.storage.database import get_previous_evaluation
+        baseline = get_previous_evaluation()
+    except Exception:
+        baseline = None
+
+    # 5) 质量门禁（阻断发布）
+    gate = eval_feedback.quality_gate(
+        summary,
+        baseline=baseline,
+        drop_threshold=EVAL_ALERT_DROP_THRESHOLD,
+        min_accuracy=EVAL_MIN_ACCURACY,
+        feedback_bad_ratio_limit=EVAL_FEEDBACK_BAD_RATIO,
+    )
+    summary["quality_gate"] = gate
+    summary["blocked"] = not gate["ok"]
+
+    if gate["ok"]:
+        logger.info(
+            "每周评测通过质量门禁 — 准确率 %.1f%%, 反馈兜底比例 %.1f%%",
+            gate.get("current_accuracy", 0) * 100,
+            gate.get("feedback_bad_ratio", 0.0) * 100,
+        )
+    else:
+        alert_msg = (
+            f"[阻断发布] 每周评测质量门禁未通过: {gate['reason']}"
+            f"（version={version}）"
+        )
+        logger.error(alert_msg)
+        _send_alert(alert_msg)
+
+    return summary
+
+
 def create_scheduler():
     """创建并配置 APScheduler 调度器
 
@@ -117,10 +203,27 @@ def create_scheduler():
         misfire_grace_time=3600,
     )
 
+    # T3.3: 每周一全量评测 + 反馈回流 + 质量门禁
+    weekly_trigger = CronTrigger(
+        day_of_week="mon",
+        hour=EVAL_WEEKLY_HOUR,
+        minute=EVAL_WEEKLY_MINUTE,
+    )
+    scheduler.add_job(
+        run_weekly_evaluation,
+        trigger=weekly_trigger,
+        id="weekly_feedback_evaluation",
+        name="每周全量评测（反馈回流+质量门禁）",
+        replace_existing=True,
+        misfire_grace_time=3600,
+    )
+
     logger.info(
-        "评测定时任务已配置 — 每天 %02d:%02d 执行",
+        "评测定时任务已配置 — 每天 %02d:%02d 执行；每周一 %02d:%02d 全量评测",
         EVAL_SCHEDULE_HOUR,
         EVAL_SCHEDULE_MINUTE,
+        EVAL_WEEKLY_HOUR,
+        EVAL_WEEKLY_MINUTE,
     )
     return scheduler
 

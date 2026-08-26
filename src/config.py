@@ -185,6 +185,14 @@ EVAL_SIMILARITY_THRESHOLD = float(os.getenv("EVAL_SIMILARITY_THRESHOLD", "0.6"))
 EVAL_ALERT_DROP_THRESHOLD = float(os.getenv("EVAL_ALERT_DROP_THRESHOLD", "0.05"))  # 准确率下降5%告警
 EVAL_SCHEDULE_HOUR = int(os.getenv("EVAL_SCHEDULE_HOUR", "2"))  # 每天凌晨2点
 EVAL_SCHEDULE_MINUTE = int(os.getenv("EVAL_SCHEDULE_MINUTE", "0"))
+# ---- T3.3 评测自动化闭环 ----
+EVAL_FEEDBACK_ENABLED = os.getenv("EVAL_FEEDBACK_ENABLED", "false").lower() in ("1", "true", "yes")  # 线上反馈回流开关
+EVAL_FEEDBACK_CASES_PATH = os.getenv("EVAL_FEEDBACK_CASES_PATH", "evaluation/feedback_cases.json")  # 反馈回流评测用例集
+EVAL_FEEDBACK_LIMIT = int(os.getenv("EVAL_FEEDBACK_LIMIT", "500"))  # 单次回流反馈条数上限
+EVAL_MIN_ACCURACY = float(os.getenv("EVAL_MIN_ACCURACY", "0.6"))  # 发布质量门禁：准确率最低要求
+EVAL_FEEDBACK_BAD_RATIO = float(os.getenv("EVAL_FEEDBACK_BAD_RATIO", "0.5"))  # 反馈用例兜底回答比例上限
+EVAL_WEEKLY_HOUR = int(os.getenv("EVAL_WEEKLY_HOUR", "3"))  # 每周全量评测：周一凌晨3点
+EVAL_WEEKLY_MINUTE = int(os.getenv("EVAL_WEEKLY_MINUTE", "0"))
 
 # M4: 监控告警配置
 ALERT_ERROR_RATE_THRESHOLD = float(os.getenv("ALERT_ERROR_RATE_THRESHOLD", "0.05"))  # 5%
